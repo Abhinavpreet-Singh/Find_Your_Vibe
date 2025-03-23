@@ -10,18 +10,18 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative pt-24 pb-20 md:pt-28 md:pb-28 px-4 overflow-hidden">
-      {/* Simple gradient background without animations */}
+    <section id="hero" className="relative pt-24 pb-20 md:pt-28 md:pb-28 px-4 overflow-hidden">
+      {/* Simple gradient background without animations - shifted slightly */}
       <div className="absolute inset-0 z-0">
-        {/* Static gradients */}
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-[#be70a9]/10 blur-3xl"></div>
-        <div className="absolute top-60 -left-20 w-[500px] h-[500px] rounded-full bg-[#edb04c]/10 blur-3xl"></div>
-        <div className="absolute bottom-20 right-60 w-[550px] h-[550px] rounded-full bg-[#c36376]/10 blur-3xl"></div>
+        {/* Static gradients - moved right */}
+        <div className="absolute -top-40 -right-20 w-[600px] h-[600px] rounded-full bg-[#be70a9]/10 blur-3xl"></div>
+        <div className="absolute top-60 left-0 w-[500px] h-[500px] rounded-full bg-[#edb04c]/10 blur-3xl"></div>
+        <div className="absolute bottom-20 right-40 w-[550px] h-[550px] rounded-full bg-[#c36376]/10 blur-3xl"></div>
       </div>
       
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center relative z-10">
-        {/* Text Content */}
-        <div>
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center relative z-10 pr-0 md:pr-8">
+        {/* Text Content - shifted right with padding */}
+        <div className="md:ml-8">
           {/* Simple highlight badge */}
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[#a477ab]/20 shadow-sm mb-8">
             <div className="w-2 h-2 rounded-full bg-gradient-to-r from-[#a477ab] to-[#c36376] mr-2"></div>
@@ -118,8 +118,8 @@ const Hero = () => {
           </div>
         </div>
         
-        {/* Visual Content with floating icons arranged in a circle */}
-        <div className="relative h-[400px] md:h-[500px]">
+        {/* Visual Content with floating icons arranged in a circle - shifted right */}
+        <div className="relative h-[400px] md:h-[500px] md:mr-0 md:ml-8">
           <FloatingIconsWithGlowingBorders isLoaded={isLoaded} />
         </div>
       </div>
@@ -133,6 +133,7 @@ const Hero = () => {
 };
 
 // Updated floating elements with glowing gradient borders and no text labels
+// Shifted slightly to the right
 const FloatingIconsWithGlowingBorders = ({ isLoaded }) => {
   // Define icons and themes with colors
   const icons = [
@@ -147,7 +148,7 @@ const FloatingIconsWithGlowingBorders = ({ isLoaded }) => {
   ];
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
+    <div className="absolute inset-0 flex items-center justify-center md:translate-x-6">
       {/* Main central logo */}
       <div className="absolute z-30">
         <motion.div 
@@ -337,7 +338,7 @@ const FloatingIconsWithGlowingBorders = ({ isLoaded }) => {
 // Full Width Animated Wave with enhanced animation
 const FullWidthAnimatedWave = () => {
   return (
-    <div className="relative h-[150px]">
+    <div className="relative h-[100px]">
       <svg
         preserveAspectRatio="none"
         width="100%"

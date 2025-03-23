@@ -36,6 +36,38 @@ const Navbar = () => {
     };
   }, [activeItem]);
 
+  // Smooth scroll function
+  const handleSmoothScroll = (e, targetId) => {
+    e.preventDefault();
+    
+    // Close mobile menu if open
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
+    
+    const targetElement = document.querySelector(targetId);
+    
+    if (targetElement) {
+      // If clicking "Home", scroll to top with smooth behavior
+      if (targetId === '#hero') {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      } else {
+        // For other sections, scroll to the element with offset for navbar
+        const offset = 80; // Navbar height plus some padding
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   return (
     <>
       <header 
@@ -77,6 +109,7 @@ const Navbar = () => {
                   <motion.a 
                     href="#hero" 
                     className="flex items-center"
+                    onClick={(e) => handleSmoothScroll(e, "#hero")}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -103,17 +136,25 @@ const Navbar = () => {
                   
                   {/* Desktop Navigation - Updated with your current sections */}
                   <div className="hidden md:flex items-center space-x-1">
-                    <NavItem href="#hero" label="Home" />
+                    <NavItem href="#hero" label="Home" onClick={(e) => handleSmoothScroll(e, "#hero")} />
                     <NavDropdown 
                       label="Discover" 
                       items={[
-                        { label: "Hobbies", href: "#hobbies" },
-                        { label: "Activities", href: "#activities" },
+                        { 
+                          label: "Hobbies", 
+                          href: "#hobbies", 
+                          onClick: (e) => handleSmoothScroll(e, "#hobbies") 
+                        },
+                        { 
+                          label: "Activities", 
+                          href: "#activities", 
+                          onClick: (e) => handleSmoothScroll(e, "#activities") 
+                        },
                       ]} 
                     />
-                    <NavItem href="#stats" label="Stats" />
-                    <NavItem href="#testimonials" label="Testimonials" />
-                    <NavItem href="#faq" label="FAQ" />
+                    <NavItem href="#stats" label="Stats" onClick={(e) => handleSmoothScroll(e, "#stats")} />
+                    <NavItem href="#testimonials" label="Testimonials" onClick={(e) => handleSmoothScroll(e, "#testimonials")} />
+                    <NavItem href="#faq" label="FAQ" onClick={(e) => handleSmoothScroll(e, "#faq")} />
                   </div>
                   
                   {/* Auth Buttons */}
@@ -238,17 +279,41 @@ const Navbar = () => {
                       closed: {}
                     }}
                   >
-                    <SimpleMobileNavItem href="#hero" label="Home" />
+                    <SimpleMobileNavItem 
+                      href="#hero" 
+                      label="Home" 
+                      onClick={(e) => handleSmoothScroll(e, "#hero")}
+                    />
                     <SimpleMobileNavDropdown 
                       label="Discover" 
                       items={[
-                        { label: "Hobbies", href: "#hobbies" },
-                        { label: "Activities", href: "#activities" },
+                        { 
+                          label: "Hobbies", 
+                          href: "#hobbies", 
+                          onClick: (e) => handleSmoothScroll(e, "#hobbies")
+                        },
+                        { 
+                          label: "Activities", 
+                          href: "#activities", 
+                          onClick: (e) => handleSmoothScroll(e, "#activities")
+                        },
                       ]} 
                     />
-                    <SimpleMobileNavItem href="#stats" label="Stats" />
-                    <SimpleMobileNavItem href="#testimonials" label="Testimonials" />
-                    <SimpleMobileNavItem href="#faq" label="FAQ" />
+                    <SimpleMobileNavItem 
+                      href="#stats" 
+                      label="Stats" 
+                      onClick={(e) => handleSmoothScroll(e, "#stats")}
+                    />
+                    <SimpleMobileNavItem 
+                      href="#testimonials" 
+                      label="Testimonials" 
+                      onClick={(e) => handleSmoothScroll(e, "#testimonials")}
+                    />
+                    <SimpleMobileNavItem 
+                      href="#faq" 
+                      label="FAQ" 
+                      onClick={(e) => handleSmoothScroll(e, "#faq")}
+                    />
                     
                     <motion.div 
                       className="pt-6 space-y-3 border-t border-gray-100 mt-4"
@@ -314,13 +379,17 @@ const Navbar = () => {
           0% { background-position: 0% 0%; }
           100% { background-position: 200% 0%; }
         }
+        
+        html {
+          scroll-behavior: smooth;
+        }
       `}</style>
     </>
   );
 };
 
 // Desktop Nav Item with animated gradient underline
-const NavItem = ({ href, label }) => {
+const NavItem = ({ href, label, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -331,6 +400,7 @@ const NavItem = ({ href, label }) => {
     >
       <a
         href={href}
+        onClick={onClick}
         className="px-4 py-2 text-gray-800 font-medium rounded-full flex items-center"
       >
         {label}
@@ -452,7 +522,7 @@ const NavDropdown = ({ label, items }) => {
               
               <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
                 {items.map((item, i) => (
-                  <DropdownItem key={i} href={item.href} label={item.label} />
+                  <DropdownItem key={i} href={item.href} label={item.label} onClick={item.onClick} />
                 ))}
               </div>
             </div>
@@ -464,7 +534,7 @@ const NavDropdown = ({ label, items }) => {
 };
 
 // Dropdown item with animated gradient underline
-const DropdownItem = ({ href, label }) => {
+const DropdownItem = ({ href, label, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   
   return (
@@ -475,6 +545,7 @@ const DropdownItem = ({ href, label }) => {
     >
       <a
         href={href}
+        onClick={onClick}
         className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5"
       >
         {label}
@@ -511,7 +582,7 @@ const DropdownItem = ({ href, label }) => {
 };
 
 // Simplified mobile nav item without underline animations
-const SimpleMobileNavItem = ({ href, label }) => {
+const SimpleMobileNavItem = ({ href, label, onClick }) => {
   return (
     <motion.div
       variants={{
@@ -521,6 +592,7 @@ const SimpleMobileNavItem = ({ href, label }) => {
     >
       <a
         href={href}
+        onClick={onClick}
         className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
       >
         {label}
@@ -567,6 +639,7 @@ const SimpleMobileNavDropdown = ({ label, items }) => {
               <div key={i}>
                 <a
                   href={item.href}
+                  onClick={item.onClick}
                   className="block py-3 px-3 rounded-lg hover:bg-[#a477ab]/5 text-gray-700"
                 >
                   {item.label}
