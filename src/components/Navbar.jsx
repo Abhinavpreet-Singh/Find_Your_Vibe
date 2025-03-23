@@ -1,129 +1,582 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
-import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiMenu, FiX, FiChevronDown, FiArrowRight } from 'react-icons/fi';
 
 const Navbar = () => {
-  const { isDarkMode, toggleTheme } = useTheme();
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState(null);
+  
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
     };
     
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Hackathons', href: '#hackathon' },
-    { name: 'Music', href: '#music' },
-    { name: 'Hobbies', href: '#hobbies' },
-    { name: 'Team', href: '#team' },
-    { name: 'FAQ', href: '#faq' },
-  ];
+  // Handle click outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (activeItem && !event.target.closest('.nav-dropdown')) {
+        setActiveItem(null);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [activeItem]);
 
   return (
-    <motion.nav 
-      className={`fixed top-0 left-0 right-0 z-50 px-4 md:px-6 lg:px-10 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white/90 dark:bg-dark-bg/90 backdrop-blur-md shadow-md' 
-          : 'bg-transparent'
-      }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: 'spring', stiffness: 120 }}
-    >
-      <div className="max-w-7xl mx-auto py-4 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center">
-          <motion.div
-            className="h-10 w-10 rounded-full bg-gradient-to-br from-primary-purple to-primary-red flex items-center justify-center text-white font-bold text-xl"
-            whileHover={{ rotate: 10, scale: 1.1 }}
-          >
-            FYV
-          </motion.div>
-          <span className="ml-2 text-xl font-bold">
-            Find Your <span className="gradient-text">Vibe</span>
-          </span>
-        </div>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
-            <a 
-              key={link.name} 
-              href={link.href}
-              className="font-medium transition-colors hover:text-primary-purple dark:hover:text-primary-gold"
+    <>
+      <header 
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 px-4 ${
+          isScrolled ? 'py-2' : 'py-5 bg-transparent'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto relative">
+          {/* Dynamic container with gradient border */}
+          <div className="relative">
+            {/* Animated gradient border - appears only when scrolled */}
+            {isScrolled && (
+              <motion.div 
+                className="absolute -inset-[3px] rounded-full z-0 overflow-hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{
+                  background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                  backgroundSize: "300% 100%",
+                  backgroundPosition: "0% 0%",
+                  animation: "gradientMove 8s linear infinite",
+                }}
+              />
+            )}
+            
+            {/* Background - changes with scroll */}
+            <div 
+              className={`relative z-10 transition-all duration-500 ${
+                isScrolled 
+                  ? "bg-white rounded-full shadow-md" 
+                  : "bg-transparent"
+              }`}
             >
-              {link.name}
-            </a>
-          ))}
-        </div>
-
-        {/* Right Side - Theme Toggle & Login */}
-        <div className="flex items-center gap-4">
-          <motion.button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-gray-100 dark:bg-gray-800"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {isDarkMode ? <FiSun className="text-primary-gold" /> : <FiMoon className="text-primary-purple" />}
-          </motion.button>
-
-          <motion.button
-            className="hidden md:block px-4 py-2 rounded-full bg-gradient-to-r from-primary-purple to-primary-red text-white font-medium"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Login / Sign Up
-          </motion.button>
-
-          {/* Mobile Menu Button */}
-          <motion.button
-            className="md:hidden p-2"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            whileTap={{ scale: 0.9 }}
-          >
-            {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-          </motion.button>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {mobileMenuOpen && (
-        <motion.div 
-          className="md:hidden bg-white dark:bg-dark-bg py-4 px-6 shadow-lg"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-        >
-          <div className="flex flex-col space-y-4">
-            {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href}
-                className="font-medium py-2 border-b border-gray-100 dark:border-gray-700"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.name}
-              </a>
-            ))}
-            <motion.button
-              className="py-2 px-4 rounded-full bg-gradient-to-r from-primary-purple to-primary-red text-white font-medium self-start"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Login / Sign Up
-            </motion.button>
+              <nav>
+                <div className="flex items-center justify-between h-16 px-6">
+                  {/* Logo */}
+                  <motion.a 
+                    href="#hero" 
+                    className="flex items-center"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl shadow-md">
+                      <motion.div 
+                        animate={{ 
+                          scale: [1, 1.05, 1],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        FYV
+                      </motion.div>
+                    </div>
+                    <div className="ml-2">
+                      <div className="text-lg font-bold text-gray-800">
+                        Find Your <span className="text-[#be70a9]">Vibe</span>
+                      </div>
+                    </div>
+                  </motion.a>
+                  
+                  {/* Desktop Navigation - Updated with your current sections */}
+                  <div className="hidden md:flex items-center space-x-1">
+                    <NavItem href="#hero" label="Home" />
+                    <NavDropdown 
+                      label="Discover" 
+                      items={[
+                        { label: "Hobbies", href: "#hobbies" },
+                        { label: "Activities", href: "#activities" },
+                      ]} 
+                    />
+                    <NavItem href="#stats" label="Stats" />
+                    <NavItem href="#testimonials" label="Testimonials" />
+                    <NavItem href="#faq" label="FAQ" />
+                  </div>
+                  
+                  {/* Auth Buttons */}
+                  <div className="hidden md:flex items-center space-x-3">
+                    <motion.button
+                      className="px-5 py-2 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      Log in
+                    </motion.button>
+                    <motion.div
+                      className="relative"
+                    >
+                      {/* Gradient border button */}
+                      <motion.div 
+                        className="absolute -inset-[1.5px] rounded-full z-0 overflow-hidden"
+                        animate={{
+                          backgroundPosition: ["0% 0%", "200% 200%"],
+                        }}
+                        transition={{
+                          repeat: Infinity,
+                          repeatType: "loop",
+                          duration: 8,
+                          ease: "linear"
+                        }}
+                        style={{
+                          background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                          backgroundSize: "300% 100%",
+                        }}
+                      />
+                      <motion.button
+                        className="relative px-5 py-2 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        <span className="flex items-center">
+                          Sign up
+                          <motion.div
+                            animate={{ x: [0, 3, 0] }}
+                            transition={{ 
+                              duration: 1.5, 
+                              repeat: Infinity,
+                              repeatType: "loop",
+                              ease: "easeInOut",
+                            }}
+                          >
+                            <FiArrowRight className="ml-1.5" />
+                          </motion.div>
+                        </span>
+                      </motion.button>
+                    </motion.div>
+                  </div>
+                  
+                  {/* Mobile Menu Button */}
+                  <div className="md:hidden">
+                    <motion.button
+                      onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                      className={`p-2 rounded-full ${
+                        isMobileMenuOpen ? 'bg-[#a477ab]/10' : isScrolled ? 'bg-gray-50' : 'bg-white'
+                      } border border-gray-100`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      {isMobileMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+                    </motion.button>
+                  </div>
+                </div>
+              </nav>
+            </div>
           </div>
+        </div>
+      </header>
+      
+      {/* Mobile Menu - Updated with your current sections */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            className="fixed inset-0 z-40 pt-24 px-4 md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* White backdrop */}
+            <motion.div 
+              className="absolute inset-0 bg-white"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.98 }}
+              exit={{ opacity: 0 }}
+            />
+            
+            <div className="relative z-10 max-w-lg mx-auto">
+              <div className="relative">
+                {/* Menu container with gradient border */}
+                <motion.div 
+                  className="absolute -inset-[3px] rounded-2xl z-0 overflow-hidden"
+                  animate={{
+                    backgroundPosition: ["0% 0%", "200% 200%"],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 8,
+                    ease: "linear"
+                  }}
+                  style={{
+                    background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                    backgroundSize: "300% 100%",
+                  }}
+                />
+                
+                <div className="relative bg-white rounded-2xl shadow-md overflow-hidden z-10">
+                  <motion.div
+                    className="p-6 space-y-1"
+                    initial="closed"
+                    animate="open"
+                    variants={{
+                      open: {
+                        transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+                      },
+                      closed: {}
+                    }}
+                  >
+                    <SimpleMobileNavItem href="#hero" label="Home" />
+                    <SimpleMobileNavDropdown 
+                      label="Discover" 
+                      items={[
+                        { label: "Hobbies", href: "#hobbies" },
+                        { label: "Activities", href: "#activities" },
+                      ]} 
+                    />
+                    <SimpleMobileNavItem href="#stats" label="Stats" />
+                    <SimpleMobileNavItem href="#testimonials" label="Testimonials" />
+                    <SimpleMobileNavItem href="#faq" label="FAQ" />
+                    
+                    <motion.div 
+                      className="pt-6 space-y-3 border-t border-gray-100 mt-4"
+                      variants={{
+                        open: {
+                          opacity: 1,
+                          y: 0,
+                          transition: { delay: 0.5 }
+                        },
+                        closed: {
+                          opacity: 0,
+                          y: 20
+                        }
+                      }}
+                    >
+                      <motion.button
+                        className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium"
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        Log in
+                      </motion.button>
+                      
+                      <div className="relative">
+                        {/* Gradient border */}
+                        <motion.div 
+                          className="absolute -inset-[2px] rounded-full z-0 overflow-hidden"
+                          animate={{
+                            backgroundPosition: ["0% 0%", "200% 200%"],
+                          }}
+                          transition={{
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: 8,
+                            ease: "linear"
+                          }}
+                          style={{
+                            background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                            backgroundSize: "300% 100%",
+                          }}
+                        />
+                        <motion.button
+                          className="relative w-full py-3 rounded-full bg-white text-[#be70a9] font-medium z-10"
+                          whileTap={{ scale: 0.97 }}
+                        >
+                          <span className="flex items-center justify-center">
+                            Sign up
+                            <FiArrowRight className="ml-1.5" />
+                          </span>
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Add CSS keyframes for gradient animation */}
+      <style jsx global>{`
+        @keyframes gradientMove {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 200% 0%; }
+        }
+      `}</style>
+    </>
+  );
+};
+
+// Desktop Nav Item with animated gradient underline
+const NavItem = ({ href, label }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div 
+      className="relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <a
+        href={href}
+        className="px-4 py-2 text-gray-800 font-medium rounded-full flex items-center"
+      >
+        {label}
+      </a>
+      
+      {/* Animated Gradient Underline */}
+      <div className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 rounded-full overflow-hidden"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          <motion.div 
+            className="w-full h-full"
+            style={{
+              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+              backgroundSize: "300% 100%",
+            }}
+            animate={{
+              backgroundPosition: ["0% 0%", "200% 0%"],
+            }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 3,
+              ease: "linear"
+            }}
+          />
         </motion.div>
-      )}
-    </motion.nav>
+      </div>
+    </div>
+  );
+};
+
+// Desktop Nav Dropdown with animated gradient underline
+const NavDropdown = ({ label, items }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <div 
+      className="relative nav-dropdown"
+      onMouseEnter={() => {
+        setIsHovered(true);
+        setIsOpen(true);
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setIsOpen(false);
+      }}
+    >
+      <button
+        className="px-4 py-2 text-gray-800 font-medium rounded-full flex items-center relative"
+      >
+        {label}
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <FiChevronDown className="ml-1" />
+        </motion.div>
+      </button>
+      
+      {/* Animated Gradient Underline */}
+      <div className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 rounded-full overflow-hidden"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          <motion.div 
+            className="w-full h-full"
+            style={{
+              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+              backgroundSize: "300% 100%",
+            }}
+            animate={{
+              backgroundPosition: ["0% 0%", "200% 0%"],
+            }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 3,
+              ease: "linear"
+            }}
+          />
+        </motion.div>
+      </div>
+      
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-48 z-10"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Dropdown with thicker gradient border (3px) */}
+            <div className="relative">
+              <motion.div 
+                className="absolute -inset-[3px] rounded-xl z-0 overflow-hidden"
+                animate={{
+                  backgroundPosition: ["0% 0%", "200% 200%"],
+                }}
+                transition={{
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 8,
+                  ease: "linear"
+                }}
+                style={{
+                  background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                  backgroundSize: "300% 100%",
+                }}
+              />
+              
+              <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
+                {items.map((item, i) => (
+                  <DropdownItem key={i} href={item.href} label={item.label} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+// Dropdown item with animated gradient underline
+const DropdownItem = ({ href, label }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <div 
+      className="relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <a
+        href={href}
+        className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5"
+      >
+        {label}
+      </a>
+      
+      {/* Animated Gradient Underline */}
+      <div className="absolute bottom-0.5 left-4 right-4 h-[1px] overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 rounded-full overflow-hidden"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          <motion.div 
+            className="w-full h-full"
+            style={{
+              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+              backgroundSize: "300% 100%",
+            }}
+            animate={{
+              backgroundPosition: ["0% 0%", "200% 0%"],
+            }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 3,
+              ease: "linear"
+            }}
+          />
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+// Simplified mobile nav item without underline animations
+const SimpleMobileNavItem = ({ href, label }) => {
+  return (
+    <motion.div
+      variants={{
+        open: { opacity: 1, y: 0 },
+        closed: { opacity: 0, y: 20 }
+      }}
+    >
+      <a
+        href={href}
+        className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
+      >
+        {label}
+      </a>
+    </motion.div>
+  );
+};
+
+// Simplified mobile nav dropdown without underline animations
+const SimpleMobileNavDropdown = ({ label, items }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <motion.div
+      variants={{
+        open: { opacity: 1, y: 0 },
+        closed: { opacity: 0, y: 20 }
+      }}
+    >
+      <button
+        className="flex items-center justify-between w-full py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5"
+        onClick={() => setIsOpen(!isOpen)}
+        whileTap={{ scale: 0.98 }}
+      >
+        {label}
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <FiChevronDown />
+        </motion.div>
+      </button>
+      
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="pl-6 pb-2 space-y-1"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {items.map((item, i) => (
+              <div key={i}>
+                <a
+                  href={item.href}
+                  className="block py-3 px-3 rounded-lg hover:bg-[#a477ab]/5 text-gray-700"
+                >
+                  {item.label}
+                </a>
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

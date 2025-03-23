@@ -2,61 +2,11 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Custom classes without using @apply */
-.gradient-text {
-  color: transparent;
-  background-clip: text;
-  background-image: linear-gradient(to right, #715F87, #F2B448, #D0776A);
-}
-
-.btn-primary {
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: bold;
-  color: white;
-  background-image: linear-gradient(to right, #715F87, #D0776A);
-  transition-property: all;
-  transition-duration: 300ms;
-}
-
-.btn-primary:hover {
-  transform: scale(1.05);
-}
-
-.card {
-  background-color: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  transition-property: all;
-  transition-duration: 300ms;
-}
-
-.card:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
-.dark .card {
-  background-color: #1f2937;
-}
-
-.card-gradient {
-  background-image: linear-gradient(to bottom right, rgba(113, 95, 135, 0.1), rgba(208, 119, 106, 0.1));
-}
-
-.dark .card-gradient {
-  background-image: linear-gradient(to bottom right, rgba(113, 95, 135, 0.2), rgba(208, 119, 106, 0.2));
-}
-
-/* Dark mode classes */
-.dark {
-  background-color: #111827;
-  color: white;
-}
-
-/* Light mode defaults */
-body {
-  background-color: white;
-  color: #111827;
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-}
+@keyframes gradient-xy {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+  }
+  .animate-gradient-xy {
+    animation: gradient-xy 15s ease infinite;
+  }

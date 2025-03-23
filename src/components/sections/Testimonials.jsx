@@ -1,8 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiCornerUpRight } from 'react-icons/fi';
 
 const Testimonials = () => {
+  // Color theme
+  const colors = {
+    lavender: "#be70a9",
+    red: "#c36376",
+    purple: "#a477ab",
+    gold: "#edb04c"
+  };
+
   const testimonials = [
     {
       name: "Jordan K.",
@@ -58,114 +66,211 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-16 px-4 md:px-6 lg:px-10 bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-20 px-4 bg-white relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#edb04c]/5 -translate-y-1/2 translate-x-1/3"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-[#be70a9]/5 translate-y-1/3 -translate-x-1/4"></div>
+      
+      <div className="max-w-5xl mx-auto">
+        {/* Heading - Made Larger with gradient "Say" */}
         <motion.div 
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            What Our Users <span className="gradient-text">Say</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+            What Our Users {" "}
+            <span className="relative inline-block">
+              <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]">
+                Say
+              </span>
+              <motion.span 
+                className="absolute inset-0 bg-gradient-to-r from-[#a477ab]/20 via-[#c36376]/20 to-[#edb04c]/20 blur-sm -z-10"
+                animate={{
+                  opacity: [0.5, 0.8, 0.5],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "mirror"
+                }}
+              ></motion.span>
+            </span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Real stories from people who found their vibe on our platform.
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Real stories from people who found their vibe
           </p>
         </motion.div>
         
-        <div className="relative">
-          {/* Testimonial Carousel */}
-          <div className="overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col md:flex-row gap-8 items-center bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-10 shadow-lg"
-              >
-                <div className="md:w-1/3">
-                  <div className="relative">
-                    <div className="w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden mx-auto mb-6 border-4 border-primary-purple dark:border-primary-gold">
+        {/* Testimonial display area */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="relative mb-10"
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              className="bg-white rounded-2xl p-8 md:p-12 shadow-xl border border-gray-100"
+            >
+              <div className="flex flex-col md:flex-row md:items-center gap-8 relative">
+                {/* Quote icon */}
+                <div className="absolute top-0 right-0 text-[#be70a9]/10 transform -translate-y-1/2 translate-x-1/4">
+                  <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                  </svg>
+                </div>
+                
+                {/* Profile section */}
+                <div className="md:w-1/3 flex flex-col items-center md:items-start">
+                  <div className="relative mb-4">
+                    <motion.div 
+                      className="w-24 h-24 rounded-2xl overflow-hidden border-4 border-white shadow-lg"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
                       <img 
                         src={testimonials[currentIndex].image} 
                         alt={testimonials[currentIndex].name}
                         className="w-full h-full object-cover" 
                       />
-                    </div>
-                    <svg className="absolute top-0 left-0 w-12 h-12 text-primary-purple dark:text-primary-gold opacity-20" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                    </svg>
+                    </motion.div>
+                    <motion.div
+                      className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full shadow-md bg-[#c36376] flex items-center justify-center text-white"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.3, type: "spring" }}
+                    >
+                      <FiCornerUpRight size={14} />
+                    </motion.div>
                   </div>
-                  <div className="text-center">
-                    <h4 className="font-bold text-xl">{testimonials[currentIndex].name}</h4>
-                    <p className="text-primary-purple dark:text-primary-gold">{testimonials[currentIndex].role}</p>
+                  
+                  <h4 className="text-xl font-bold text-gray-800 mb-1">{testimonials[currentIndex].name}</h4>
+                  <p className="text-[#a477ab] font-medium">{testimonials[currentIndex].role}</p>
+                  
+                  <div className="flex items-center mt-3 space-x-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <motion.svg
+                        key={i}
+                        className="w-5 h-5 text-[#edb04c]"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.4 + (i * 0.1) }}
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </motion.svg>
+                    ))}
                   </div>
                 </div>
                 
-                <div className="md:w-2/3">
-                  <div className="relative">
-                    <motion.p 
-                      className="text-lg md:text-xl leading-relaxed italic text-gray-600 dark:text-gray-300"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3, duration: 0.5 }}
-                    >
+                {/* Quote section */}
+                <div className="md:w-2/3 flex flex-col">
+                  <motion.div
+                    className="h-full flex items-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <p className="text-lg md:text-xl text-gray-600 leading-relaxed italic relative">
                       "{testimonials[currentIndex].testimonial}"
-                    </motion.p>
-                    <svg className="absolute bottom-0 right-0 w-12 h-12 text-primary-purple dark:text-primary-gold opacity-20 transform rotate-180" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                    </svg>
-                  </div>
+                    </p>
+                  </motion.div>
                 </div>
-              </motion.div>
-            </AnimatePresence>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+        
+        {/* Navigation controls with gradient buttons */}
+        <div className="flex justify-center items-center gap-8">
+          {/* Arrow buttons with gradient borders */}
+          <div className="flex gap-3">
+            <GradientBorderButton onClick={prevTestimonial} direction="left" />
+            <GradientBorderButton onClick={nextTestimonial} direction="right" />
           </div>
           
-          {/* Navigation Arrows */}
-          <div className="flex justify-center mt-8 gap-4">
-            <motion.button
-              onClick={prevTestimonial}
-              className="p-3 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-gray-600 dark:text-gray-300"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <FiChevronLeft size={20} />
-            </motion.button>
-            
-            {/* Dots */}
-            <div className="flex items-center gap-2">
-              {testimonials.map((_, index) => (
-                <button 
-                  key={index}
-                  onClick={() => {
-                    setAutoplay(false);
-                    setCurrentIndex(index);
-                  }}
-                  className={`h-3 rounded-full transition-all duration-300 ${
+          {/* Indicator dots */}
+          <div className="flex items-center gap-3">
+            {testimonials.map((_, index) => (
+              <button 
+                key={index}
+                onClick={() => {
+                  setAutoplay(false);
+                  setCurrentIndex(index);
+                }}
+                className="group"
+                aria-label={`Go to testimonial ${index + 1}`}
+              >
+                <motion.div 
+                  className={`rounded-full transition-all duration-300 ${
                     currentIndex === index 
-                      ? "w-6 bg-primary-purple dark:bg-primary-gold" 
-                      : "w-3 bg-gray-300 dark:bg-gray-600"
+                      ? "w-10 h-3 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]" 
+                      : "w-3 h-3 bg-gray-200 group-hover:bg-[#be70a9]/40"
                   }`}
-                />
-              ))}
-            </div>
-            
-            <motion.button
-              onClick={nextTestimonial}
-              className="p-3 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-gray-600 dark:text-gray-300"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <FiChevronRight size={20} />
-            </motion.button>
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                ></motion.div>
+              </button>
+            ))}
           </div>
         </div>
       </div>
     </section>
+  );
+};
+
+// Gradient border button component
+const GradientBorderButton = ({ onClick, direction }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <motion.div
+      className="relative"
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+    >
+      {/* Moving gradient border */}
+      <motion.div 
+        className="absolute -inset-[2px] rounded-full z-0 overflow-hidden"
+        animate={{
+          backgroundPosition: ["0% 0%", "200% 200%"],
+        }}
+        transition={{
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: 8,
+          ease: "linear"
+        }}
+        style={{
+          background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+          backgroundSize: "300% 100%",
+        }}
+      />
+      
+      <motion.button
+        onClick={onClick}
+        className="relative z-10 w-12 h-12 rounded-full flex items-center justify-center bg-white text-gray-600"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {direction === "left" ? (
+          <FiChevronLeft size={20} className={isHovered ? "text-[#be70a9]" : ""} />
+        ) : (
+          <FiChevronRight size={20} className={isHovered ? "text-[#be70a9]" : ""} />
+        )}
+      </motion.button>
+    </motion.div>
   );
 };
 
