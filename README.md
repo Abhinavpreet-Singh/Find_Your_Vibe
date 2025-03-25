@@ -14,8 +14,8 @@ Find Your Vibe is a platform designed to help students connect with peers who sh
 ## 🛠️ Tech Stack
 - **Frontend**: Vite + React.js
 - **Styling**: TailwindCSS + Framer Motion
-- **Backend**: Node.js (Future Scope)
-- **Database**: MongoDB (Future Scope)
+- **Backend**: Node.js
+- **Database**: MongoDB
 
 ## 📂 Project Setup
 To run this project locally, follow these steps:
