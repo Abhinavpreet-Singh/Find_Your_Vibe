@@ -24,8 +24,8 @@ const Home = () => {
       <Stats />
       <Hobbies />
       <Activities />
-      <FAQ />
       <Testimonials />
+      <FAQ />
       <CTA />
       <Footer />
     </div>
