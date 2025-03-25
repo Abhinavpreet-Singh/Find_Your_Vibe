@@ -63,7 +63,7 @@ npm run dev
 - **Get Started & Footer**: Quick sign-up and contact info
 
 ## 🔒 Security Considerations
-- Authentication for user verification (Future Scope)
+- Authentication for user verification 
 - Profile visibility control
 - Spam prevention measures
 
