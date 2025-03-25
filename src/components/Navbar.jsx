@@ -137,6 +137,8 @@ const Navbar = () => {
                   {/* Desktop Navigation - Updated with your current sections */}
                   <div className="hidden md:flex items-center space-x-1">
                     <NavItem href="#hero" label="Home" onClick={(e) => handleSmoothScroll(e, "#hero")} />
+                    
+                    <NavItem href="#stats" label="Stats" onClick={(e) => handleSmoothScroll(e, "#stats")} />
                     <NavDropdown 
                       label="Discover" 
                       items={[
@@ -152,7 +154,6 @@ const Navbar = () => {
                         },
                       ]} 
                     />
-                    <NavItem href="#stats" label="Stats" onClick={(e) => handleSmoothScroll(e, "#stats")} />
                     <NavItem href="#testimonials" label="Testimonials" onClick={(e) => handleSmoothScroll(e, "#testimonials")} />
                     <NavItem href="#faq" label="FAQ" onClick={(e) => handleSmoothScroll(e, "#faq")} />
                   </div>
