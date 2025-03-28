@@ -25,8 +25,8 @@ const Home = () => {
       <Hobbies />
       <Activities />
       <Testimonials />
-      <FAQ />
       <CTA />
+      <FAQ />
       <Footer />
     </div>
   );
