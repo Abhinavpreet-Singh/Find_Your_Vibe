@@ -73,5 +73,5 @@ npm run dev
 - AI-powered recommendations for finding teammates
 
 ---
-💡 **Find Your Vibe** is more than just a platform—it's a community for students to connect, collaborate, and grow together!
+💡 **Find Your Vibe** is more than just a platform. It's a community for students to connect, collaborate, and grow together!!!!
 
