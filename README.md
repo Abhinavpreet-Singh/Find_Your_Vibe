@@ -68,9 +68,9 @@ npm run dev
 - Spam prevention measures
 
 ## 📌 Future Enhancements
-- In-app chat for direct communication.
-- Event organization & team management features.
-- AI-powered recommendations for finding teammates.
+- In-app chat for direct communication
+- Event organization & team management features
+- AI-powered recommendations for finding teammates
 
 ---
 💡 **Find Your Vibe** is more than just a platform—it's a community for students to connect, collaborate, and grow together!
