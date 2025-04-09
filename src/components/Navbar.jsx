@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX, FiChevronDown, FiArrowRight } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -160,6 +162,7 @@ const Navbar = () => {
                   
                   {/* Auth Buttons */}
                   <div className="hidden md:flex items-center space-x-3">
+                  <Link to="/login">
                     <motion.button
                       className="px-5 py-2 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
                       whileHover={{ scale: 1.03 }}
@@ -167,6 +170,8 @@ const Navbar = () => {
                     >
                       Log in
                     </motion.button>
+                  </Link>
+
                     <motion.div
                       className="relative"
                     >
@@ -187,11 +192,12 @@ const Navbar = () => {
                           backgroundSize: "300% 100%",
                         }}
                       />
-                      <motion.button
-                        className="relative px-5 py-2 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                      >
+                      <Link to="/signup">
+                        <motion.button
+                          className="relative px-5 py-2 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
+                        >
                         <span className="flex items-center">
                           Sign up
                           <motion.div
@@ -207,6 +213,7 @@ const Navbar = () => {
                           </motion.div>
                         </span>
                       </motion.button>
+                      </Link>
                     </motion.div>
                   </div>
                   
@@ -281,7 +288,7 @@ const Navbar = () => {
                     }}
                   >
                     <SimpleMobileNavItem 
-                      href="#hero" 
+                      to="/hero" 
                       label="Home" 
                       onClick={(e) => handleSmoothScroll(e, "#hero")}
                     />
@@ -583,7 +590,9 @@ const DropdownItem = ({ href, label, onClick }) => {
 };
 
 // Simplified mobile nav item without underline animations
-const SimpleMobileNavItem = ({ href, label, onClick }) => {
+
+
+const SimpleMobileNavItem = ({ to, label, onClick }) => {
   return (
     <motion.div
       variants={{
@@ -591,16 +600,17 @@ const SimpleMobileNavItem = ({ href, label, onClick }) => {
         closed: { opacity: 0, y: 20 }
       }}
     >
-      <a
-        href={href}
+      <Link
+        to={to}
         onClick={onClick}
         className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
       >
         {label}
-      </a>
+      </Link>
     </motion.div>
   );
 };
+
 
 // Simplified mobile nav dropdown without underline animations
 const SimpleMobileNavDropdown = ({ label, items }) => {
