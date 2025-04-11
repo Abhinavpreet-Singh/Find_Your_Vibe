@@ -1,30 +1,30 @@
-name: 🚀 Find Your Vibe CI Workflow
+name: 🔧 Find Your Vibe CI on Windows
 
 on:
   push:
-    branches: [main]
+    branches: ["main"]
   pull_request:
-    branches: [main]
+    branches: ["main"]
 
 jobs:
-  build-and-lint:
-    name: 🧪 Lint & Build Vite React App
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
 
     steps:
-      - name: 📦 Checkout Repository
+      - name: 🧾 Checkout repository
         uses: actions/checkout@v3
 
-      - name: 🔧 Setup Node.js
+      - name: 🟢 Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "npm"
 
-      - name: 📥 Install Dependencies
+      - name: 📦 Install dependencies
         run: npm install
 
-      - name: 🧹 Lint Code
+      - name: ✅ Lint project
         run: npm run lint
 
-      - name: 🏗️ Build Project
+      - name: 🛠️ Build project
         run: npm run build
