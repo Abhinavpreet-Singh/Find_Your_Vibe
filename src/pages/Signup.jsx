@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar"; // adjust path if needed
+import Navbar from "../components/Navbar"; // Adjust path as needed
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -13,149 +12,120 @@ export default function Signup() {
 
   const handleSignup = (e) => {
     e.preventDefault();
-
-    const trimmedEmail = email.trim();
-    const trimmedUsername = username.trim();
-    const trimmedPassword = password.trim();
-    const trimmedConfirmPassword = confirmPassword.trim();
-
-    if (
-      !trimmedEmail ||
-      !trimmedUsername ||
-      !trimmedPassword ||
-      !trimmedConfirmPassword
-    ) {
+    if (!email || !username || !password || !confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
-
-    if (trimmedPassword !== trimmedConfirmPassword) {
+    if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
-
-    console.log("Signing up with:", {
-      email: trimmedEmail,
-      username: trimmedUsername,
-      password: trimmedPassword,
-    });
-
+    console.log("Signed up with:", { email, username });
     setError("");
-    // Future: Submit to backend
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-white to-orange-100 px-4">
-      <Navbar />
-      <motion.div
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md mt-4"
-      >
-        <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-orange-400">
-          Create Your Account
-        </h2>
+    <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-white via-pink-50 to-orange-50">
+      
+      {/* White navbar background wrapper */}
+      <div className="w-full bg-white shadow-sm z-20">
+        <Navbar />
+      </div>
 
-        <form onSubmit={handleSignup} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError("");
-              }}
-              placeholder="you@example.com"
-            />
-          </div>
+      {/* Form Card */}
+      <div className="flex-grow flex items-center justify-center w-full px-4 py-10">
+        <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+        <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-br from-[#a477ab] via-[#c36376] to-[#a477ab] drop-shadow-[0_0_10px_rgba(255,168,198,0.9)]">
+            Create Your Account
+          </h2>
 
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Username
-            </label>
-            <input
-              type="text"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-                setError("");
-              }}
-              placeholder="yourname"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Password
-            </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError("");
-              }}
-              placeholder="••••••••"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Confirm Password
-            </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              value={confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value);
-                setError("");
-              }}
-              placeholder="••••••••"
-            />
-            <div className="text-sm mt-1 flex items-center">
+          <form onSubmit={handleSignup} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
               <input
-                id="showPassword"
-                type="checkbox"
-                checked={showPassword}
-                onChange={() => setShowPassword(!showPassword)}
-                className="mr-2"
+                type="email"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError("");
+                }}
+                placeholder="you@example.com"
               />
-              <label htmlFor="showPassword" className="text-gray-600">
-                Show Password
-              </label>
             </div>
-          </div>
 
-          {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
-          )}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Username</label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  setError("");
+                }}
+                placeholder="yourname"
+              />
+            </div>
 
-          <button
-            type="submit"
-            className="w-full py-3 bg-gradient-to-r from-pink-600 to-orange-400 text-white font-bold rounded-xl hover:scale-105 transition"
-          >
-            Sign Up
-          </button>
-        </form>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <input
+                type={showPassword ? "text" : "password"}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                }}
+                placeholder="••••••••"
+              />
+            </div>
 
-        <div className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-orange-600 font-semibold hover:underline"
-          >
-            Log In
-          </Link>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+              <input
+                type={showPassword ? "text" : "password"}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setError("");
+                }}
+                placeholder="••••••••"
+              />
+              <div className="mt-2 flex items-center text-sm">
+                <input
+                  id="showPassword"
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)}
+                  className="mr-2"
+                />
+                <label htmlFor="showPassword" className="text-gray-600">
+                  Show Password
+                </label>
+              </div>
+            </div>
+
+            {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 text-white font-bold rounded-xl hover:scale-105 transition-all"
+            >
+              Sign Up
+            </button>
+          </form>
+
+          <p className="mt-4 text-center text-sm">
+            Already have an account?{" "}
+            <Link to="/login" className="text-orange-600 font-semibold hover:underline">
+              Log In
+            </Link>
+          </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
