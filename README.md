@@ -6,7 +6,7 @@ Find Your Vibe is a platform designed to help students connect with peers who sh
 
 ## 🚀 Features
 - **Interest-Based Connections**: Find people who share your hobbies, from gaming and sports to coding and music.
-- **Collaboration Hub**: Form teams for hackathons, coding projects, and other activities.
+- **Collaboration Hub**: Form teams for hackathons, coding projects, fun activites, movie watching, and other activities.
 - **User Profiles**: Showcase skills, past collaborations, and events attended.
 - **Level-Up System**: Gain experience and increase your level through collaborations.
 - **Light & Dark Mode**: Dynamic themes for user preference.
