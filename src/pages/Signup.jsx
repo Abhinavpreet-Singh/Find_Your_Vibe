@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar"; // Adjust path as needed
 
@@ -32,10 +33,15 @@ export default function Signup() {
         <Navbar />
       </div>
 
-      {/* Form Card */}
+      {/* Form Card with Animation */}
       <div className="flex-grow flex items-center justify-center w-full px-4 py-10">
-        <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-br from-[#a477ab] via-[#c36376] to-[#a477ab] drop-shadow-[0_0_10px_rgba(255,168,198,0.9)]">
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md"
+        >
+          <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-br from-[#a477ab] via-[#c36376] to-[#a477ab] drop-shadow-[0_0_10px_rgba(255,168,198,0.9)]">
             Create Your Account
           </h2>
 
@@ -124,7 +130,7 @@ export default function Signup() {
               Log In
             </Link>
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
