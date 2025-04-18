@@ -534,7 +534,7 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
                 <AnimatePresence>
                   {activeIcon === index && (
                     <motion.div
-                      className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 bg-white/90 backdrop-blur-sm rounded-md shadow-lg px-3 py-2 text-center w-max max-w-[160px] pointer-events-none"
+                      className="absolute left-0 top-0 bg-white/90 backdrop-blur-sm rounded-md shadow-lg px-3 py-2 text-center w-max max-w-[160px] pointer-events-none"
                       initial={{ opacity: 0, y: 10, scale: 0.8 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 5, scale: 0.9 }}
