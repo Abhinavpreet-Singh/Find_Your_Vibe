@@ -7,8 +7,8 @@ const Stats = () => {
 
   // Stats data with their final values
   const stats = [
-    { value: 1000, label: "Active Users", color: "#a477ab", suffix: "+" },
-    { value: 250, label: "Projects Created", color: "#edb04c", suffix: "+" },
+    { value: 100, label: "Active Users", color: "#a477ab", suffix: "+" },
+    { value: 25, label: "Projects Created", color: "#edb04c", suffix: "+" },
     { value: 50, label: "Hackathons Supported", color: "#c36376", suffix: "+" },
     { value: 100, label: "Satisfaction Rate", color: "gradient", suffix: "%" }
   ];
