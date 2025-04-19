@@ -9,8 +9,8 @@ const Stats = () => {
   const stats = [
     { value: 100, label: "Active Users", color: "#a477ab", suffix: "+" },
     { value: 25, label: "Projects Created", color: "#edb04c", suffix: "+" },
-    { value: 50, label: "Hackathons Supported", color: "#c36376", suffix: "+" },
-    { value: 100, label: "Satisfaction Rate", color: "gradient", suffix: "%" }
+    { value: 50, label: "Club Sessions", color: "#c36376", suffix: "+" },
+    { value: 100, label: "Events Held", color: "gradient", suffix: "+" }
   ];
 
   return (
