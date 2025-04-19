@@ -29,7 +29,7 @@ export default function Login() {
         className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md mt-4"
       >
         <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-orange-400 leading-relaxed">
-          Log in to Find Your Vibe
+          Log in to Continue
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-5">
@@ -74,7 +74,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-gradient-to-r from-pink-600 to-orange-400 text-white font-bold rounded-xl hover:scale-105 transition leading-normal tracking-wide"
+            className="w-full py-3 bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 text-white font-bold rounded-xl hover:scale-105 transition leading-normal tracking-wide"
           >
             Log In
           </button>
@@ -83,7 +83,7 @@ export default function Login() {
         <div className="mt-4 text-center text-sm">
           <Link
             to="/forgot-password"
-            className="text-purple-600 hover:underline"
+            className="text-orange-600  hover:underline"
           >
             Forgot Password?
           </Link>
