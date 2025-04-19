@@ -126,7 +126,8 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-lg text-gray-600 max-w-lg mb-8"
           >
-            Connect with like-minded individuals who share your passions
+            Connect with individuals who share your passions.
+            Build meaningful relationships and unlock endless opportunities 
             through our vibrant community platform.
           </motion.p>
           
