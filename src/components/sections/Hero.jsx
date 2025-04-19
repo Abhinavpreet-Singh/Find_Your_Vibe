@@ -302,7 +302,6 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
             >
               Find Your Vibe
             </motion.h3>
-            <p className="text-xs md:text-sm text-gray-600 mt-1">Connect & Thrive</p>
           </div>
           
           {/* Enhanced gradient border with animated glow */}
