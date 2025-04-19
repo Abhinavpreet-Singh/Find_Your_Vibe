@@ -300,9 +300,8 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
               }}
               style={{ backgroundSize: "300% 100%" }}
             >
-              Find Your Vibe
+              Connect & Thrive
             </motion.h3>
-            <p className="text-xs md:text-sm text-gray-600 mt-1">Connect & Thrive</p>
           </div>
           
           {/* Enhanced gradient border with animated glow */}
