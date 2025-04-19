@@ -8,9 +8,9 @@ const Hobbies = () => {
   // Hobby category cards with basic information
   const hobbyCategories = [
     {
-      id: 'tech',
+      id: 'Arts',
       emoji: '💻',
-      title: 'Tech & Hackathons',
+      title: 'Arts and Crafts',
       description: 'Form teams for competitions & collaborate on innovative projects',
       color: '#a477ab',
       tags: ['Team Building', 'Competitions', 'Projects']
