@@ -29,7 +29,7 @@ export default function Login() {
         className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md mt-4"
       >
         <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-orange-400 leading-relaxed">
-          Log in to Find Your Vibe
+          Log in to Continue
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-5">
