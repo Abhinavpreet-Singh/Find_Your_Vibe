@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX, FiChevronDown, FiArrowRight } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
-
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
+  const location = useLocation();
+  
+  // Check if we're on the home page
+  const isHomePage = location.pathname === '/' || location.pathname === '';
   
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +41,7 @@ const Navbar = () => {
     };
   }, [activeItem]);
 
-  // Smooth scroll function
+  // Smooth scroll function - only works on home page
   const handleSmoothScroll = (e, targetId) => {
     e.preventDefault();
     
@@ -47,26 +50,59 @@ const Navbar = () => {
       setIsMobileMenuOpen(false);
     }
     
-    const targetElement = document.querySelector(targetId);
-    
-    if (targetElement) {
-      // If clicking "Home", scroll to top with smooth behavior
-      if (targetId === '#hero') {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      } else {
-        // For other sections, scroll to the element with offset for navbar
-        const offset = 80; // Navbar height plus some padding
-        const elementPosition = targetElement.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
+    // Only perform smooth scroll on home page
+    if (isHomePage) {
+      const targetElement = document.querySelector(targetId);
+      
+      if (targetElement) {
+        // If clicking "Home", scroll to top with smooth behavior
+        if (targetId === '#hero') {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        } else {
+          // For other sections, scroll to the element with offset for navbar
+          const offset = 80; // Navbar height plus some padding
+          const elementPosition = targetElement.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
       }
+    } else {
+      // Navigate to home page with the target section as hash
+      window.location.href = '/' + targetId;
+    }
+  };
+
+  // Function to create appropriate link based on current page
+  const createNavLink = (targetId, label, onClick) => {
+    // If we're on the home page, use anchor with smooth scroll
+    if (isHomePage) {
+      return (
+        <a
+          href={targetId}
+          onClick={onClick}
+          className="px-4 py-2 text-gray-800 font-medium rounded-full flex items-center"
+        >
+          {label}
+        </a>
+      );
+    } 
+    // If on other pages, use Link to navigate to home page with hash
+    else {
+      return (
+        <Link
+          to={'/' + targetId}
+          className="px-4 py-2 text-gray-800 font-medium rounded-full flex items-center"
+        >
+          {label}
+        </Link>
+      );
     }
   };
 
@@ -108,39 +144,81 @@ const Navbar = () => {
               <nav>
                 <div className="flex items-center justify-between h-16 px-6">
                   {/* Logo */}
-                  <motion.a 
-                    href="#hero" 
+                  <motion.div 
                     className="flex items-center"
-                    onClick={(e) => handleSmoothScroll(e, "#hero")}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl shadow-md">
-                      <motion.div 
-                        animate={{ 
-                          scale: [1, 1.05, 1],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
+                    {isHomePage ? (
+                      <a 
+                        href="#hero" 
+                        onClick={(e) => handleSmoothScroll(e, "#hero")}
                       >
-                        FYV
-                      </motion.div>
-                    </div>
-                    <div className="ml-2">
-                      <div className="text-lg font-bold text-gray-800">
-                        Find Your <span className="text-[#be70a9]">Vibe</span>
-                      </div>
-                    </div>
-                  </motion.a>
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl shadow-md">
+                            <motion.div 
+                              animate={{ 
+                                scale: [1, 1.05, 1],
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }}
+                            >
+                              FYV
+                            </motion.div>
+                          </div>
+                          <div className="ml-2">
+                            <div className="text-lg font-bold text-gray-800">
+                              Find Your <span className="text-[#be70a9]">Vibe</span>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    ) : (
+                      <Link to="/">
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl shadow-md">
+                            <motion.div 
+                              animate={{ 
+                                scale: [1, 1.05, 1],
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }}
+                            >
+                              FYV
+                            </motion.div>
+                          </div>
+                          <div className="ml-2">
+                            <div className="text-lg font-bold text-gray-800">
+                              Find Your <span className="text-[#be70a9]">Vibe</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    )}
+                  </motion.div>
                   
                   {/* Desktop Navigation - Updated with your current sections */}
                   <div className="hidden md:flex items-center space-x-1">
-                    <NavItem href="#hero" label="Home" onClick={(e) => handleSmoothScroll(e, "#hero")} />
+                    <NavItem 
+                      href="#hero" 
+                      label="Home" 
+                      onClick={(e) => handleSmoothScroll(e, "#hero")} 
+                      isHomePage={isHomePage}
+                    />
                     
-                    <NavItem href="#stats" label="Stats" onClick={(e) => handleSmoothScroll(e, "#stats")} />
+                    <NavItem 
+                      href="#stats" 
+                      label="Stats" 
+                      onClick={(e) => handleSmoothScroll(e, "#stats")} 
+                      isHomePage={isHomePage}
+                    />
+                    
                     <NavDropdown 
                       label="Discover" 
                       items={[
@@ -155,66 +233,128 @@ const Navbar = () => {
                           onClick: (e) => handleSmoothScroll(e, "#activities") 
                         },
                       ]} 
+                      isHomePage={isHomePage}
                     />
-                    <NavItem href="#testimonials" label="Testimonials" onClick={(e) => handleSmoothScroll(e, "#testimonials")} />
-                    <NavItem href="#faq" label="FAQ" onClick={(e) => handleSmoothScroll(e, "#faq")} />
+                    
+                    <NavItem 
+                      href="#testimonials" 
+                      label="Testimonials" 
+                      onClick={(e) => handleSmoothScroll(e, "#testimonials")} 
+                      isHomePage={isHomePage}
+                    />
+                    
+                    <NavItem 
+                      href="#faq" 
+                      label="FAQ" 
+                      onClick={(e) => handleSmoothScroll(e, "#faq")} 
+                      isHomePage={isHomePage}
+                    />
                   </div>
                   
                   {/* Auth Buttons */}
                   <div className="hidden md:flex items-center space-x-3">
-                  <Link to="/login">
-                    <motion.button
-                      className="px-5 py-2 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      Log in
-                    </motion.button>
-                  </Link>
-
-                    <motion.div
-                      className="relative"
-                    >
-                      {/* Gradient border button */}
-                      <motion.div 
-                        className="absolute -inset-[1.5px] rounded-full z-0 overflow-hidden"
-                        animate={{
-                          backgroundPosition: ["0% 0%", "200% 200%"],
-                        }}
-                        transition={{
-                          repeat: Infinity,
-                          repeatType: "loop",
-                          duration: 8,
-                          ease: "linear"
-                        }}
-                        style={{
-                          background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-                          backgroundSize: "300% 100%",
-                        }}
-                      />
-                      <Link to="/signup">
+                    {location.pathname !== '/login' ? (
+                      <Link to="/login">
                         <motion.button
-                          className="relative px-5 py-2 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
+                          className="px-5 py-2 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
                         >
-                        <span className="flex items-center">
-                          Sign up
-                          <motion.div
-                            animate={{ x: [0, 3, 0] }}
-                            transition={{ 
-                              duration: 1.5, 
-                              repeat: Infinity,
-                              repeatType: "loop",
-                              ease: "easeInOut",
-                            }}
-                          >
-                            <FiArrowRight className="ml-1.5" />
-                          </motion.div>
-                        </span>
-                      </motion.button>
+                          Log in
+                        </motion.button>
                       </Link>
-                    </motion.div>
+                    ) : (
+                      <div className="relative">
+                        <motion.button
+                          className="relative px-5 py-2 rounded-full font-medium shadow-sm z-10 overflow-hidden"
+                          style={{
+                            background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
+                            backgroundSize: "300% 100%",
+                            color: "white"
+                          }}
+                          animate={{
+                            backgroundPosition: ["0% 0%", "200% 0%"],
+                          }}
+                          transition={{
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: 5,
+                            ease: "linear"
+                          }}
+                        >
+                          Log in
+                        </motion.button>
+                      </div>
+                    )}
+
+                    {location.pathname !== '/signup' ? (
+                      <motion.div className="relative">
+                        {/* Gradient border button */}
+                        <motion.div 
+                          className="absolute -inset-[1.5px] rounded-full z-0 overflow-hidden"
+                          animate={{
+                            backgroundPosition: ["0% 0%", "200% 200%"],
+                          }}
+                          transition={{
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: 8,
+                            ease: "linear"
+                          }}
+                          style={{
+                            background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                            backgroundSize: "300% 100%",
+                          }}
+                        />
+                        <Link to="/signup">
+                          <motion.button
+                            className="relative px-5 py-2 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                          >
+                            <span className="flex items-center">
+                              Sign up
+                              <motion.div
+                                animate={{ x: [0, 3, 0] }}
+                                transition={{ 
+                                  duration: 1.5, 
+                                  repeat: Infinity,
+                                  repeatType: "loop",
+                                  ease: "easeInOut",
+                                }}
+                              >
+                                <FiArrowRight className="ml-1.5" />
+                              </motion.div>
+                            </span>
+                          </motion.button>
+                        </Link>
+                      </motion.div>
+                    ) : (
+                      <div className="relative">
+                        <motion.button
+                          className="relative px-5 py-2 rounded-full font-medium shadow-sm z-10 overflow-hidden"
+                          style={{
+                            background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
+                            backgroundSize: "300% 100%",
+                            color: "white"
+                          }}
+                          animate={{
+                            backgroundPosition: ["0% 0%", "200% 0%"],
+                          }}
+                          transition={{
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: 5,
+                            ease: "linear"
+                          }}
+                        >
+                          <span className="flex items-center">
+                            Sign up
+                            <FiArrowRight className="ml-1.5" />
+                          </span>
+                        </motion.button>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Mobile Menu Button */}
@@ -288,9 +428,9 @@ const Navbar = () => {
                     }}
                   >
                     <SimpleMobileNavItem 
-                      to="/hero" 
+                      to={isHomePage ? "#hero" : "/"} 
                       label="Home" 
-                      onClick={(e) => handleSmoothScroll(e, "#hero")}
+                      onClick={isHomePage ? (e) => handleSmoothScroll(e, "#hero") : null}
                     />
                     <SimpleMobileNavDropdown 
                       label="Discover" 
@@ -337,41 +477,96 @@ const Navbar = () => {
                         }
                       }}
                     >
-                      <motion.button
-                        className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium"
-                        whileTap={{ scale: 0.97 }}
-                      >
-                        Log in
-                      </motion.button>
+                      {location.pathname !== '/login' ? (
+                        <Link to="/login">
+                          <motion.button
+                            className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium"
+                            whileTap={{ scale: 0.97 }}
+                          >
+                            Log in
+                          </motion.button>
+                        </Link>
+                      ) : (
+                        <div className="relative">
+                          <motion.button
+                            className="relative w-full py-3 rounded-full font-medium shadow-sm z-10 overflow-hidden"
+                            style={{
+                              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
+                              backgroundSize: "300% 100%",
+                              color: "white"
+                            }}
+                            animate={{
+                              backgroundPosition: ["0% 0%", "200% 0%"],
+                            }}
+                            transition={{
+                              repeat: Infinity,
+                              repeatType: "loop",
+                              duration: 5,
+                              ease: "linear"
+                            }}
+                          >
+                            Log in
+                          </motion.button>
+                        </div>
+                      )}
                       
-                      <div className="relative">
-                        {/* Gradient border */}
-                        <motion.div 
-                          className="absolute -inset-[2px] rounded-full z-0 overflow-hidden"
-                          animate={{
-                            backgroundPosition: ["0% 0%", "200% 200%"],
-                          }}
-                          transition={{
-                            repeat: Infinity,
-                            repeatType: "loop",
-                            duration: 8,
-                            ease: "linear"
-                          }}
-                          style={{
-                            background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-                            backgroundSize: "300% 100%",
-                          }}
-                        />
-                        <motion.button
-                          className="relative w-full py-3 rounded-full bg-white text-[#be70a9] font-medium z-10"
-                          whileTap={{ scale: 0.97 }}
-                        >
-                          <span className="flex items-center justify-center">
-                            Sign up
-                            <FiArrowRight className="ml-1.5" />
-                          </span>
-                        </motion.button>
-                      </div>
+                      {location.pathname !== '/signup' ? (
+                        <div className="relative">
+                          {/* Gradient border */}
+                          <motion.div 
+                            className="absolute -inset-[2px] rounded-full z-0 overflow-hidden"
+                            animate={{
+                              backgroundPosition: ["0% 0%", "200% 200%"],
+                            }}
+                            transition={{
+                              repeat: Infinity,
+                              repeatType: "loop",
+                              duration: 8,
+                              ease: "linear"
+                            }}
+                            style={{
+                              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                              backgroundSize: "300% 100%",
+                            }}
+                          />
+                          <Link to="/signup">
+                            <motion.button
+                              className="relative w-full py-3 rounded-full bg-white text-[#be70a9] font-medium z-10"
+                              whileTap={{ scale: 0.97 }}
+                            >
+                              <span className="flex items-center justify-center">
+                                Sign up
+                                <FiArrowRight className="ml-1.5" />
+                              </span>
+                            </motion.button>
+                          </Link>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <motion.button
+                            className="relative w-full py-3 rounded-full font-medium shadow-sm z-10 overflow-hidden"
+                            style={{
+                              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
+                              backgroundSize: "300% 100%",
+                              color: "white"
+                            }}
+                            animate={{
+                              backgroundPosition: ["0% 0%", "200% 0%"],
+                            }}
+                            transition={{
+                              repeat: Infinity,
+                              repeatType: "loop",
+                              duration: 5,
+                              ease: "linear"
+                            }}
+                          >
+                            <span className="flex items-center justify-center">
+                              Sign up
+                              <FiArrowRight className="ml-1.5" />
+                            </span>
+                          </motion.button>
+                        </div>
+                      )}
                     </motion.div>
                   </motion.div>
                 </div>
@@ -397,8 +592,11 @@ const Navbar = () => {
 };
 
 // Desktop Nav Item with animated gradient underline
-const NavItem = ({ href, label, onClick }) => {
+const NavItem = ({ href, label, onClick, isHomePage }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const location = useLocation();
+  const isActive = href === "#login" && location.pathname === '/login' || 
+                   href === "#signup" && location.pathname === '/signup';
 
   return (
     <div 
@@ -406,20 +604,30 @@ const NavItem = ({ href, label, onClick }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <a
-        href={href}
-        onClick={onClick}
-        className="px-4 py-2 text-gray-800 font-medium rounded-full flex items-center"
-      >
-        {label}
-      </a>
+      {isHomePage ? (
+        <a
+          href={href}
+          onClick={onClick}
+          className={`px-4 py-2 font-medium rounded-full flex items-center ${isActive ? 'text-[#be70a9]' : 'text-gray-800'}`}
+        >
+          {label}
+        </a>
+      ) : (
+        <Link
+          to={'/' + href}
+          state={{ scrollToSection: href }}
+          className={`px-4 py-2 font-medium rounded-full flex items-center ${isActive ? 'text-[#be70a9]' : 'text-gray-800'}`}
+        >
+          {label}
+        </Link>
+      )}
       
       {/* Animated Gradient Underline */}
       <div className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] overflow-hidden">
         <motion.div 
           className="absolute inset-0 rounded-full overflow-hidden"
           initial={{ scaleX: 0 }}
-          animate={{ scaleX: isHovered ? 1 : 0 }}
+          animate={{ scaleX: isHovered || isActive ? 1 : 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
           <motion.div 
@@ -530,7 +738,7 @@ const NavDropdown = ({ label, items }) => {
               
               <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
                 {items.map((item, i) => (
-                  <DropdownItem key={i} href={item.href} label={item.label} onClick={item.onClick} />
+                  <DropdownItem key={i} href={item.href} label={item.label} onClick={item.onClick} isHomePage={isHomePage} />
                 ))}
               </div>
             </div>
@@ -540,7 +748,6 @@ const NavDropdown = ({ label, items }) => {
     </div>
   );
 };
-
 const DropdownItem = ({ href, label, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   
@@ -550,13 +757,23 @@ const DropdownItem = ({ href, label, onClick }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <a
-        href={href}
-        onClick={onClick}
-        className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5"
-      >
-        {label}
-      </a>
+      {isHomePage ? (
+        <a
+          href={href}
+          onClick={onClick}
+          className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5"
+        >
+          {label}
+        </a>
+      ) : (
+        <Link
+          to={'/' + href}
+          state={{ scrollToSection: href }}
+          className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5"
+        >
+          {label}
+        </Link>
+      )}
       
       {/* Animated Gradient Underline */}
       <div className="absolute bottom-0.5 left-4 right-4 h-[1px] overflow-hidden">
@@ -588,10 +805,11 @@ const DropdownItem = ({ href, label, onClick }) => {
   );
 };
 
-// Simplified mobile nav item without underline animations
-
-
+// Simplified mobile nav item 
 const SimpleMobileNavItem = ({ to, label, onClick }) => {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/' || location.pathname === '';
+  
   return (
     <motion.div
       variants={{
@@ -599,21 +817,32 @@ const SimpleMobileNavItem = ({ to, label, onClick }) => {
         closed: { opacity: 0, y: 20 }
       }}
     >
-      <Link
-        to={to}
-        onClick={onClick}
-        className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
-      >
-        {label}
-      </Link>
+      {isHomePage && onClick ? (
+        <a
+          href={to}
+          onClick={onClick}
+          className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
+        >
+          {label}
+        </a>
+      ) : (
+        <Link
+          to={to.startsWith('#') ? '/' + to : to}
+          state={{ scrollToSection: to.startsWith('#') ? to : null }}
+          className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
+        >
+          {label}
+        </Link>
+      )}
     </motion.div>
   );
 };
 
-
 // Simplified mobile nav dropdown without underline animations
 const SimpleMobileNavDropdown = ({ label, items }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/' || location.pathname === '';
   
   return (
     <motion.div
@@ -647,13 +876,23 @@ const SimpleMobileNavDropdown = ({ label, items }) => {
           >
             {items.map((item, i) => (
               <div key={i}>
-                <a
-                  href={item.href}
-                  onClick={item.onClick}
-                  className="block py-3 px-3 rounded-lg hover:bg-[#a477ab]/5 text-gray-700"
-                >
-                  {item.label}
-                </a>
+                {isHomePage && item.onClick ? (
+                  <a
+                    href={item.href}
+                    onClick={item.onClick}
+                    className="block py-3 px-3 rounded-lg hover:bg-[#a477ab]/5 text-gray-700"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link
+                    to={item.href.startsWith('#') ? '/' + item.href : item.href}
+                    state={{ scrollToSection: item.href }}
+                    className="block py-3 px-3 rounded-lg hover:bg-[#a477ab]/5 text-gray-700"
+                  >
+                    {item.label}
+                  </Link>
+                )}
               </div>
             ))}
           </motion.div>
