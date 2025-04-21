@@ -444,7 +444,7 @@ const NavItem = ({ href, label, onClick }) => {
   );
 };
 
-// Desktop Nav Dropdown with animated gradient underline
+// Desktop Nav with animated gradient underline
 const NavDropdown = ({ label, items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -541,7 +541,6 @@ const NavDropdown = ({ label, items }) => {
   );
 };
 
-// Dropdown item with animated gradient underline
 const DropdownItem = ({ href, label, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   
