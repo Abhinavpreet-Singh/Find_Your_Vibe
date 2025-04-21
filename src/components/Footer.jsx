@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { FiGithub, FiInstagram, FiLinkedin, FiMail, FiArrowRight, FiHeart } from 'react-icons/fi';
+import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import { FiGithub, FiInstagram, FiLinkedin, FiMail, FiArrowRight, FiHeart, FiCheck } from 'react-icons/fi';
 import { useTheme } from '../context/ThemeContext';
 
 // Custom X logo component (Twitter rebrand)
@@ -129,6 +129,37 @@ const Footer = () => {
 
   // Button hover state
   const [buttonHovered, setButtonHovered] = useState(false);
+  
+  // Email subscription states
+  const [email, setEmail] = useState('');
+  const [subscriptionStatus, setSubscriptionStatus] = useState('idle'); // idle, submitting, success, error
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Handle email submission
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setSubscriptionStatus('error');
+      setErrorMessage('Please enter a valid email address');
+      return;
+    }
+    
+    setSubscriptionStatus('submitting');
+    
+    // Simulate API call with timeout
+    setTimeout(() => {
+      setSubscriptionStatus('success');
+      setEmail('');
+      
+      // Reset after 5 seconds
+      setTimeout(() => {
+        setSubscriptionStatus('idle');
+      }, 5000);
+    }, 800);
+  };
 
   return (
     <footer className="bg-white pt-24 pb-12 px-4 md:px-6 lg:px-10 relative overflow-hidden">
@@ -290,11 +321,16 @@ const Footer = () => {
                   </p>
                 </div>
                 <div className="md:w-1/2">
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
                     <input 
                       type="email" 
                       placeholder="Enter your email address" 
-                      className="flex-1 px-5 py-4 rounded-lg bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a477ab] text-gray-800"
+                      className={`flex-1 px-5 py-4 rounded-lg bg-white border ${
+                        subscriptionStatus === 'error' ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-[#a477ab]'
+                      } focus:outline-none focus:ring-2 text-gray-800`}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={subscriptionStatus === 'submitting' || subscriptionStatus === 'success'}
                     />
                     {/* Button with CTA-matching style */}
                     <div className="relative">
@@ -317,6 +353,7 @@ const Footer = () => {
                       />
                       
                       <motion.button
+                        type="submit"
                         className="relative px-6 py-4 bg-white text-[#a477ab] font-medium rounded-lg shadow-md flex items-center justify-center whitespace-nowrap z-10"
                         onHoverStart={() => setButtonHovered(true)}
                         onHoverEnd={() => setButtonHovered(false)}
@@ -325,23 +362,41 @@ const Footer = () => {
                           boxShadow: "0 15px 30px rgba(0,0,0,0.2)"
                         }}
                         whileTap={{ scale: 0.97 }}
+                        disabled={subscriptionStatus === 'submitting' || subscriptionStatus === 'success'}
                       >
                         <div className="flex items-center justify-center gap-2">
-                          <span className="font-medium">
-                            Subscribe
-                          </span>
-                          <motion.div
-                            animate={{ 
-                              x: buttonHovered ? 5 : 0,
-                              transition: { type: "spring", stiffness: 300 }
-                            }}
-                          >
-                            <FiArrowRight />
-                          </motion.div>
+                          {subscriptionStatus === 'submitting' ? (
+                            <span className="flex items-center">
+                              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#a477ab]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Processing...
+                            </span>
+                          ) : subscriptionStatus === 'success' ? (
+                            <span className="flex items-center">
+                              <FiCheck className="mr-1" />
+                              Subscribed!
+                            </span>
+                          ) : (
+                            <>
+                              <span className="font-medium">
+                                Subscribe
+                              </span>
+                              <motion.div
+                                animate={{ 
+                                  x: buttonHovered ? 5 : 0,
+                                  transition: { type: "spring", stiffness: 300 }
+                                }}
+                              >
+                                <FiArrowRight />
+                              </motion.div>
+                            </>
+                          )}
                         </div>
                         
                         {/* Moving highlight effect */}
-                        {buttonHovered && (
+                        {buttonHovered && subscriptionStatus !== 'success' && (
                           <motion.div
                             className="absolute top-0 left-0 w-full h-[150%] bg-white/30 -skew-y-12"
                             initial={{ top: "-150%" }}
@@ -361,7 +416,67 @@ const Footer = () => {
                         }}
                       />
                     </div>
-                  </div>
+                  </form>
+                  
+                  {/* Error message */}
+                  {subscriptionStatus === 'error' && (
+                    <p className="text-red-500 text-xs mt-2">
+                      {errorMessage}
+                    </p>
+                  )}
+                  
+                  {/* Success message */}
+                  <AnimatePresence>
+                    {subscriptionStatus === 'success' && (
+                      <motion.div 
+                        className="mt-4 p-4 bg-gradient-to-r from-[#a477ab]/20 to-[#edb04c]/20 rounded-lg"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        <div className="flex items-start">
+                          <div className="flex-shrink-0 bg-gradient-to-r from-[#a477ab] to-[#c36376] p-2 rounded-lg">
+                            <FiCheck className="text-white" />
+                          </div>
+                          <div className="ml-3">
+                            <h3 className="text-lg font-medium text-gray-800">Your vibe has been received!</h3>
+                            <div className="mt-1 text-sm text-gray-600">
+                              <p>Get ready for good vibes in your inbox. We'll share upcoming events, collaborations, and creative opportunities tailored to your interests.</p>
+                            </div>
+                            <div className="mt-2">
+                              <motion.div
+                                className="inline-flex"
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ 
+                                  delay: 0.2,
+                                  type: "spring", 
+                                  stiffness: 300 
+                                }}
+                              >
+                                {[...Array(5)].map((_, i) => (
+                                  <motion.span 
+                                    key={i}
+                                    className="text-[#edb04c]"
+                                    initial={{ rotate: 0 }}
+                                    animate={{ rotate: [0, 15, -15, 0] }}
+                                    transition={{
+                                      delay: 0.3 + (i * 0.1),
+                                      duration: 0.6,
+                                      ease: "easeInOut"
+                                    }}
+                                  >
+                                    ✨
+                                  </motion.span>
+                                ))}
+                              </motion.div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  
                   <p className="text-xs text-gray-500 mt-3">
                     We respect your privacy. Unsubscribe at any time.
                   </p>
