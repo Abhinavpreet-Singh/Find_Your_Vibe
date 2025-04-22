@@ -5,9 +5,6 @@ import { FiCalendar, FiMapPin, FiUsers, FiCheck, FiArrowRight } from 'react-icon
 const Activities = () => {
   const [activeTab, setActiveTab] = useState('join');
   
-  // Current time (not displayed, just for reference)
-  const currentTime = "2025-03-23 13:20:48";
-  
   // Sample upcoming activities
   const upcomingActivities = [
     {
