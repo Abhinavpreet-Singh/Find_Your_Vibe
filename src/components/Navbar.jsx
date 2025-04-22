@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX, FiChevronDown, FiArrowRight } from 'react-icons/fi';
-import { Link, useLocation } from 'react-router-dom';
+import { FiMenu, FiX, FiChevronDown, FiArrowRight, FiUser, FiLogOut } from 'react-icons/fi';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
   
   // Check if we're on the home page
   const isHomePage = location.pathname === '/' || location.pathname === '';
@@ -33,13 +37,26 @@ const Navbar = () => {
       if (activeItem && !event.target.closest('.nav-dropdown')) {
         setActiveItem(null);
       }
+      if (userMenuOpen && !event.target.closest('.user-menu-dropdown')) {
+        setUserMenuOpen(false);
+      }
     };
     
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [activeItem]);
+  }, [activeItem, userMenuOpen]);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+      setUserMenuOpen(false);
+    } catch (error) {
+      console.error('Failed to log out:', error);
+    }
+  };
 
   // Smooth scroll function - only works on home page
   const handleSmoothScroll = (e, targetId) => {
@@ -253,107 +270,172 @@ const Navbar = () => {
                   
                   {/* Auth Buttons */}
                   <div className="hidden md:flex items-center space-x-3">
-                    {location.pathname !== '/login' ? (
-                      <Link to="/login">
+                    {currentUser ? (
+                      <div className="relative user-menu-dropdown">
                         <motion.button
-                          className="px-5 py-2 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
+                          onClick={() => setUserMenuOpen(!userMenuOpen)}
+                          className="flex items-center space-x-2 px-4 py-2 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
                         >
-                          Log in
-                        </motion.button>
-                      </Link>
-                    ) : (
-                      <div className="relative">
-                        <motion.button
-                          className="relative px-5 py-2 rounded-full font-medium shadow-sm z-10 overflow-hidden"
-                          style={{
-                            background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
-                            backgroundSize: "300% 100%",
-                            color: "white"
-                          }}
-                          animate={{
-                            backgroundPosition: ["0% 0%", "200% 0%"],
-                          }}
-                          transition={{
-                            repeat: Infinity,
-                            repeatType: "loop",
-                            duration: 5,
-                            ease: "linear"
-                          }}
-                        >
-                          Log in
-                        </motion.button>
-                      </div>
-                    )}
-
-                    {location.pathname !== '/signup' ? (
-                      <motion.div className="relative">
-                        {/* Gradient border button */}
-                        <motion.div 
-                          className="absolute -inset-[1.5px] rounded-full z-0 overflow-hidden"
-                          animate={{
-                            backgroundPosition: ["0% 0%", "200% 200%"],
-                          }}
-                          transition={{
-                            repeat: Infinity,
-                            repeatType: "loop",
-                            duration: 8,
-                            ease: "linear"
-                          }}
-                          style={{
-                            background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-                            backgroundSize: "300% 100%",
-                          }}
-                        />
-                        <Link to="/signup">
-                          <motion.button
-                            className="relative px-5 py-2 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
+                          <FiUser size={18} />
+                          <span>{currentUser.email?.split('@')[0] || 'User'}</span>
+                          <motion.div
+                            animate={{ rotate: userMenuOpen ? 180 : 0 }}
+                            transition={{ duration: 0.2 }}
                           >
-                            <span className="flex items-center">
-                              Sign up
-                              <motion.div
-                                animate={{ x: [0, 3, 0] }}
-                                transition={{ 
-                                  duration: 1.5, 
-                                  repeat: Infinity,
-                                  repeatType: "loop",
-                                  ease: "easeInOut",
-                                }}
-                              >
-                                <FiArrowRight className="ml-1.5" />
-                              </motion.div>
-                            </span>
-                          </motion.button>
-                        </Link>
-                      </motion.div>
-                    ) : (
-                      <div className="relative">
-                        <motion.button
-                          className="relative px-5 py-2 rounded-full font-medium shadow-sm z-10 overflow-hidden"
-                          style={{
-                            background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
-                            backgroundSize: "300% 100%",
-                            color: "white"
-                          }}
-                          animate={{
-                            backgroundPosition: ["0% 0%", "200% 0%"],
-                          }}
-                          transition={{
-                            repeat: Infinity,
-                            repeatType: "loop",
-                            duration: 5,
-                            ease: "linear"
-                          }}
-                        >
-                          <span className="flex items-center">
-                            Sign up
-                            <FiArrowRight className="ml-1.5" />
-                          </span>
+                            <FiChevronDown className="ml-1" />
+                          </motion.div>
                         </motion.button>
+                        
+                        <AnimatePresence>
+                          {userMenuOpen && (
+                            <motion.div
+                              className="absolute right-0 mt-2 w-48 z-10"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 10 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <div className="relative">
+                                <motion.div 
+                                  className="absolute -inset-[3px] rounded-xl z-0 overflow-hidden"
+                                  animate={{
+                                    backgroundPosition: ["0% 0%", "200% 200%"],
+                                  }}
+                                  transition={{
+                                    repeat: Infinity,
+                                    repeatType: "loop",
+                                    duration: 8,
+                                    ease: "linear"
+                                  }}
+                                  style={{
+                                    background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                                    backgroundSize: "300% 100%",
+                                  }}
+                                />
+                                
+                                <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
+                                  <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
+                                    Profile
+                                  </Link>
+                                  <button
+                                    onClick={handleLogout}
+                                    className="w-full text-left px-4 py-2 text-gray-700 hover:text-red-600 hover:bg-red-50 flex items-center"
+                                  >
+                                    <FiLogOut className="mr-2" /> Log out
+                                  </button>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
+                    ) : (
+                      <>
+                        {location.pathname !== '/login' ? (
+                          <Link to="/login">
+                            <motion.button
+                              className="px-5 py-2 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
+                              whileHover={{ scale: 1.03 }}
+                              whileTap={{ scale: 0.97 }}
+                            >
+                              Log in
+                            </motion.button>
+                          </Link>
+                        ) : (
+                          <div className="relative">
+                            <motion.button
+                              className="relative px-5 py-2 rounded-full font-medium shadow-sm z-10 overflow-hidden"
+                              style={{
+                                background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
+                                backgroundSize: "300% 100%",
+                                color: "white"
+                              }}
+                              animate={{
+                                backgroundPosition: ["0% 0%", "200% 0%"],
+                              }}
+                              transition={{
+                                repeat: Infinity,
+                                repeatType: "loop",
+                                duration: 5,
+                                ease: "linear"
+                              }}
+                            >
+                              Log in
+                            </motion.button>
+                          </div>
+                        )}
+
+                        {location.pathname !== '/signup' ? (
+                          <motion.div className="relative">
+                            {/* Gradient border button */}
+                            <motion.div 
+                              className="absolute -inset-[1.5px] rounded-full z-0 overflow-hidden"
+                              animate={{
+                                backgroundPosition: ["0% 0%", "200% 200%"],
+                              }}
+                              transition={{
+                                repeat: Infinity,
+                                repeatType: "loop",
+                                duration: 8,
+                                ease: "linear"
+                              }}
+                              style={{
+                                background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                                backgroundSize: "300% 100%",
+                              }}
+                            />
+                            <Link to="/signup">
+                              <motion.button
+                                className="relative px-5 py-2 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.97 }}
+                              >
+                                <span className="flex items-center">
+                                  Sign up
+                                  <motion.div
+                                    animate={{ x: [0, 3, 0] }}
+                                    transition={{ 
+                                      duration: 1.5, 
+                                      repeat: Infinity,
+                                      repeatType: "loop",
+                                      ease: "easeInOut",
+                                    }}
+                                  >
+                                    <FiArrowRight className="ml-1.5" />
+                                  </motion.div>
+                                </span>
+                              </motion.button>
+                            </Link>
+                          </motion.div>
+                        ) : (
+                          <div className="relative">
+                            <motion.button
+                              className="relative px-5 py-2 rounded-full font-medium shadow-sm z-10 overflow-hidden"
+                              style={{
+                                background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
+                                backgroundSize: "300% 100%",
+                                color: "white"
+                              }}
+                              animate={{
+                                backgroundPosition: ["0% 0%", "200% 0%"],
+                              }}
+                              transition={{
+                                repeat: Infinity,
+                                repeatType: "loop",
+                                duration: 5,
+                                ease: "linear"
+                              }}
+                            >
+                              <span className="flex items-center">
+                                Sign up
+                                <FiArrowRight className="ml-1.5" />
+                              </span>
+                            </motion.button>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                   
@@ -477,95 +559,117 @@ const Navbar = () => {
                         }
                       }}
                     >
-                      {location.pathname !== '/login' ? (
-                        <Link to="/login">
-                          <motion.button
-                            className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium"
-                            whileTap={{ scale: 0.97 }}
-                          >
-                            Log in
-                          </motion.button>
-                        </Link>
-                      ) : (
-                        <div className="relative">
-                          <motion.button
-                            className="relative w-full py-3 rounded-full font-medium shadow-sm z-10 overflow-hidden"
-                            style={{
-                              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
-                              backgroundSize: "300% 100%",
-                              color: "white"
-                            }}
-                            animate={{
-                              backgroundPosition: ["0% 0%", "200% 0%"],
-                            }}
-                            transition={{
-                              repeat: Infinity,
-                              repeatType: "loop",
-                              duration: 5,
-                              ease: "linear"
-                            }}
-                          >
-                            Log in
-                          </motion.button>
-                        </div>
-                      )}
-                      
-                      {location.pathname !== '/signup' ? (
-                        <div className="relative">
-                          {/* Gradient border */}
-                          <motion.div 
-                            className="absolute -inset-[2px] rounded-full z-0 overflow-hidden"
-                            animate={{
-                              backgroundPosition: ["0% 0%", "200% 200%"],
-                            }}
-                            transition={{
-                              repeat: Infinity,
-                              repeatType: "loop",
-                              duration: 8,
-                              ease: "linear"
-                            }}
-                            style={{
-                              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-                              backgroundSize: "300% 100%",
-                            }}
-                          />
-                          <Link to="/signup">
+                      {currentUser ? (
+                        <>
+                          <Link to="/profile">
                             <motion.button
-                              className="relative w-full py-3 rounded-full bg-white text-[#be70a9] font-medium z-10"
+                              className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium flex items-center justify-center"
                               whileTap={{ scale: 0.97 }}
                             >
-                              <span className="flex items-center justify-center">
-                                Sign up
-                                <FiArrowRight className="ml-1.5" />
-                              </span>
+                              <FiUser className="mr-2" /> My Profile
                             </motion.button>
                           </Link>
-                        </div>
-                      ) : (
-                        <div className="relative">
-                          <motion.button
-                            className="relative w-full py-3 rounded-full font-medium shadow-sm z-10 overflow-hidden"
-                            style={{
-                              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
-                              backgroundSize: "300% 100%",
-                              color: "white"
-                            }}
-                            animate={{
-                              backgroundPosition: ["0% 0%", "200% 0%"],
-                            }}
-                            transition={{
-                              repeat: Infinity,
-                              repeatType: "loop",
-                              duration: 5,
-                              ease: "linear"
-                            }}
+                          <button
+                            onClick={handleLogout}
+                            className="w-full py-3 rounded-full bg-red-50 text-red-600 border border-red-200 font-medium flex items-center justify-center"
+                            whileTap={{ scale: 0.97 }}
                           >
-                            <span className="flex items-center justify-center">
-                              Sign up
-                              <FiArrowRight className="ml-1.5" />
-                            </span>
-                          </motion.button>
-                        </div>
+                            <FiLogOut className="mr-2" /> Log out
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          {location.pathname !== '/login' ? (
+                            <Link to="/login">
+                              <motion.button
+                                className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium"
+                                whileTap={{ scale: 0.97 }}
+                              >
+                                Log in
+                              </motion.button>
+                            </Link>
+                          ) : (
+                            <div className="relative">
+                              <motion.button
+                                className="relative w-full py-3 rounded-full font-medium shadow-sm z-10 overflow-hidden"
+                                style={{
+                                  background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
+                                  backgroundSize: "300% 100%",
+                                  color: "white"
+                                }}
+                                animate={{
+                                  backgroundPosition: ["0% 0%", "200% 0%"],
+                                }}
+                                transition={{
+                                  repeat: Infinity,
+                                  repeatType: "loop",
+                                  duration: 5,
+                                  ease: "linear"
+                                }}
+                              >
+                                Log in
+                              </motion.button>
+                            </div>
+                          )}
+                          
+                          {location.pathname !== '/signup' ? (
+                            <div className="relative">
+                              {/* Gradient border */}
+                              <motion.div 
+                                className="absolute -inset-[2px] rounded-full z-0 overflow-hidden"
+                                animate={{
+                                  backgroundPosition: ["0% 0%", "200% 200%"],
+                                }}
+                                transition={{
+                                  repeat: Infinity,
+                                  repeatType: "loop",
+                                  duration: 8,
+                                  ease: "linear"
+                                }}
+                                style={{
+                                  background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                                  backgroundSize: "300% 100%",
+                                }}
+                              />
+                              <Link to="/signup">
+                                <motion.button
+                                  className="relative w-full py-3 rounded-full bg-white text-[#be70a9] font-medium z-10"
+                                  whileTap={{ scale: 0.97 }}
+                                >
+                                  <span className="flex items-center justify-center">
+                                    Sign up
+                                    <FiArrowRight className="ml-1.5" />
+                                  </span>
+                                </motion.button>
+                              </Link>
+                            </div>
+                          ) : (
+                            <div className="relative">
+                              <motion.button
+                                className="relative w-full py-3 rounded-full font-medium shadow-sm z-10 overflow-hidden"
+                                style={{
+                                  background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
+                                  backgroundSize: "300% 100%",
+                                  color: "white"
+                                }}
+                                animate={{
+                                  backgroundPosition: ["0% 0%", "200% 0%"],
+                                }}
+                                transition={{
+                                  repeat: Infinity,
+                                  repeatType: "loop",
+                                  duration: 5,
+                                  ease: "linear"
+                                }}
+                              >
+                                <span className="flex items-center justify-center">
+                                  Sign up
+                                  <FiArrowRight className="ml-1.5" />
+                                </span>
+                              </motion.button>
+                            </div>
+                          )}
+                        </>
                       )}
                     </motion.div>
                   </motion.div>
