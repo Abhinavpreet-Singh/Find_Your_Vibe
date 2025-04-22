@@ -5,7 +5,6 @@ import { FiChevronDown, FiInfo, FiUsers, FiDollarSign, FiTrendingUp, FiCalendar,
 const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState(null);
   
-  // Color theme
   const colors = {
     lavender: "#be70a9",
     red: "#c36376",

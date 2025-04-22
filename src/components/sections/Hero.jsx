@@ -1,15 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
+import {Link, useNavigate } from 'react-router-dom';
 
 const Hero = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hoverIcon, setHoverIcon] = useState(null);
   const orbitRef = useRef(null);
-  
+  const navigate = useNavigate();
+
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+
+  // Function to handle navigation to signup page
+  const handleGetStarted = () => {
+    navigate('/signup');
+  };
+
+  // Function to scroll to hobbies section
+  const scrollToHobbies = (e) => {
+    e.preventDefault();
+    const hobbiesSection = document.getElementById('hobbies');
+    if (hobbiesSection) {
+      hobbiesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <section id="hero" className="relative pt-24 pb-20 md:pt-28 md:pb-28 px-4 overflow-hidden">
@@ -162,8 +178,11 @@ const Hero = () => {
                 }}
               />
               
-              {/* Button content */}
-              <button className="relative px-7 py-4 rounded-full bg-white shadow-md z-10 flex items-center gap-2 transition-all duration-300 group-hover:bg-gray-50">
+{/* Button content */}
+              <button 
+                className="relative px-7 py-4 rounded-full bg-white shadow-md z-10 flex items-center gap-2 transition-all duration-300 group-hover:bg-gray-50"
+                onClick={handleGetStarted}
+              >
                 <span className="font-semibold text-lg text-[#a477ab]">Get Started Now</span>
                 <motion.div
                   animate={{ x: [0, 5, 0] }}
@@ -183,6 +202,7 @@ const Hero = () => {
               href="#explore"
               className="text-[#a477ab] font-medium text-lg flex items-center gap-1 relative group overflow-hidden"
               whileHover={{ scale: 1.05 }}
+              onClick= {scrollToHobbies}
             >
               <span>Explore Interests</span>
               <motion.span
