@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
 import Loader from './components/Loader';
 
 // Protected Route Component
@@ -16,6 +17,25 @@ const ProtectedRoute = ({ children }) => {
   
   if (!currentUser) {
     return <Navigate to="/login" />;
+  }
+  
+  return children;
+};
+
+// Protected Route that requires completed profile
+const ProfileProtectedRoute = ({ children }) => {
+  const { currentUser, loading, profileCompleted } = useAuth();
+  
+  if (loading) {
+    return <Loader />;
+  }
+  
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
+  
+  if (!profileCompleted) {
+    return <Navigate to="/profile" />;
   }
   
   return children;
@@ -62,13 +82,23 @@ function App() {
             } 
           />
           
-          {/* Protected routes - require authentication */}
+          {/* Profile route - requires authentication but not completed profile */}
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Protected routes - require authentication AND completed profile */}
           <Route 
             path="/dashboard" 
             element={
-              <ProtectedRoute>
+              <ProfileProtectedRoute>
                 <Dashboard />
-              </ProtectedRoute>
+              </ProfileProtectedRoute>
             } 
           />
           

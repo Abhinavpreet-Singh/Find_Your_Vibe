@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
+import { getUserProfile } from "../firebase/profileService";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,8 +11,30 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login, googleSignIn, githubSignIn } = useAuth();
+  const { login, googleSignIn, githubSignIn, currentUser } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    const checkUserStatus = async () => {
+      if (currentUser) {
+        try {
+          const userProfile = await getUserProfile(currentUser.uid);
+          if (userProfile && !userProfile.completedProfile) {
+            // If user has not completed profile setup
+            navigate("/profile");
+          } else {
+            // Profile is complete, redirect to dashboard
+            navigate("/dashboard");
+          }
+        } catch (error) {
+          console.error("Error checking user profile:", error);
+        }
+      }
+    };
+
+    checkUserStatus();
+  }, [currentUser, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,8 +46,15 @@ export default function Login() {
     try {
       setError("");
       setLoading(true);
-      await login(email, password);
-      navigate("/dashboard"); // Redirect to dashboard page after successful login
+      const result = await login(email, password);
+      
+      // Check if user has completed their profile
+      const userProfile = await getUserProfile(result.user.uid);
+      if (userProfile && !userProfile.completedProfile) {
+        navigate("/profile");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       setError(error.message.includes("auth/") 
         ? "Invalid email or password. Please try again." 
@@ -39,8 +69,15 @@ export default function Login() {
     try {
       setError("");
       setLoading(true);
-      await googleSignIn();
-      navigate("/dashboard");
+      const result = await googleSignIn();
+      
+      // Check if user has completed their profile
+      const userProfile = await getUserProfile(result.user.uid);
+      if (!userProfile || !userProfile.completedProfile) {
+        navigate("/profile");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       setError("Failed to sign in with Google. Please try again.");
       console.error("Google sign-in error:", error);
@@ -53,8 +90,15 @@ export default function Login() {
     try {
       setError("");
       setLoading(true);
-      await githubSignIn();
-      navigate("/dashboard");
+      const result = await githubSignIn();
+      
+      // Check if user has completed their profile
+      const userProfile = await getUserProfile(result.user.uid);
+      if (!userProfile || !userProfile.completedProfile) {
+        navigate("/profile");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       setError("Failed to sign in with GitHub. Please try again.");
       console.error("GitHub sign-in error:", error);

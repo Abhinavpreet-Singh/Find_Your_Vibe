@@ -10,6 +10,7 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth } from '../firebase/config';
+import { getUserProfile, saveUserProfile } from '../firebase/profileService';
 import Loader from '../components/Loader';
 
 const AuthContext = createContext();
@@ -21,10 +22,25 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [profileCompleted, setProfileCompleted] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+      
+      if (user) {
+        // Check if user has completed their profile
+        try {
+          const userProfile = await getUserProfile(user.uid);
+          setProfileCompleted(userProfile?.completedProfile === true);
+        } catch (error) {
+          console.error("Error checking profile completion:", error);
+          setProfileCompleted(false);
+        }
+      } else {
+        setProfileCompleted(false);
+      }
+      
       setLoading(false);
     });
 
@@ -33,38 +49,124 @@ export function AuthProvider({ children }) {
 
   // Email/Password Sign Up
   async function signup(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+    try {
+      console.log("Attempting to create user with email:", email);
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Initialize an empty profile for the new user
+      await saveUserProfile(result.user.uid, { 
+        email: result.user.email,
+        displayName: result.user.displayName || '',
+        createdAt: new Date().toISOString(),
+        completedProfile: false
+      });
+      
+      return result;
+    } catch (error) {
+      console.error("Signup error:", error.code, error.message);
+      throw error;
+    }
   }
 
   // Email/Password Login
   async function login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+    try {
+      console.log("Attempting to login with email:", email);
+      return await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error("Login error:", error.code, error.message);
+      throw error;
+    }
   }
 
   // Google Sign In
   async function googleSignIn() {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    try {
+      console.log("Setting up Google auth provider");
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      console.log("Initiating Google popup sign-in");
+      const result = await signInWithPopup(auth, provider);
+      
+      // Check if this is a new user or existing user without a profile
+      const userProfile = await getUserProfile(result.user.uid);
+      if (!userProfile) {
+        // Initialize a profile for this Google user
+        await saveUserProfile(result.user.uid, {
+          email: result.user.email,
+          displayName: result.user.displayName || '',
+          profileImage: result.user.photoURL || '',
+          createdAt: new Date().toISOString(),
+          completedProfile: false
+        });
+      }
+      
+      return result;
+    } catch (error) {
+      console.error("Google Sign-in error:", error.code, error.message);
+      if (error.code === 'auth/popup-blocked') {
+        console.error("Popup was blocked by the browser");
+      }
+      throw error;
+    }
   }
 
   // GitHub Sign In
   async function githubSignIn() {
-    const provider = new GithubAuthProvider();
-    return signInWithPopup(auth, provider);
+    try {
+      console.log("Setting up GitHub auth provider");
+      const provider = new GithubAuthProvider();
+      console.log("Initiating GitHub popup sign-in");
+      const result = await signInWithPopup(auth, provider);
+      
+      // Check if this is a new user or existing user without a profile
+      const userProfile = await getUserProfile(result.user.uid);
+      if (!userProfile) {
+        // Initialize a profile for this GitHub user
+        await saveUserProfile(result.user.uid, {
+          email: result.user.email,
+          displayName: result.user.displayName || '',
+          profileImage: result.user.photoURL || '',
+          createdAt: new Date().toISOString(),
+          completedProfile: false
+        });
+      }
+      
+      return result;
+    } catch (error) {
+      console.error("GitHub Sign-in error:", error.code, error.message);
+      if (error.code === 'auth/popup-blocked') {
+        console.error("Popup was blocked by the browser");
+      }
+      throw error;
+    }
   }
   
   // Reset Password
   async function resetPassword(email) {
-    return sendPasswordResetEmail(auth, email);
+    try {
+      console.log("Sending password reset email to:", email);
+      return await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      console.error("Reset password error:", error.code, error.message);
+      throw error;
+    }
   }
 
   // Logout
   async function logout() {
-    return signOut(auth);
+    try {
+      console.log("Attempting to log out user");
+      return await signOut(auth);
+    } catch (error) {
+      console.error("Logout error:", error.code, error.message);
+      throw error;
+    }
   }
 
   const value = {
     currentUser,
+    profileCompleted,
     signup,
     login,
     googleSignIn,

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Navbar from '../components/Navbar';
+import DashboardNavbar from '../components/DashboardNavbar';
 import { useAuth } from '../context/AuthContext';
 import Loader from '../components/Loader';
 import { FiActivity, FiClock, FiHeart, FiAward, FiCalendar, FiUsers, FiSettings } from 'react-icons/fi';
@@ -38,7 +38,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-orange-50">
-      <Navbar />
+      <DashboardNavbar />
       
       <div className="pt-24 px-4 max-w-7xl mx-auto">
         {/* Welcome Section with User */}

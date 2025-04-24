@@ -564,7 +564,6 @@ const Navbar = () => {
                           <Link to="/profile">
                             <motion.button
                               className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium flex items-center justify-center"
-                              whileTap={{ scale: 0.97 }}
                             >
                               <FiUser className="mr-2" /> My Profile
                             </motion.button>
@@ -572,7 +571,6 @@ const Navbar = () => {
                           <button
                             onClick={handleLogout}
                             className="w-full py-3 rounded-full bg-red-50 text-red-600 border border-red-200 font-medium flex items-center justify-center"
-                            whileTap={{ scale: 0.97 }}
                           >
                             <FiLogOut className="mr-2" /> Log out
                           </button>
@@ -583,7 +581,6 @@ const Navbar = () => {
                             <Link to="/login">
                               <motion.button
                                 className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium"
-                                whileTap={{ scale: 0.97 }}
                               >
                                 Log in
                               </motion.button>
@@ -634,7 +631,6 @@ const Navbar = () => {
                               <Link to="/signup">
                                 <motion.button
                                   className="relative w-full py-3 rounded-full bg-white text-[#be70a9] font-medium z-10"
-                                  whileTap={{ scale: 0.97 }}
                                 >
                                   <span className="flex items-center justify-center">
                                     Sign up
@@ -911,7 +907,7 @@ const DropdownItem = ({ href, label, onClick, isHomePage }) => {
   );
 };
 
-// Simplified mobile nav item 
+// Simplified mobile nav item with fixed startsWith error
 const SimpleMobileNavItem = ({ to, label, onClick }) => {
   const location = useLocation();
   const isHomePage = location.pathname === '/' || location.pathname === '';
@@ -924,17 +920,19 @@ const SimpleMobileNavItem = ({ to, label, onClick }) => {
       }}
     >
       {isHomePage && onClick ? (
-        <a
+        <motion.a
           href={to}
           onClick={onClick}
           className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
         >
           {label}
-        </a>
+        </motion.a>
       ) : (
         <Link
-          to={to.startsWith('#') ? '/' + to : to}
-          state={{ scrollToSection: to.startsWith('#') ? to : null }}
+          to={to && typeof to === 'string' && to.startsWith ? 
+            (to.startsWith('#') ? '/' + to : to) : '/'}
+          state={{ scrollToSection: to && typeof to === 'string' && to.startsWith ? 
+            (to.startsWith('#') ? to : null) : null }}
           className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
         >
           {label}
@@ -944,7 +942,7 @@ const SimpleMobileNavItem = ({ to, label, onClick }) => {
   );
 };
 
-// Simplified mobile nav dropdown without underline animations
+// Simplified mobile nav dropdown with fixed startsWith error
 const SimpleMobileNavDropdown = ({ label, items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -957,10 +955,10 @@ const SimpleMobileNavDropdown = ({ label, items }) => {
         closed: { opacity: 0, y: 20 }
       }}
     >
-      <button
+      <motion.button
         className="flex items-center justify-between w-full py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5"
         onClick={() => setIsOpen(!isOpen)}
-        whileTap={{ scale: 0.98 }}
+        // Use motion.button instead of button with whileTap
       >
         {label}
         <motion.div
@@ -969,7 +967,7 @@ const SimpleMobileNavDropdown = ({ label, items }) => {
         >
           <FiChevronDown />
         </motion.div>
-      </button>
+      </motion.button>
       
       <AnimatePresence>
         {isOpen && (
@@ -983,17 +981,19 @@ const SimpleMobileNavDropdown = ({ label, items }) => {
             {items.map((item, i) => (
               <div key={i}>
                 {isHomePage && item.onClick ? (
-                  <a
+                  <motion.a
                     href={item.href}
                     onClick={item.onClick}
                     className="block py-3 px-3 rounded-lg hover:bg-[#a477ab]/5 text-gray-700"
                   >
                     {item.label}
-                  </a>
+                  </motion.a>
                 ) : (
                   <Link
-                    to={item.href.startsWith('#') ? '/' + item.href : item.href}
-                    state={{ scrollToSection: item.href }}
+                    to={item.href && typeof item.href === 'string' && item.href.startsWith ? 
+                      (item.href.startsWith('#') ? '/' + item.href : item.href) : '/'}
+                    state={{ scrollToSection: item.href && typeof item.href === 'string' && item.href.startsWith ? 
+                      (item.href.startsWith('#') ? item.href : null) : null }}
                     className="block py-3 px-3 rounded-lg hover:bg-[#a477ab]/5 text-gray-700"
                   >
                     {item.label}

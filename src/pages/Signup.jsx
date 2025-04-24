@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
+import { saveUserProfile } from "../firebase/profileService";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -12,8 +13,15 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signup, googleSignIn, githubSignIn } = useAuth();
+  const { signup, googleSignIn, githubSignIn, currentUser } = useAuth();
   const navigate = useNavigate();
+  
+  // Redirect if already logged in
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/profile");
+    }
+  }, [currentUser, navigate]);
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -33,10 +41,18 @@ export default function Signup() {
     try {
       setError("");
       setLoading(true);
-      await signup(email, password);
-      // In a real app, you would save the username to the user profile in Firebase
-      // For now, we're just redirecting to dashboard after successful signup
-      navigate("/dashboard");
+      const result = await signup(email, password);
+      
+      // Save the username to the user's profile
+      await saveUserProfile(result.user.uid, {
+        displayName: username,
+        email: email,
+        createdAt: new Date().toISOString(),
+        completedProfile: false
+      });
+      
+      // Redirect to profile setup page
+      navigate("/profile");
     } catch (error) {
       if (error.message.includes("email-already-in-use")) {
         setError("Email is already in use. Try logging in instead.");
@@ -54,7 +70,7 @@ export default function Signup() {
       setError("");
       setLoading(true);
       await googleSignIn();
-      navigate("/dashboard");
+      // The redirect to profile page is handled in the googleSignIn function
     } catch (error) {
       setError("Failed to sign in with Google. Please try again.");
       console.error("Google sign-in error:", error);
@@ -68,7 +84,7 @@ export default function Signup() {
       setError("");
       setLoading(true);
       await githubSignIn();
-      navigate("/dashboard");
+      // The redirect to profile page is handled in the githubSignIn function
     } catch (error) {
       setError("Failed to sign in with GitHub. Please try again.");
       console.error("GitHub sign-in error:", error);
