@@ -687,6 +687,14 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
 
 // Enhanced Wave Animation with more dynamic effects
 const EnhancedAnimatedWave = () => {
+  // Add check for mobile view
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  
+  // Return null if on mobile to hide the wave
+  if (isMobile) {
+    return null;
+  }
+  
   return (
     <div className="relative h-[100px]">
       <svg
