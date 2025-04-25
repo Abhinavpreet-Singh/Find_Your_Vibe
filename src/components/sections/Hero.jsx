@@ -2,20 +2,26 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import {Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Hero = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hoverIcon, setHoverIcon] = useState(null);
   const orbitRef = useRef(null);
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
 
-  // Function to handle navigation to signup page
+  // Function to handle navigation based on user login status
   const handleGetStarted = () => {
-    navigate('/signup');
+    if (currentUser) {
+      navigate('/dashboard');
+    } else {
+      navigate('/signup');
+    }
   };
 
   // Function to scroll to hobbies section
@@ -183,7 +189,9 @@ const Hero = () => {
                 className="relative px-7 py-4 rounded-full bg-white shadow-md z-10 flex items-center gap-2 transition-all duration-300 group-hover:bg-gray-50"
                 onClick={handleGetStarted}
               >
-                <span className="font-semibold text-lg text-[#a477ab]">Get Started Now</span>
+                <span className="font-semibold text-lg text-[#a477ab]">
+                  {currentUser ? "Go to Dashboard" : "Get Started Now"}
+                </span>
                 <motion.div
                   animate={{ x: [0, 5, 0] }}
                   transition={{

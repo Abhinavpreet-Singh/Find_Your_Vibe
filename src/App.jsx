@@ -9,9 +9,9 @@ import Loader from './components/Loader';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { currentUser, loading } = useAuth();
+  const { currentUser, loading, authInitialized } = useAuth();
   
-  if (loading) {
+  if (loading || !authInitialized) {
     return <Loader />;
   }
   
@@ -24,9 +24,9 @@ const ProtectedRoute = ({ children }) => {
 
 // Protected Route that requires completed profile
 const ProfileProtectedRoute = ({ children }) => {
-  const { currentUser, loading, profileCompleted } = useAuth();
+  const { currentUser, loading, profileCompleted, authInitialized } = useAuth();
   
-  if (loading) {
+  if (loading || !authInitialized) {
     return <Loader />;
   }
   
@@ -43,9 +43,9 @@ const ProfileProtectedRoute = ({ children }) => {
 
 // Public Route that redirects authenticated users to dashboard
 const PublicRoute = ({ children }) => {
-  const { currentUser, loading } = useAuth();
+  const { currentUser, loading, authInitialized } = useAuth();
   
-  if (loading) {
+  if (loading || !authInitialized) {
     return <Loader />;
   }
   

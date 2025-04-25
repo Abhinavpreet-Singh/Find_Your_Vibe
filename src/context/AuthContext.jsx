@@ -7,7 +7,9 @@ import {
   GithubAuthProvider,
   signOut,
   onAuthStateChanged,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  setPersistence,
+  browserLocalPersistence
 } from 'firebase/auth';
 import { auth } from '../firebase/config';
 import { getUserProfile, saveUserProfile } from '../firebase/profileService';
@@ -23,9 +25,20 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profileCompleted, setProfileCompleted] = useState(false);
+  const [authInitialized, setAuthInitialized] = useState(false);
 
   useEffect(() => {
+    // Set persistence to LOCAL to survive page reloads
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        console.log("Auth persistence set to local");
+      })
+      .catch((error) => {
+        console.error("Error setting persistence:", error);
+      });
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log("Auth state changed:", user ? "User logged in" : "No user");
       setCurrentUser(user);
       
       if (user) {
@@ -42,6 +55,7 @@ export function AuthProvider({ children }) {
       }
       
       setLoading(false);
+      setAuthInitialized(true);
     });
 
     return unsubscribe;
@@ -167,6 +181,8 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     profileCompleted,
+    loading,
+    authInitialized,
     signup,
     login,
     googleSignIn,

@@ -316,6 +316,9 @@ const Navbar = () => {
                                 />
                                 
                                 <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
+                                  <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
+                                    Dashboard
+                                  </Link>
                                   <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
                                     Profile
                                   </Link>
@@ -561,6 +564,13 @@ const Navbar = () => {
                     >
                       {currentUser ? (
                         <>
+                          <Link to="/dashboard">
+                            <motion.button
+                              className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium flex items-center justify-center"
+                            >
+                              <FiUser className="mr-2" /> Dashboard
+                            </motion.button>
+                          </Link>
                           <Link to="/profile">
                             <motion.button
                               className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium flex items-center justify-center"
