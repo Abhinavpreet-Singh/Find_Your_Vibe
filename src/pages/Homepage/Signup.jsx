@@ -19,7 +19,7 @@ export default function Signup() {
   // Redirect if already logged in
   useEffect(() => {
     if (currentUser) {
-      navigate("/profile");
+      navigate("/dashboard/profile");
     }
   }, [currentUser, navigate]);
 
@@ -52,7 +52,7 @@ export default function Signup() {
       });
       
       // Redirect to profile setup page
-      navigate("/profile");
+      navigate("/dashboard/profile");
     } catch (error) {
       if (error.message.includes("email-already-in-use")) {
         setError("Email is already in use. Try logging in instead.");

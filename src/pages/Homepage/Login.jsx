@@ -22,10 +22,10 @@ export default function Login() {
           const userProfile = await getUserProfile(currentUser.uid);
           if (userProfile && !userProfile.completedProfile) {
             // If user has not completed profile setup
-            navigate("/profile");
+            navigate("/dashboard/profile");
           } else {
             // Profile is complete, redirect to dashboard
-            navigate("/dashboard");
+            navigate("/dashboard/home");
           }
         } catch (error) {
           console.error("Error checking user profile:", error);
@@ -51,9 +51,9 @@ export default function Login() {
       // Check if user has completed their profile
       const userProfile = await getUserProfile(result.user.uid);
       if (userProfile && !userProfile.completedProfile) {
-        navigate("/profile");
+        navigate("/dashboard/profile");
       } else {
-        navigate("/dashboard");
+        navigate("/dashboard/home");
       }
     } catch (error) {
       setError(error.message.includes("auth/") 
@@ -74,9 +74,9 @@ export default function Login() {
       // Check if user has completed their profile
       const userProfile = await getUserProfile(result.user.uid);
       if (!userProfile || !userProfile.completedProfile) {
-        navigate("/profile");
+        navigate("/dashboard/profile");
       } else {
-        navigate("/dashboard");
+        navigate("/dashboard/home");
       }
     } catch (error) {
       setError("Failed to sign in with Google. Please try again.");
@@ -95,9 +95,9 @@ export default function Login() {
       // Check if user has completed their profile
       const userProfile = await getUserProfile(result.user.uid);
       if (!userProfile || !userProfile.completedProfile) {
-        navigate("/profile");
+        navigate("/dashboard/profile");
       } else {
-        navigate("/dashboard");
+        navigate("/dashboard/home");
       }
     } catch (error) {
       setError("Failed to sign in with GitHub. Please try again.");
