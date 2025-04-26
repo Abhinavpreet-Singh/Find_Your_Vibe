@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { FiX, FiPlus, FiArrowRight, FiChevronDown, FiSkipForward } from 'react-icons/fi';
 import DashboardNavbar from '../../components/dashboard/DashboardNavbar';
 import { useAuth } from '../../context/AuthContext';
 import Loader from '../../components/Loader';
@@ -656,7 +658,7 @@ export default function Profile() {
           <button
             onClick={handleNext}
             disabled={saving}
-            className="py-2 px-6 bg-gradient-to-r from-pink-500 to-orange-400 text-white font-medium rounded-lg hover:opacity-90 transition flex items-center disabled:opacity-50"
+            className="py-2 px-6 bg-gradient-to-r from-pink-500 to-orange-400 text-white font-medium rounded-lg hover:opacity-90 transition flex items-center"
           >
             {saving ? "Saving..." : (
               <>
