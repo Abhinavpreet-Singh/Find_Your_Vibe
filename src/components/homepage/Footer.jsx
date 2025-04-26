@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
 import { FiGithub, FiInstagram, FiLinkedin, FiMail, FiArrowRight, FiHeart, FiCheck } from 'react-icons/fi';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 // Custom X logo component (Twitter rebrand)
 const XLogo = ({ size }) => (

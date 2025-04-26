@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import { useAuth } from "../context/AuthContext";
-import { getUserProfile } from "../firebase/profileService";
+import Navbar from "../../components/homepage/Navbar";
+import { useAuth } from "../../context/AuthContext";
+import { getUserProfile } from "../../firebase/profileService";
 
 export default function Login() {
   const [email, setEmail] = useState("");

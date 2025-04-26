@@ -1,11 +1,16 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
 import Loader from './components/Loader';
+
+// Import pages with new folder structure
+import HomepageHome from './pages/Homepage/Home';
+import Login from './pages/Homepage/Login';
+import Signup from './pages/Homepage/Signup';
+import DashboardHome from './pages/Dashboard/Home';
+import Connections from './pages/Dashboard/Connections';
+import Events from './pages/Dashboard/Events';
+import Notifications from './pages/Dashboard/Notifications';
+import Profile from './pages/Dashboard/Profile';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -35,7 +40,7 @@ const ProfileProtectedRoute = ({ children }) => {
   }
   
   if (!profileCompleted) {
-    return <Navigate to="/profile" />;
+    return <Navigate to="/dashboard/profile" />;
   }
   
   return children;
@@ -50,7 +55,7 @@ const PublicRoute = ({ children }) => {
   }
   
   if (currentUser) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboard/home" />;
   }
   
   return children;
@@ -62,7 +67,7 @@ function App() {
       <div className="font-sans">
         <Routes>
           {/* Public routes */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomepageHome />} />
           
           {/* Auth routes - redirect to dashboard if already logged in */}
           <Route 
@@ -82,23 +87,51 @@ function App() {
             } 
           />
           
-          {/* Profile route - requires authentication but not completed profile */}
+          {/* Dashboard routes - require authentication */}
+          <Route path="/dashboard" element={<Navigate to="/dashboard/home" />} />
+          
           <Route 
-            path="/profile" 
+            path="/dashboard/home" 
+            element={
+              <ProfileProtectedRoute>
+                <DashboardHome />
+              </ProfileProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/dashboard/connections" 
+            element={
+              <ProfileProtectedRoute>
+                <Connections />
+              </ProfileProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/dashboard/events" 
+            element={
+              <ProfileProtectedRoute>
+                <Events />
+              </ProfileProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/dashboard/notifications" 
+            element={
+              <ProfileProtectedRoute>
+                <Notifications />
+              </ProfileProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/dashboard/profile" 
             element={
               <ProtectedRoute>
                 <Profile />
               </ProtectedRoute>
-            } 
-          />
-          
-          {/* Protected routes - require authentication AND completed profile */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProfileProtectedRoute>
-                <Dashboard />
-              </ProfileProtectedRoute>
             } 
           />
           

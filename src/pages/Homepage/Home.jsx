@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { useLocation } from 'react-router-dom';
 
 // Import components
-import Navbar from '../components/Navbar';
-import Hero from '../components/sections/Hero';
-import Stats from '../components/sections/Stats';
-import Hobbies from '../components/sections/Hobbies';
-import FAQ from '../components/sections/FAQ';
-import Testimonials from '../components/sections/Testimonials';
-import CTA from '../components/sections/CTA';
-import Footer from '../components/Footer';
-import Activities from '../components/sections/Activities';
+import Navbar from '../../components/homepage/Navbar';
+import Hero from '../../components/homepage/Hero';
+import Stats from '../../components/homepage/Stats';
+import Hobbies from '../../components/homepage/Hobbies';
+import FAQ from '../../components/homepage/FAQ';
+import Testimonials from '../../components/homepage/Testimonials';
+import CTA from '../../components/homepage/CTA';
+import Footer from '../../components/homepage/Footer';
+import Activities from '../../components/homepage/Activities';
 
 const Home = () => {
   // Keep the useTheme hook for compatibility, but we won't use the toggle function

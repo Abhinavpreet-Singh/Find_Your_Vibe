@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut, FiHome, FiSettings, FiUsers, FiBriefcase } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut, FiHome, FiSettings, FiUsers, FiBriefcase, FiCalendar, FiBell } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const DashboardNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,12 +51,13 @@ const DashboardNavbar = () => {
     }
   };
 
-  // Dashboard navigation items
+  // Dashboard navigation items - update paths to reflect the folder structure
   const dashboardNavItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: <FiHome className="mr-2" /> },
-    { path: '/profile', label: 'My Profile', icon: <FiUser className="mr-2" /> },
-    { path: '/connections', label: 'Connections', icon: <FiUsers className="mr-2" /> },
-    { path: '/activities', label: 'My Activities', icon: <FiBriefcase className="mr-2" /> },
+    { path: '/dashboard/home', label: 'Home', icon: <FiHome className="mr-2" /> },
+    { path: '/dashboard/connections', label: 'Vibes', icon: <FiUsers className="mr-2" /> },
+    { path: '/dashboard/events', label: 'Events', icon: <FiCalendar className="mr-2" /> },
+    { path: '/dashboard/notifications', label: 'Notifications', icon: <FiBell className="mr-2" /> },
+    { path: '/dashboard/profile', label: 'Profile', icon: <FiUser className="mr-2" /> },
   ];
 
   return (

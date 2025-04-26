@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiChevronDown, FiPlus, FiX, FiArrowRight, FiSkipForward } from 'react-icons/fi';
-import { useAuth } from '../context/AuthContext';
-import DashboardNavbar from '../components/DashboardNavbar';
-import Loader from '../components/Loader';
+import DashboardNavbar from '../../components/dashboard/DashboardNavbar';
+import { useAuth } from '../../context/AuthContext';
+import Loader from '../../components/Loader';
 import { 
   saveUserProfile, 
   getUserProfile, 
   interestCategories,
   interestsByCategory,
   collaborationTypes
-} from '../firebase/profileService';
+} from '../../firebase/profileService';
 
 // Common universities for dropdown
 const universities = [
