@@ -1,12 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useAnimationControls } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
 
 const CTA = () => {
   const containerRef = useRef(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const backgroundControls = useAnimationControls();
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
   
   // Handle mouse movement for spotlight effect
   const handleMouseMove = (e) => {
@@ -188,6 +193,18 @@ const ParticleField = () => {
 // Button with moving gradient border - no fill effect
 const GradientBorderButton = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  
+  const handleClick = () => {
+    if (currentUser) {
+      // Redirect to dashboard if user is authenticated
+      navigate('/dashboard/home');
+    } else {
+      // Redirect to signup page if user is not authenticated
+      navigate('/signup');
+    }
+  };
   
   return (
     <motion.div
@@ -219,6 +236,7 @@ const GradientBorderButton = () => {
         className="relative px-10 py-5 bg-white rounded-xl shadow-xl overflow-hidden z-10 group"
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
+        onClick={handleClick}
         whileHover={{ 
           scale: 1.03,
           boxShadow: "0 15px 30px rgba(0,0,0,0.2)"
