@@ -6,6 +6,7 @@ import Loader from './components/Loader';
 import HomepageHome from './pages/Homepage/Home';
 import Login from './pages/Homepage/Login';
 import Signup from './pages/Homepage/Signup';
+import Contact from './pages/Homepage/Contact';
 import DashboardHome from './pages/Dashboard/Home';
 import Connections from './pages/Dashboard/Connections';
 import Events from './pages/Dashboard/Events';
@@ -68,7 +69,7 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<HomepageHome />} />
-          
+          <Route path="/contact" element={<Contact />} />
           {/* Auth routes - redirect to dashboard if already logged in */}
           <Route 
             path="/login" 
