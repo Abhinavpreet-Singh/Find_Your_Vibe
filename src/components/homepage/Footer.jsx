@@ -67,25 +67,25 @@ const Footer = () => {
   const socialLinks = [
     { 
       icon: <XLogo size={18} />, // Changed from Twitter to X logo
-      href: "#", 
+      href: "https://x.com/", 
       label: "X",
       color: colors.lavender
     },
     { 
       icon: <FiInstagram size={20} />, 
-      href: "#", 
+      href: "https://instagram.com/", 
       label: "Instagram",
       color: colors.red
     },
     { 
       icon: <FiGithub size={20} />, 
-      href: "#", 
+      href: "https://github.com/", 
       label: "GitHub",
       color: colors.purple
     },
     { 
       icon: <FiLinkedin size={20} />, 
-      href: "#", 
+      href: "https://linkedin.com/", 
       label: "LinkedIn",
       color: colors.gold
     }
@@ -223,6 +223,8 @@ const Footer = () => {
                 <motion.a
                   key={index}
                   href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="h-12 w-12 rounded-lg bg-white shadow-md flex items-center justify-center text-gray-600 border border-gray-100 hover:border-0"
                   whileHover={{ 
                     y: -5,
