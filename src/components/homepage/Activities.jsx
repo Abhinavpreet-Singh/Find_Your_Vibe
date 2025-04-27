@@ -34,7 +34,7 @@ const Activities = () => {
       time: "10:00 AM",
       spots: "2 spots left",
       host: "Sports Club",
-      image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4e8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "https://images.unsplash.com/photo-1521537634581-0dced2fee2ef?w=800&auto=format&fit=crop&q=80&ixlib=rb-4.0.3",
       tags: ["Badminton", "Beginner", "Weekend"]
     },
     {
@@ -73,7 +73,7 @@ const Activities = () => {
       time: "1:00 PM",
       spots: "1 spot left",
       host: "DGIT",
-      image: "https://images.unsplash.com/photo-1553406772-4156d8c4f4db?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80&ixlib=rb-4.0.3",
       tags: ["Gaming", "Valorant", "Tournament"]
     },
     {
@@ -86,7 +86,7 @@ const Activities = () => {
       time: "8:30 PM",
       spots: "8 spots left",
       host: "Chitkara Anime Society",
-      image: "https://images.unsplash.com/photo-1614846484158-379b193673c0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      image: "https://c4.wallpaperflare.com/wallpaper/892/692/922/howl-s-moving-castle-studio-ghibli-fantasy-art-clouds-daylight-hd-wallpaper-preview.jpg",
       tags: ["Anime", "Movies", "Social"]
     }
   ];
