@@ -7,7 +7,6 @@ import { saveUserProfile } from "../../firebase/profileService";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +24,7 @@ export default function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (!email || !username || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
@@ -43,9 +42,8 @@ export default function Signup() {
       setLoading(true);
       const result = await signup(email, password);
       
-      // Save the username to the user's profile
+      // Save basic user profile info
       await saveUserProfile(result.user.uid, {
-        displayName: username,
         email: email,
         createdAt: new Date().toISOString(),
         completedProfile: false
@@ -101,8 +99,8 @@ export default function Signup() {
         <Navbar />
       </div>
 
-      {/* Form Card with Animation */}
-      <div className="flex-grow flex items-center justify-center w-full px-4 py-10">
+      {/* Form Card with Animation - Added more top padding (pt-16) to shift it down */}
+      <div className="flex-grow flex items-center justify-center w-full px-4 py-10 pt-20">
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -125,21 +123,6 @@ export default function Signup() {
                   setError("");
                 }}
                 placeholder="you@example.com"
-                disabled={loading}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Username</label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-300"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  setError("");
-                }}
-                placeholder="yourname"
                 disabled={loading}
               />
             </div>
