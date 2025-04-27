@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { FiCalendar, FiMapPin, FiUsers, FiCheck, FiArrowRight } from 'react-icons/fi';
+import { useAuth } from '../../context/AuthContext';
 
 const Activities = () => {
   const [activeTab, setActiveTab] = useState('join');
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
   
   // Sample upcoming activities
   const upcomingActivities = [
@@ -167,6 +171,14 @@ const Activities = () => {
                   className="px-8 py-4 rounded-full shadow-sm font-medium mx-auto bg-white relative"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    // If user is logged in, navigate to dashboard, otherwise to signup
+                    if (currentUser) {
+                      navigate('/dashboard/home');
+                    } else {
+                      navigate('/signup');
+                    }
+                  }}
                 >
                   {/* Animated gradient border */}
                   <span className="absolute inset-0 rounded-full z-0 overflow-hidden">
@@ -301,6 +313,14 @@ const Activities = () => {
                   className="px-8 py-4 rounded-full shadow-sm font-medium mx-auto bg-white relative"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    // If user is logged in, navigate to dashboard, otherwise to signup
+                    if (currentUser) {
+                      navigate('/dashboard/home');
+                    } else {
+                      navigate('/signup');
+                    }
+                  }}
                 >
                   {/* Animated gradient border */}
                   <span className="absolute inset-0 rounded-full z-0 overflow-hidden">
