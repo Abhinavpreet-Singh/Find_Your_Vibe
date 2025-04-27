@@ -375,7 +375,9 @@ const ActivityCard = ({ activity, index }) => {
   };
   
   const color = typeColors[activity.type] || '#a477ab';
-  
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+
   return (
     <motion.div 
       className="group bg-white rounded-2xl shadow-md overflow-hidden flex flex-col h-full"
@@ -470,6 +472,15 @@ const ActivityCard = ({ activity, index }) => {
           className="w-full py-2.5 rounded-lg relative overflow-hidden"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          onClick={() => {
+            // If user is logged in, navigate to activity detail page in dashboard
+            // otherwise, redirect to signup
+            if (currentUser) {
+              navigate(`/dashboard/events?activityId=${activity.id}`);
+            } else {
+              navigate('/signup', { state: { redirectAfterSignup: `/dashboard/events?activityId=${activity.id}` } });
+            }
+          }}
         >
           {/* Animated gradient border */}
           <span className="absolute inset-0 rounded-lg z-0 overflow-hidden">
