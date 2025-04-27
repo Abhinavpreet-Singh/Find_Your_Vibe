@@ -9,6 +9,7 @@ import Signup from './pages/Homepage/Signup';
 import Contact from './pages/Homepage/Contact';
 import Cookies from './pages/Homepage/Cookies';
 import Privacy from './pages/Homepage/Privacy';
+import Terms from './pages/Homepage/Terms';
 import DashboardHome from './pages/Dashboard/Home';
 import Connections from './pages/Dashboard/Connections';
 import Events from './pages/Dashboard/Events';
@@ -74,6 +75,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           {/* Auth routes - redirect to dashboard if already logged in */}
           <Route 
             path="/login" 
