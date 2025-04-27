@@ -8,6 +8,7 @@ import Login from './pages/Homepage/Login';
 import Signup from './pages/Homepage/Signup';
 import Contact from './pages/Homepage/Contact';
 import Cookies from './pages/Homepage/Cookies';
+import Privacy from './pages/Homepage/Privacy';
 import DashboardHome from './pages/Dashboard/Home';
 import Connections from './pages/Dashboard/Connections';
 import Events from './pages/Dashboard/Events';
@@ -72,6 +73,7 @@ function App() {
           <Route path="/" element={<HomepageHome />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cookies" element={<Cookies />} />
+          <Route path="/privacy" element={<Privacy />} />
           {/* Auth routes - redirect to dashboard if already logged in */}
           <Route 
             path="/login" 
