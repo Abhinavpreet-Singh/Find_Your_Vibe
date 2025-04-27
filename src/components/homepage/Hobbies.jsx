@@ -1,7 +1,12 @@
 import { motion } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Hobbies = () => {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+
   // Current date for reference only (not displayed)
   const currentDate = "2025-03-23 13:03:54";
   
@@ -56,7 +61,13 @@ const Hobbies = () => {
       tags: ['Watch Parties', 'Discussions', 'Themes']
     }
   ];
-
+  const handleExploreClick = () => {
+    if (currentUser) {
+      navigate('/dashboard/home');
+    } else {
+      navigate('/signup');
+    }
+  };
   return (
     <section id="hobbies" className="py-20 px-4 bg-gray-50 relative overflow-hidden">
       {/* Dynamic Background Elements */}
@@ -100,6 +111,7 @@ const Hobbies = () => {
             className="px-8 py-4 rounded-full shadow-sm font-medium mx-auto bg-white relative"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
+            onClick={handleExploreClick}
           >
             {/* Animated gradient border */}
             <span className="absolute inset-0 rounded-full z-0 overflow-hidden">
