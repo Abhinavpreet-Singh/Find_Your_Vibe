@@ -30,43 +30,27 @@ const Footer = () => {
       title: "Platform",
       links: [
         { name: "Home", href: "/" },
-        { name: "About", href: "/about" },
-        { name: "Features", href: "/features" },
-        { name: "Pricing", href: "/pricing" },
+        { name: "Dashboard", href: "/dashboard/home" },
+        { name: "Profile", href: "/dashboard/profile" },
+        { name: "Login", href: "/login" },
+        { name: "Sign Up", href: "/signup" },
       ]
     },
     {
       title: "Community",
       links: [
-        { name: "Hackathons", href: "/hackathons" },
-        { name: "Music", href: "/music" },
-        { name: "Hobbies", href: "/hobbies" },
-        { name: "Events", href: "/events" },
+        { name: "Vibes", href: "/dashboard/connections" },
+        { name: "Events", href: "/dashboard/events" },
+        { name: "Sessions", href: "/dashboard/home" },
+        { name: "Activities", href: "/#activities" },
+        { name: "Hobbies", href: "/#hobbies" },
       ]
     },
-    {
-      title: "Company",
-      links: [
-        { name: "Team", href: "/team" },
-        { name: "Careers", href: "/careers" },
-        { name: "Blog", href: "/blog" },
-        { name: "Contact", href: "/contact" },
-      ]
-    },
-    {
-      title: "Legal",
-      links: [
-        { name: "Privacy Policy", href: "/privacy" },
-        { name: "Terms of Service", href: "/terms" },
-        { name: "Cookie Policy", href: "/cookies" },
-        { name: "GDPR", href: "/gdpr" },
-      ]
-    }
   ];
   
   const socialLinks = [
     { 
-      icon: <XLogo size={18} />, // Changed from Twitter to X logo
+      icon: <XLogo size={18} />, 
       href: "https://x.com/", 
       label: "X",
       color: colors.lavender
@@ -187,8 +171,9 @@ const Footer = () => {
       </div>
       
       <div className="max-w-7xl mx-auto relative z-10">
+        {/* Logo, Description and Links Section */}
         <motion.div
-          className="grid md:grid-cols-2 lg:grid-cols-6 gap-12 mb-16"
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -217,28 +202,6 @@ const Footer = () => {
               Connect with like-minded individuals who share your passions.
               From hackathons to music jams to gaming nights – find your people.
             </p>
-            
-            <div className="flex gap-3">
-              {socialLinks.map((link, index) => (
-                <motion.a
-                  key={index}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="h-12 w-12 rounded-lg bg-white shadow-md flex items-center justify-center text-gray-600 border border-gray-100 hover:border-0"
-                  whileHover={{ 
-                    y: -5,
-                    backgroundColor: link.color,
-                    color: "#ffffff",
-                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label={link.label}
-                >
-                  {link.icon}
-                </motion.a>
-              ))}
-            </div>
           </motion.div>
           
           {/* Footer Links */}
@@ -262,79 +225,119 @@ const Footer = () => {
           ))}
         </motion.div>
         
-        {/* Newsletter with moving gradient border - similar to CTA */}
-        <motion.div 
-          ref={newsletterContainerRef}
-          onMouseMove={handleMouseMove}
-          className="relative mb-16 rounded-2xl overflow-hidden"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-        >
-          {/* Moving gradient border */}
+        {/* Social and Subscribe Section - Enhanced Layout */}
+        <div className="flex flex-col lg:flex-row gap-10 mb-16 items-start">
+          {/* Social Icons Column */}
           <motion.div 
-            className="absolute inset-0 rounded-2xl z-0"
-            animate={{
-              backgroundPosition: ["0% 0%", "200% 200%"],
-            }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 8,
-              ease: "linear"
-            }}
-            style={{
-              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-              backgroundSize: "300% 100%",
-            }}
-          />
+            className="lg:w-1/4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="font-bold text-lg mb-5 text-gray-800">Connect With Us</h3>
+            <div className="flex gap-4">
+              {socialLinks.map((link, index) => (
+                <motion.a
+                  key={index}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="h-14 w-14 rounded-lg bg-white shadow-md flex items-center justify-center text-gray-600 border border-gray-100 hover:border-0"
+                  whileHover={{ 
+                    y: -5,
+                    backgroundColor: link.color,
+                    color: "#ffffff",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label={link.label}
+                >
+                  {link.icon}
+                </motion.a>
+              ))}
+            </div>
+            
+            <div className="mt-6">
+              <p className="text-gray-600">
+                Follow us for updates, announcements, and community highlights.
+              </p>
+            </div>
+          </motion.div>
           
-          {/* Interactive spotlight effect */}
-          <motion.div
-            className="absolute w-[40vw] h-[40vw] rounded-full bg-white/5 blur-[50px] pointer-events-none z-0"
-            style={{
-              left: spotlightX,
-              top: spotlightY,
-              translateX: "-50%",
-              translateY: "-50%"
-            }}
-          />
-          
-          {/* Content with 2px padding to show the gradient border */}
-          <div className="relative m-[2px] p-8 md:p-10 bg-white rounded-2xl z-10">
-            <div className="max-w-4xl mx-auto">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                <div className="md:w-1/2">
+          {/* Subscribe Form Column - Enlarged */}
+          <motion.div 
+            ref={newsletterContainerRef}
+            onMouseMove={handleMouseMove}
+            className="lg:w-3/4 relative rounded-2xl overflow-hidden"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+          >
+            {/* Moving gradient border */}
+            <motion.div 
+              className="absolute inset-0 rounded-2xl z-0"
+              animate={{
+                backgroundPosition: ["0% 0%", "200% 200%"],
+              }}
+              transition={{
+                repeat: Infinity,
+                repeatType: "loop",
+                duration: 8,
+                ease: "linear"
+              }}
+              style={{
+                background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                backgroundSize: "300% 100%",
+              }}
+            />
+            
+            {/* Interactive spotlight effect */}
+            <motion.div
+              className="absolute w-[40vw] h-[40vw] rounded-full bg-white/5 blur-[50px] pointer-events-none z-0"
+              style={{
+                left: spotlightX,
+                top: spotlightY,
+                translateX: "-50%",
+                translateY: "-50%"
+              }}
+            />
+            
+            {/* Content with 2px padding to show the gradient border */}
+            <div className="relative m-[2px] p-8 bg-white rounded-2xl z-10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="sm:w-2/5">
                   <motion.div 
-                    className="inline-block px-4 py-1 rounded-full bg-[#be70a9] bg-opacity-10 text-[#be70a9] text-sm font-medium mb-4"
+                    className="inline-block px-4 py-1.5 rounded-full bg-[#be70a9] bg-opacity-10 text-[#be70a9] text-sm font-medium mb-3"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 }}
                     viewport={{ once: true }}
                   >
-                    Stay Connected
+                    Find Your Tribe
                   </motion.div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                    Get the latest <span className="text-[#c36376]">updates</span>
+                  <h3 className="text-2xl font-bold mb-3">
+                    Get the latest <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#be70a9] to-[#c36376]">updates & events</span>
                   </h3>
-                  <p className="text-gray-600 mb-0">
-                    Be the first to know about new features, events, and opportunities.
+                  <p className="text-gray-600">
+                    Stay connected with our community. We send weekly digests of new activities and events matching your interests.
                   </p>
                 </div>
-                <div className="md:w-1/2">
-                  <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
+                <div className="sm:w-3/5">
+                  <form onSubmit={handleSubscribe} className="flex flex-col gap-4">
                     <input 
                       type="email" 
                       placeholder="Enter your email address" 
-                      className={`flex-1 px-5 py-4 rounded-lg bg-white border ${
+                      className={`w-full px-5 py-3.5 rounded-lg bg-white border ${
                         subscriptionStatus === 'error' ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-[#a477ab]'
                       } focus:outline-none focus:ring-2 text-gray-800`}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={subscriptionStatus === 'submitting' || subscriptionStatus === 'success'}
                     />
-                    {/* Button with CTA-matching style */}
+                    
+                    {/* Subscribe Button */}
                     <div className="relative">
                       {/* Moving gradient border */}
                       <motion.div 
@@ -356,7 +359,7 @@ const Footer = () => {
                       
                       <motion.button
                         type="submit"
-                        className="relative px-6 py-4 bg-white text-[#a477ab] font-medium rounded-lg shadow-md flex items-center justify-center whitespace-nowrap z-10"
+                        className="relative w-full px-5 py-3.5 bg-white text-[#a477ab] font-medium rounded-lg shadow-md flex items-center justify-center z-10"
                         onHoverStart={() => setButtonHovered(true)}
                         onHoverEnd={() => setButtonHovered(false)}
                         whileHover={{ 
@@ -369,7 +372,7 @@ const Footer = () => {
                         <div className="flex items-center justify-center gap-2">
                           {subscriptionStatus === 'submitting' ? (
                             <span className="flex items-center">
-                              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#a477ab]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-[#a477ab]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                               </svg>
@@ -377,13 +380,13 @@ const Footer = () => {
                             </span>
                           ) : subscriptionStatus === 'success' ? (
                             <span className="flex items-center">
-                              <FiCheck className="mr-1" />
+                              <FiCheck className="mr-2" size={20} />
                               Subscribed!
                             </span>
                           ) : (
                             <>
-                              <span className="font-medium">
-                                Subscribe
+                              <span className="font-medium text-base">
+                                Subscribe to Updates
                               </span>
                               <motion.div
                                 animate={{ 
@@ -391,32 +394,12 @@ const Footer = () => {
                                   transition: { type: "spring", stiffness: 300 }
                                 }}
                               >
-                                <FiArrowRight />
+                                <FiArrowRight size={20} />
                               </motion.div>
                             </>
                           )}
                         </div>
-                        
-                        {/* Moving highlight effect */}
-                        {buttonHovered && subscriptionStatus !== 'success' && (
-                          <motion.div
-                            className="absolute top-0 left-0 w-full h-[150%] bg-white/30 -skew-y-12"
-                            initial={{ top: "-150%" }}
-                            animate={{ top: "100%" }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                          />
-                        )}
                       </motion.button>
-                      
-                      {/* Button glow effect */}
-                      <motion.div 
-                        className="absolute inset-0 -z-10 blur-xl rounded-lg opacity-0"
-                        animate={{ opacity: buttonHovered ? 0.6 : 0 }}
-                        style={{ 
-                          background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c)",
-                          backgroundSize: "200% 100%",
-                        }}
-                      />
                     </div>
                   </form>
                   
@@ -430,52 +413,14 @@ const Footer = () => {
                   {/* Success message */}
                   <AnimatePresence>
                     {subscriptionStatus === 'success' && (
-                      <motion.div 
-                        className="mt-4 p-4 bg-gradient-to-r from-[#a477ab]/20 to-[#edb04c]/20 rounded-lg"
+                      <motion.p 
+                        className="text-green-600 text-xs mt-3"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                       >
-                        <div className="flex items-start">
-                          <div className="flex-shrink-0 bg-gradient-to-r from-[#a477ab] to-[#c36376] p-2 rounded-lg">
-                            <FiCheck className="text-white" />
-                          </div>
-                          <div className="ml-3">
-                            <h3 className="text-lg font-medium text-gray-800">Your vibe has been received!</h3>
-                            <div className="mt-1 text-sm text-gray-600">
-                              <p>Get ready for good vibes in your inbox. We'll share upcoming events, collaborations, and creative opportunities tailored to your interests.</p>
-                            </div>
-                            <div className="mt-2">
-                              <motion.div
-                                className="inline-flex"
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ 
-                                  delay: 0.2,
-                                  type: "spring", 
-                                  stiffness: 300 
-                                }}
-                              >
-                                {[...Array(5)].map((_, i) => (
-                                  <motion.span 
-                                    key={i}
-                                    className="text-[#edb04c]"
-                                    initial={{ rotate: 0 }}
-                                    animate={{ rotate: [0, 15, -15, 0] }}
-                                    transition={{
-                                      delay: 0.3 + (i * 0.1),
-                                      duration: 0.6,
-                                      ease: "easeInOut"
-                                    }}
-                                  >
-                                    ✨
-                                  </motion.span>
-                                ))}
-                              </motion.div>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
+                        Thanks for subscribing! Get ready for good vibes in your inbox.
+                      </motion.p>
                     )}
                   </AnimatePresence>
                   
@@ -485,8 +430,8 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
         
         {/* Divider */}
         <div className="border-t border-gray-200 mb-8"></div>
