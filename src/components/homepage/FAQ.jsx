@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronDown, FiInfo, FiUsers, FiDollarSign, FiTrendingUp, FiCalendar, FiArrowRight } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -227,6 +228,11 @@ const FAQ = () => {
 // Smaller button with just gradient border, no fill
 const GradientBorderButton = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate(); // Add useNavigate hook
+  
+  const handleClick = () => {
+    navigate('/contact'); // Navigate to contact page on click
+  };
   
   return (
     <motion.div
@@ -260,6 +266,7 @@ const GradientBorderButton = () => {
         onHoverEnd={() => setIsHovered(false)}
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}
+        onClick={handleClick}
       >
         {/* Button content */}
         <div className="flex items-center justify-center gap-1.5">
