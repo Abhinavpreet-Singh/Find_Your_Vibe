@@ -50,7 +50,7 @@ const programs = [
 ];
 
 export default function Profile() {
-  const { currentUser, updateProfileCompletionStatus } = useAuth();
+  const { currentUser, updateProfileCompletionStatus, updateUserProfile } = useAuth();
   const navigate = useNavigate();
   
   const [loading, setLoading] = useState(true);
@@ -261,26 +261,43 @@ export default function Profile() {
           ...profile,
           completedProfile: true,
           updatedAt: new Date().toISOString(),
-          // Make sure displayName is included if it's empty
-          displayName: profile.displayName || currentUser.displayName || 'User'
+          // Always use the user-entered display name
+          displayName: profile.displayName || 'User'
         };
         
         console.log("Saving final profile:", finalProfile);
         
-        // First save the profile data
+        // First save the profile data to Firebase
         await saveUserProfile(currentUser.uid, finalProfile);
-        console.log("Profile saved successfully");
+        console.log("Profile saved successfully to Firebase");
         
-        // Then update local state and auth context
+        // Update local state
         setProfile(finalProfile);
         setProfileComplete(true);
         
-        // Update the profile completion status in AuthContext
-        // This is the key change that fixes the navigation issue
-        await updateProfileCompletionStatus(true);
-        
-        // Now navigate to the dashboard home
-        navigate('/dashboard/home');
+        try {
+          // Update the profile completion status in AuthContext
+          await updateProfileCompletionStatus(true);
+          
+          // Try to update the profile data in AuthContext
+          if (typeof updateUserProfile === 'function') {
+            await updateUserProfile(finalProfile);
+            console.log("Profile updated in AuthContext");
+          } else {
+            console.log("updateUserProfile function not available, will reload page instead");
+            // If updateUserProfile is not available, we'll reload the page after navigation
+            setTimeout(() => window.location.reload(), 100);
+          }
+          
+          // Navigate to the dashboard home
+          navigate('/dashboard/home');
+          
+        } catch (contextError) {
+          console.error("Error updating AuthContext:", contextError);
+          // If updating context fails, still navigate but reload the page
+          navigate('/dashboard/home');
+          setTimeout(() => window.location.reload(), 100);
+        }
       } else {
         // Otherwise just go to next step
         console.log("Moving to next step");
