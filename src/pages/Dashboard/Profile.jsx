@@ -277,14 +277,15 @@ export default function Profile() {
         
         // Delay navigation slightly to ensure state updates
         setTimeout(() => {
-          console.log("Redirecting to dashboard");
-          navigate('/dashboard');
+          console.log("Redirecting to dashboard home");
+          navigate('/dashboard/home');
         }, 500);
       } else {
         // Otherwise just go to next step
         console.log("Moving to next step");
         nextStep();
       }
+      
     } catch (error) {
       console.error("Error saving profile:", error);
       alert("There was an error saving your profile. Please try again.");
