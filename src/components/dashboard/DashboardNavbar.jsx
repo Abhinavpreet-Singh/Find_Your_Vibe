@@ -118,17 +118,28 @@ const DashboardNavbar = () => {
                 <div className="relative user-menu-dropdown">
                   <motion.button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center space-x-2 px-4 py-2 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
+                    className="flex items-center p-1 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
                     whileHover={{ scale: 1.03 }}
-                    // Fixed whileTap issue by properly setting the correct HTML element with motion
                   >
-                    <FiUser size={18} />
-                    <span>{currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User'}</span>
+                    <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-[#a477ab]/30">
+                      {currentUser.photoURL ? (
+                        <img 
+                          src={currentUser.photoURL} 
+                          alt="Profile" 
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold">
+                          {currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0)?.toUpperCase() || 'U'}
+                        </div>
+                      )}
+                    </div>
                     <motion.div
                       animate={{ rotate: userMenuOpen ? 180 : 0 }}
                       transition={{ duration: 0.2 }}
+                      className="ml-1"
                     >
-                      <FiChevronDown className="ml-1" />
+                      <FiChevronDown />
                     </motion.div>
                   </motion.button>
                   
