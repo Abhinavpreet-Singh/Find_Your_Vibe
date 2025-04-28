@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useLocation } from 'react-router-dom';
+import { ActiveSectionProvider } from '../../context/ActiveSectionContext';
 
 // Import components
 import Navbar from '../../components/homepage/Navbar';
@@ -26,11 +27,11 @@ const Home = () => {
       const element = document.querySelector(sectionId);
       
       if (element) {
-        // Add a slight delay to ensure the page has fully rendered
+        // Add a small delay to ensure the page is fully loaded
         setTimeout(() => {
-          const navbarOffset = 80; // Adjust based on navbar height
+          const offset = 80; // Navbar height plus some padding
           const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - navbarOffset;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
           
           window.scrollTo({
             top: offsetPosition,
@@ -39,41 +40,25 @@ const Home = () => {
         }, 100);
       }
     }
-    
-    // Check for hash in URL for direct links
-    if (location.hash) {
-      const sectionId = location.hash;
-      const element = document.querySelector(sectionId);
-      
-      if (element) {
-        setTimeout(() => {
-          const navbarOffset = 80; // Adjust based on navbar height
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - navbarOffset;
-          
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
-        }, 100);
-      }
-    }
-  }, [location]);
-  
+  }, [location.state]);
+
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      {/* Removed theme toggle button */}
-      
-      <Navbar />
-      <Hero id="hero" />
-      <Stats id="stats" />
-      <Hobbies id="hobbies" />
-      <Activities id="activities" />
-      <Testimonials id="testimonials" />
-      <CTA id="cta" />
-      <FAQ id="faq" />
-      <Footer />
-    </div>
+    // Wrap the entire component with the ActiveSectionProvider
+    <ActiveSectionProvider>
+      <div className={`min-h-screen bg-white ${isDarkMode ? 'dark' : ''}`}>
+        {/* Removed theme toggle button */}
+        
+        <Navbar />
+        <Hero id="hero" />
+        <Stats id="stats" />
+        <Hobbies id="hobbies" />
+        <Activities id="activities" />
+        <Testimonials id="testimonials" />
+        <CTA id="cta" />
+        <FAQ id="faq" />
+        <Footer />
+      </div>
+    </ActiveSectionProvider>
   );
 };
 

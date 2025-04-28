@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX, FiChevronDown, FiArrowRight, FiUser, FiLogOut } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { ActiveSectionContext } from '../../context/ActiveSectionContext';
 
+// Add activeSection state and IntersectionObserver to track the current section
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -12,9 +14,51 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
+  const { activeSection, setActiveSection } = useContext(ActiveSectionContext);
   
   // Check if we're on the home page
   const isHomePage = location.pathname === '/' || location.pathname === '';
+  
+  // Set up IntersectionObserver to detect which section is in view
+  useEffect(() => {
+    if (isHomePage) {
+      const sections = ['hero', 'stats', 'hobbies', 'activities', 'testimonials', 'faq'];
+      
+      const observerOptions = {
+        root: null,
+        rootMargin: '-100px 0px -20% 0px', // Adjust margins to better detect when sections are in view
+        threshold: 0.2, // Element is considered visible when 20% is in view
+      };
+      
+      const observerCallback = (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      };
+      
+      const observer = new IntersectionObserver(observerCallback, observerOptions);
+      
+      // Observe each section
+      sections.forEach(sectionId => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          observer.observe(element);
+        }
+      });
+      
+      return () => {
+        // Clean up observer on unmount
+        sections.forEach(sectionId => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            observer.unobserve(element);
+          }
+        });
+      };
+    }
+  }, [isHomePage, setActiveSection]);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -155,7 +199,7 @@ const Navbar = () => {
               className={`relative z-10 transition-all duration-500 ${
                 isScrolled 
                   ? "bg-white rounded-full shadow-md" 
-                  : "bg-transparent"
+                  : "bg-white rounded-full shadow-sm"
               }`}
             >
               <nav>
@@ -728,24 +772,37 @@ const Navbar = () => {
   );
 };
 
-// Desktop Nav Item with animated gradient underline
+// Desktop Nav Item with background hover effect instead of underline
 const NavItem = ({ href, label, onClick, isHomePage }) => {
-  const [isHovered, setIsHovered] = useState(false);
   const location = useLocation();
-  const isActive = href === "#login" && location.pathname === '/login' || 
-                   href === "#signup" && location.pathname === '/signup';
+  const { activeSection } = useContext(ActiveSectionContext);
+  
+  // Check if active based on section ID
+  const isActive = () => {
+    // Extract section ID from href (remove the #)
+    const sectionId = href.replace('#', '');
+    
+    // If on homepage, check against active section
+    if (location.pathname === '/' || location.pathname === '') {
+      return activeSection === sectionId;
+    }
+    
+    // For other pages/sections check pathname
+    return href === "#login" && location.pathname === '/login' || 
+           href === "#signup" && location.pathname === '/signup';
+  };
 
   return (
-    <div 
-      className="relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="relative">
       {isHomePage ? (
         <a
           href={href}
           onClick={onClick}
-          className={`px-4 py-2 font-medium rounded-full flex items-center ${isActive ? 'text-[#be70a9]' : 'text-gray-800'}`}
+          className={`px-4 py-2 font-medium rounded-full flex items-center transition-all duration-200 ${
+            isActive() 
+              ? 'text-[#be70a9] bg-[#be70a9]/10' 
+              : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
+          }`}
         >
           {label}
         </a>
@@ -753,61 +810,36 @@ const NavItem = ({ href, label, onClick, isHomePage }) => {
         <Link
           to={'/' + href}
           state={{ scrollToSection: href }}
-          className={`px-4 py-2 font-medium rounded-full flex items-center ${isActive ? 'text-[#be70a9]' : 'text-gray-800'}`}
+          className={`px-4 py-2 font-medium rounded-full flex items-center transition-all duration-200 ${
+            isActive() 
+              ? 'text-[#be70a9] bg-[#be70a9]/10' 
+              : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
+          }`}
         >
           {label}
         </Link>
       )}
-      
-      {/* Animated Gradient Underline */}
-      <div className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 rounded-full overflow-hidden"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: isHovered || isActive ? 1 : 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        >
-          <motion.div 
-            className="w-full h-full"
-            style={{
-              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-              backgroundSize: "300% 100%",
-            }}
-            animate={{
-              backgroundPosition: ["0% 0%", "200% 0%"],
-            }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 3,
-              ease: "linear"
-            }}
-          />
-        </motion.div>
-      </div>
     </div>
   );
 };
 
-// Desktop Nav Dropdown with animated gradient underline
+// Desktop Nav Dropdown with background hover effect
 const NavDropdown = ({ label, items, isHomePage }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const { activeSection } = useContext(ActiveSectionContext);
+  
+  // Check if this dropdown should be active (when hobbies or activities sections are active)
+  const isActive = activeSection === 'hobbies' || activeSection === 'activities';
   
   return (
     <div 
       className="relative nav-dropdown"
-      onMouseEnter={() => {
-        setIsHovered(true);
-        setIsOpen(true);
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setIsOpen(false);
-      }}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
     >
       <button
-        className="px-4 py-2 text-gray-800 font-medium rounded-full flex items-center relative"
+        className={`px-4 py-2 font-medium rounded-full flex items-center transition-all duration-200
+          ${isOpen || isActive ? 'text-[#be70a9] bg-[#be70a9]/10' : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'}`}
       >
         {label}
         <motion.div
@@ -817,33 +849,6 @@ const NavDropdown = ({ label, items, isHomePage }) => {
           <FiChevronDown className="ml-1" />
         </motion.div>
       </button>
-      
-      {/* Animated Gradient Underline */}
-      <div className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 rounded-full overflow-hidden"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        >
-          <motion.div 
-            className="w-full h-full"
-            style={{
-              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-              backgroundSize: "300% 100%",
-            }}
-            animate={{
-              backgroundPosition: ["0% 0%", "200% 0%"],
-            }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 3,
-              ease: "linear"
-            }}
-          />
-        </motion.div>
-      </div>
       
       <AnimatePresence>
         {isOpen && (
@@ -875,7 +880,14 @@ const NavDropdown = ({ label, items, isHomePage }) => {
               
               <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
                 {items.map((item, i) => (
-                  <DropdownItem key={i} href={item.href} label={item.label} onClick={item.onClick} isHomePage={isHomePage} />
+                  <DropdownItem 
+                    key={i} 
+                    href={item.href} 
+                    label={item.label} 
+                    onClick={item.onClick} 
+                    isHomePage={isHomePage}
+                    isActive={activeSection === item.href.replace('#', '')}
+                  />
                 ))}
               </div>
             </div>
@@ -886,21 +898,23 @@ const NavDropdown = ({ label, items, isHomePage }) => {
   );
 };
 
-// Dropdown item with animated gradient underline
+// Dropdown item with background hover effect instead of underline
 const DropdownItem = ({ href, label, onClick, isHomePage }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
+  const location = useLocation();
+  // Check if this dropdown item matches the current hash
+  const isActive = location.hash === href;
+
   return (
-    <div 
-      className="relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="relative">
       {isHomePage ? (
         <a
           href={href}
           onClick={onClick}
-          className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5"
+          className={`block px-4 py-2 transition-all duration-200 ${
+            isActive 
+              ? 'text-[#be70a9] bg-[#be70a9]/10' 
+              : 'text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5'
+          }`}
         >
           {label}
         </a>
@@ -908,46 +922,36 @@ const DropdownItem = ({ href, label, onClick, isHomePage }) => {
         <Link
           to={'/' + href}
           state={{ scrollToSection: href }}
-          className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5"
+          className={`block px-4 py-2 transition-all duration-200 ${
+            isActive 
+              ? 'text-[#be70a9] bg-[#be70a9]/10' 
+              : 'text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5'
+          }`}
         >
           {label}
         </Link>
       )}
-      
-      {/* Animated Gradient Underline */}
-      <div className="absolute bottom-0.5 left-4 right-4 h-[1px] overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 rounded-full overflow-hidden"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        >
-          <motion.div 
-            className="w-full h-full"
-            style={{
-              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-              backgroundSize: "300% 100%",
-            }}
-            animate={{
-              backgroundPosition: ["0% 0%", "200% 0%"],
-            }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 3,
-              ease: "linear"
-            }}
-          />
-        </motion.div>
-      </div>
     </div>
   );
 };
 
-// Simplified mobile nav item with fixed startsWith error
-const SimpleMobileNavItem = ({ to, label, onClick }) => {
+// Simplified mobile nav item with active and hover styling
+const SimpleMobileNavItem = ({ to, href, label, onClick }) => {
   const location = useLocation();
   const isHomePage = location.pathname === '/' || location.pathname === '';
+  
+  // Check if this item is active
+  const isActive = () => {
+    if (location.hash) {
+      return location.hash === (href || to);
+    }
+    
+    if (isHomePage && (href === '#hero' || to === '#hero')) {
+      return window.scrollY < 100;
+    }
+    
+    return false;
+  };
   
   return (
     <motion.div
@@ -958,9 +962,13 @@ const SimpleMobileNavItem = ({ to, label, onClick }) => {
     >
       {isHomePage && onClick ? (
         <motion.a
-          href={to}
+          href={to || href}
           onClick={onClick}
-          className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
+          className={`block py-4 px-3 text-lg font-medium rounded-xl relative transition-all duration-200 ${
+            isActive() 
+              ? 'text-[#be70a9] bg-[#be70a9]/10' 
+              : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
+          }`}
         >
           {label}
         </motion.a>
@@ -968,9 +976,14 @@ const SimpleMobileNavItem = ({ to, label, onClick }) => {
         <Link
           to={to && typeof to === 'string' && to.startsWith ? 
             (to.startsWith('#') ? '/' + to : to) : '/'}
+
           state={{ scrollToSection: to && typeof to === 'string' && to.startsWith ? 
             (to.startsWith('#') ? to : null) : null }}
-          className="block py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5 relative"
+          className={`block py-4 px-3 text-lg font-medium rounded-xl relative transition-all duration-200 ${
+            isActive() 
+              ? 'text-[#be70a9] bg-[#be70a9]/10' 
+              : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
+          }`}
         >
           {label}
         </Link>
@@ -979,11 +992,14 @@ const SimpleMobileNavItem = ({ to, label, onClick }) => {
   );
 };
 
-// Simplified mobile nav dropdown with fixed startsWith error
+// Simplified mobile nav dropdown with improved active and hover styling
 const SimpleMobileNavDropdown = ({ label, items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/' || location.pathname === '';
+  
+  // Check if any dropdown items are active by comparing with current hash
+  const hasActiveChild = items.some(item => location.hash === item.href);
   
   return (
     <motion.div
@@ -993,9 +1009,12 @@ const SimpleMobileNavDropdown = ({ label, items }) => {
       }}
     >
       <motion.button
-        className="flex items-center justify-between w-full py-4 px-3 text-lg font-medium text-gray-800 rounded-xl hover:bg-[#a477ab]/5"
+        className={`flex items-center justify-between w-full py-4 px-3 text-lg font-medium rounded-xl transition-all duration-200 ${
+          hasActiveChild || isOpen 
+            ? 'text-[#be70a9] bg-[#be70a9]/10' 
+            : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
+        }`}
         onClick={() => setIsOpen(!isOpen)}
-        // Use motion.button instead of button with whileTap
       >
         {label}
         <motion.div
@@ -1015,29 +1034,43 @@ const SimpleMobileNavDropdown = ({ label, items }) => {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {items.map((item, i) => (
-              <div key={i}>
-                {isHomePage && item.onClick ? (
-                  <motion.a
-                    href={item.href}
-                    onClick={item.onClick}
-                    className="block py-3 px-3 rounded-lg hover:bg-[#a477ab]/5 text-gray-700"
-                  >
-                    {item.label}
-                  </motion.a>
-                ) : (
-                  <Link
-                    to={item.href && typeof item.href === 'string' && item.href.startsWith ? 
-                      (item.href.startsWith('#') ? '/' + item.href : item.href) : '/'}
-                    state={{ scrollToSection: item.href && typeof item.href === 'string' && item.href.startsWith ? 
-                      (item.href.startsWith('#') ? item.href : null) : null }}
-                    className="block py-3 px-3 rounded-lg hover:bg-[#a477ab]/5 text-gray-700"
-                  >
-                    {item.label}
-                  </Link>
-                )}
-              </div>
-            ))}
+            {items.map((item, i) => {
+              // Check if this dropdown item is active
+              const isItemActive = location.hash === item.href;
+              
+              return (
+                <div key={i}>
+                  {isHomePage && item.onClick ? (
+                    <motion.a
+                      href={item.href}
+                      onClick={item.onClick}
+                      className={`block py-3 px-3 rounded-lg transition-all duration-200 ${
+                        isItemActive 
+                          ? 'text-[#be70a9] bg-[#be70a9]/10' 
+                          : 'text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5'
+                      }`}
+                    >
+                      {item.label}
+                    </motion.a>
+                  ) : (
+                    <Link
+                      to={item.href && typeof item.href === 'string' && item.href.startsWith ? 
+                        (item.href.startsWith('#') ? '/' + item.href : item.href) : '/'}
+
+                      state={{ scrollToSection: item.href && typeof item.href === 'string' && item.href.startsWith ? 
+                        (item.href.startsWith('#') ? item.href : null) : null }}
+                      className={`block py-3 px-3 rounded-lg transition-all duration-200 ${
+                        isItemActive 
+                          ? 'text-[#be70a9] bg-[#be70a9]/10' 
+                          : 'text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5'
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </div>
+              );
+            })}
           </motion.div>
         )}
       </AnimatePresence>
