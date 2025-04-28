@@ -274,17 +274,28 @@ const Navbar = () => {
                       <div className="relative user-menu-dropdown">
                         <motion.button
                           onClick={() => setUserMenuOpen(!userMenuOpen)}
-                          className="flex items-center space-x-2 px-4 py-2 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
+                          className="flex items-center p-1 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
                           whileHover={{ scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
                         >
-                          <FiUser size={18} />
-                          <span>{currentUser.email?.split('@')[0] || 'User'}</span>
+                          <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-[#a477ab]/30">
+                            {currentUser.photoURL ? (
+                              <img 
+                                src={currentUser.photoURL} 
+                                alt="Profile" 
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <div className="h-full w-full bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold">
+                                {currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0)?.toUpperCase() || 'U'}
+                              </div>
+                            )}
+                          </div>
                           <motion.div
                             animate={{ rotate: userMenuOpen ? 180 : 0 }}
                             transition={{ duration: 0.2 }}
+                            className="ml-1"
                           >
-                            <FiChevronDown className="ml-1" />
+                            <FiChevronDown />
                           </motion.div>
                         </motion.button>
                         
@@ -319,8 +330,8 @@ const Navbar = () => {
                                   <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
                                     Dashboard
                                   </Link>
-                                  <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
-                                    Profile
+                                  <Link to="/dashboard/profile" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
+                                    Profile Settings
                                   </Link>
                                   <button
                                     onClick={handleLogout}
@@ -571,11 +582,24 @@ const Navbar = () => {
                               <FiUser className="mr-2" /> Dashboard
                             </motion.button>
                           </Link>
-                          <Link to="/profile">
+                          <Link to="/dashboard/profile">
                             <motion.button
                               className="w-full py-3 rounded-full border border-[#a477ab] text-[#a477ab] font-medium flex items-center justify-center"
                             >
-                              <FiUser className="mr-2" /> My Profile
+                              <div className="h-5 w-5 rounded-full overflow-hidden mr-2">
+                                {currentUser.photoURL ? (
+                                  <img 
+                                    src={currentUser.photoURL} 
+                                    alt="Profile" 
+                                    className="h-full w-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="h-full w-full bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xs">
+                                    {currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0)?.toUpperCase() || 'U'}
+                                  </div>
+                                )}
+                              </div>
+                              Profile Settings
                             </motion.button>
                           </Link>
                           <button
@@ -640,9 +664,9 @@ const Navbar = () => {
                               />
                               <Link to="/signup">
                                 <motion.button
-                                  className="relative w-full py-3 rounded-full bg-white text-[#be70a9] font-medium z-10"
+                                  className="relative w-full py-3 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
                                 >
-                                  <span className="flex items-center justify-center">
+                                  <span className="flex items-center">
                                     Sign up
                                     <FiArrowRight className="ml-1.5" />
                                   </span>
@@ -668,7 +692,7 @@ const Navbar = () => {
                                   ease: "linear"
                                 }}
                               >
-                                <span className="flex items-center justify-center">
+                                <span className="flex items-center">
                                   Sign up
                                   <FiArrowRight className="ml-1.5" />
                                 </span>
