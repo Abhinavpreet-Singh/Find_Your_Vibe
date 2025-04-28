@@ -464,7 +464,7 @@ const Navbar = () => {
                             />
                             <Link to="/signup">
                               <motion.button
-                                className="relative px-5 py-2 rounded-full bg-white dark:bg-black text-[#be70a9] font-medium shadow-sm z-10 hover:bg-[#be70a9] hover:text-black transition-colors"
+                                className="relative px-5 py-2 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10  transition-colors"
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.97 }}
                               >
