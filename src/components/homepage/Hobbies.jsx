@@ -152,9 +152,20 @@ const Hobbies = () => {
 
 // Dynamic Hobby Card Component with enhanced hover effects but no button
 const DynamicHobbyCard = ({ category, index }) => {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+
+  const handleCardClick = () => {
+    if (currentUser) {
+      navigate(`/dashboard/groups`);
+    } else {
+      navigate('/signup');
+    }
+  };
+
   return (
-    <motion.a 
-      href={`#${category.id}`}
+    <motion.div 
+      onClick={handleCardClick}
       className="group bg-white rounded-2xl shadow-md overflow-hidden flex flex-col h-full relative no-underline cursor-pointer"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -263,7 +274,7 @@ const DynamicHobbyCard = ({ category, index }) => {
           ))}
         </div>
       </div>
-    </motion.a>
+    </motion.div>
   );
 };
 

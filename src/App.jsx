@@ -12,6 +12,7 @@ import Privacy from './pages/Homepage/Privacy';
 import Terms from './pages/Homepage/Terms';
 import DashboardHome from './pages/Dashboard/Home';
 import Connections from './pages/Dashboard/Connections';
+import Groups from './pages/Dashboard/Groups';
 import Events from './pages/Dashboard/Events';
 import Notifications from './pages/Dashboard/Notifications';
 import Profile from './pages/Dashboard/Profile';
@@ -120,6 +121,15 @@ function App() {
             element={
               <ProfileProtectedRoute>
                 <Events />
+              </ProfileProtectedRoute>
+            } 
+          />
+
+                    <Route 
+            path="/dashboard/groups" 
+            element={
+              <ProfileProtectedRoute>
+                <Groups />
               </ProfileProtectedRoute>
             } 
           />
