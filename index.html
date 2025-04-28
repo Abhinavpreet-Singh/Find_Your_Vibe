@@ -5,36 +5,9 @@
     <link rel="icon" type="image/svg+xml" href="/src/assets/WhatsApp_Image_2025-04-27_at_18.05.59_d18c7f5c-removebg-preview.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Find Your Vibe</title>
-    <style>
-      .app-loading {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        width: 100%;
-      }
-      .app-loading-spinner {
-        border: 4px solid rgba(0, 0, 0, 0.1);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        border-left-color: #0891b2;
-        animation: spin 1s linear infinite;
-      }
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    </style>
   </head>
   <body>
-    <div id="root">
-      <div class="app-loading">
-        <div class="app-loading-spinner"></div>
-        <p>Loading...</p>
-      </div>
-    </div>
+    <div id="root"></div>
     <script>
       // This helps with page reloads and authentication state persistence
       window.addEventListener('load', function() {
