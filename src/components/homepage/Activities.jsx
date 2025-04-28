@@ -124,7 +124,7 @@ const Activities = () => {
               className={`px-6 py-3 rounded-full font-medium text-base transition-all ${
                 activeTab === 'join' 
                 ? 'bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white shadow-md' 
-                : 'text-gray-700 hover:bg-gray-100'
+                : 'text-gray-700 hover:text-[#a477ab] border border-transparent hover:border-[#a477ab]/30'
               }`}
               onClick={() => setActiveTab('join')}
               whileTap={{ scale: 0.98 }}
@@ -135,7 +135,7 @@ const Activities = () => {
               className={`px-6 py-3 rounded-full font-medium text-base transition-all ${
                 activeTab === 'host' 
                 ? 'bg-gradient-to-r from-[#c36376] to-[#edb04c] text-white shadow-md' 
-                : 'text-gray-700 hover:bg-gray-100'
+                : 'text-gray-700 hover:text-[#c36376] border border-transparent hover:border-[#c36376]/30'
               }`}
               onClick={() => setActiveTab('host')}
               whileTap={{ scale: 0.98 }}
@@ -458,7 +458,7 @@ const ActivityCard = ({ activity, index }) => {
           {activity.tags.map((tag, i) => (
             <span 
               key={i}
-              className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700 group-hover:bg-gray-200 transition-colors duration-300"
+              className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700"
             >
               {tag}
             </span>

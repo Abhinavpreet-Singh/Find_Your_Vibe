@@ -146,25 +146,9 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-white pt-24 pb-12 px-4 md:px-6 lg:px-10 relative overflow-hidden">
-      {/* Decorative Shapes */}
-      <div className="absolute top-0 left-0 right-0 h-24 overflow-hidden">
-        <svg
-          preserveAspectRatio="none"
-          width="100%"
-          height="100"
-          viewBox="0 0 1200 120"
-          xmlns="http://www.w3.org/2000/svg"
-          className="fill-gray-50"
-        >
-          <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path>
-          <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path>
-          <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
-        </svg>
-      </div>
-      
-      {/* Background color blobs */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+    <footer className="bg-white dark:bg-black pt-24 pb-12 px-4 md:px-6 lg:px-10 relative overflow-hidden">
+      {/* Background color blobs - Removed in dark mode */}
+      <div className="absolute inset-0 z-0 overflow-hidden dark:hidden">
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-[#be70a9]/10 blur-3xl"></div>
         <div className="absolute bottom-20 right-10 w-64 h-64 rounded-full bg-[#edb04c]/10 blur-3xl"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-[#a477ab]/10 blur-3xl"></div>
@@ -198,7 +182,7 @@ const Footer = () => {
               </motion.div>
             </div>
             
-            <p className="text-gray-600 mb-8 pr-4 text-lg">
+            <p className="text-gray-600 dark:text-gray-300 mb-8 pr-4 text-lg">
               Connect with like-minded individuals who share your passions.
               From hackathons to music jams to gaming nights – find your people.
             </p>
@@ -207,13 +191,13 @@ const Footer = () => {
           {/* Footer Links */}
           {footerLinks.map((category, index) => (
             <motion.div key={index} variants={itemVariants}>
-              <h3 className="font-bold text-lg mb-5 text-gray-800">{category.title}</h3>
+              <h3 className="font-bold text-lg mb-5 text-gray-800 dark:text-gray-100">{category.title}</h3>
               <ul className="space-y-3">
                 {category.links.map((link, i) => (
                   <li key={i}>
                     <motion.a 
                       href={link.href}
-                      className="text-gray-600 hover:text-[#be70a9] transition-colors inline-block"
+                      className="text-gray-600 dark:text-gray-300 hover:text-[#be70a9] dark:hover:text-[#be70a9] transition-colors inline-block"
                       whileHover={{ x: 3 }}
                     >
                       {link.name}
@@ -235,7 +219,7 @@ const Footer = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
           >
-            <h3 className="font-bold text-lg mb-5 text-gray-800">Connect With Us</h3>
+            <h3 className="font-bold text-lg mb-5 text-gray-800 dark:text-gray-100">Connect With Us</h3>
             <div className="flex gap-4">
               {socialLinks.map((link, index) => (
                 <motion.a
@@ -243,11 +227,11 @@ const Footer = () => {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="h-14 w-14 rounded-lg bg-white shadow-md flex items-center justify-center text-gray-600 border border-gray-100 hover:border-0"
+                  className="h-14 w-14 rounded-lg bg-white dark:bg-black shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 border border-gray-100 dark:border-gray-800 hover:border-0"
                   whileHover={{ 
                     y: -5,
                     backgroundColor: link.color,
-                    color: "#ffffff",
+                    color: "#000000",
                     boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
                   }}
                   whileTap={{ scale: 0.95 }}
@@ -259,7 +243,7 @@ const Footer = () => {
             </div>
             
             <div className="mt-6">
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Follow us for updates, announcements, and community highlights.
               </p>
             </div>
@@ -305,11 +289,11 @@ const Footer = () => {
             />
             
             {/* Content with 2px padding to show the gradient border */}
-            <div className="relative m-[2px] p-8 bg-white rounded-2xl z-10">
+            <div className="relative m-[2px] p-8 bg-white dark:bg-black rounded-2xl z-10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="sm:w-2/5">
                   <motion.div 
-                    className="inline-block px-4 py-1.5 rounded-full bg-[#be70a9] bg-opacity-10 text-[#be70a9] text-sm font-medium mb-3"
+                    className="inline-block px-4 py-1.5 rounded-full bg-[#be70a9] bg-opacity-10 dark:bg-opacity-20 text-[#be70a9] text-sm font-medium mb-3"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 }}
@@ -317,10 +301,10 @@ const Footer = () => {
                   >
                     Find Your Tribe
                   </motion.div>
-                  <h3 className="text-2xl font-bold mb-3">
+                  <h3 className="text-2xl font-bold mb-3 dark:text-white">
                     Get the latest <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#be70a9] to-[#c36376]">updates & events</span>
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 dark:text-gray-300">
                     Stay connected with our community. We send weekly digests of new activities and events matching your interests.
                   </p>
                 </div>
@@ -329,9 +313,9 @@ const Footer = () => {
                     <input 
                       type="email" 
                       placeholder="Enter your email address" 
-                      className={`w-full px-5 py-3.5 rounded-lg bg-white border ${
-                        subscriptionStatus === 'error' ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-[#a477ab]'
-                      } focus:outline-none focus:ring-2 text-gray-800`}
+                      className={`w-full px-5 py-3.5 rounded-lg bg-white dark:bg-black border ${
+                        subscriptionStatus === 'error' ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 dark:border-gray-700 focus:ring-[#a477ab]'
+                      } focus:outline-none focus:ring-2 text-gray-800 dark:text-white`}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={subscriptionStatus === 'submitting' || subscriptionStatus === 'success'}
@@ -359,7 +343,7 @@ const Footer = () => {
                       
                       <motion.button
                         type="submit"
-                        className="relative w-full px-5 py-3.5 bg-white text-[#a477ab] font-medium rounded-lg shadow-md flex items-center justify-center z-10"
+                        className="relative w-full px-5 py-3.5 bg-white dark:bg-black text-[#a477ab] font-medium rounded-lg shadow-md flex items-center justify-center z-10"
                         onHoverStart={() => setButtonHovered(true)}
                         onHoverEnd={() => setButtonHovered(false)}
                         whileHover={{ 
@@ -434,19 +418,19 @@ const Footer = () => {
         </div>
         
         {/* Divider */}
-        <div className="border-t border-gray-200 mb-8"></div>
+        <div className="border-t border-gray-200 dark:border-gray-800 mb-8"></div>
         
         {/* Copyright */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-gray-600 text-sm">
+          <div className="text-gray-600 dark:text-gray-400 text-sm">
             © {currentYear} Find Your Vibe. All rights reserved.
           </div>
           <div className="flex items-center gap-6">
-            <a href="/privacy" className="text-sm text-gray-600 hover:text-[#be70a9]">Privacy</a>
-            <a href="/terms" className="text-sm text-gray-600 hover:text-[#be70a9]">Terms</a>
-            <a href="/cookies" className="text-sm text-gray-600 hover:text-[#be70a9]">Cookies</a>
+            <a href="/privacy" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#be70a9]">Privacy</a>
+            <a href="/terms" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#be70a9]">Terms</a>
+            <a href="/cookies" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[#be70a9]">Cookies</a>
             <motion.div 
-              className="text-sm text-gray-600 flex items-center"
+              className="text-sm text-gray-600 dark:text-gray-400 flex items-center"
               whileHover={{ scale: 1.05 }}
             >
               Made by team Find Your Vibe~~
