@@ -58,7 +58,6 @@ const DashboardNavbar = () => {
     { path: '/dashboard/groups', label: 'Groups', icon: <FiBriefcase className="mr-2" /> },
     { path: '/dashboard/events', label: 'Events', icon: <FiCalendar className="mr-2" /> },
     { path: '/dashboard/notifications', label: 'Notifications', icon: <FiBell className="mr-2" /> },
-    { path: '/dashboard/profile', label: 'Profile', icon: <FiUser className="mr-2" /> },
   ];
 
   return (
@@ -161,7 +160,7 @@ const DashboardNavbar = () => {
                           />
                           
                           <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
-                            <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
+                            <Link to="/dashboard/profile" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
                               Profile Settings
                             </Link>
                             <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
