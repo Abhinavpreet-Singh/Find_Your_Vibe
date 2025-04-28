@@ -34,7 +34,7 @@ const Hero = () => {
   };
 
   return (
-    <section id="hero" className="relative pt-24 pb-20 md:pt-28 md:pb-28 px-4 overflow-hidden">
+    <section id="hero" className="relative pt-28 pb-20 md:pt-28 md:pb-28 px-4 overflow-hidden">
       {/* Enhanced background gradients with subtle animation */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <motion.div 
@@ -80,77 +80,67 @@ const Hero = () => {
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-6 md:gap-10 items-center relative z-10 pr-0 md:pr-8">
         {/* Text Content - shifted right with padding */}
         <div className="md:ml-8">
-          {/* Enhanced highlight badge */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[#a477ab]/20 shadow-sm mb-8"
-          >
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.2, 1],
-                background: [
-                  "linear-gradient(to right, #a477ab, #c36376)",
-                  "linear-gradient(to right, #c36376, #edb04c)",
-                  "linear-gradient(to right, #a477ab, #c36376)"
-                ]
-              }}
-              transition={{ 
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="w-2 h-2 rounded-full mr-2"
-            />
-            <span className="text-sm font-medium text-gray-700">
-              Connect. Collaborate. Grow Together.
-            </span>
-          </motion.div>
-          
-          {/* Animated heading reveal */}
-          <div className="overflow-hidden mb-5">
-            <motion.h1 
+          {/* Enhanced animated heading with better visual treatment - no background */}
+          <div className="overflow-hidden mb-8">
+            <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight"
+              className="relative"
             >
-              Find Your <motion.span 
-                className="bg-clip-text text-transparent bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"
-                animate={{ 
-                  backgroundPosition: ["0% center", "100% center", "0% center"],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                style={{ backgroundSize: "300% 100%" }}
-              >Vibe</motion.span>
-            </motion.h1>
+              <motion.h1 
+                className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight"
+              >
+                <span className="relative z-10 text-gray-800 mr-3">Find</span>
+                <span className="relative z-10 text-gray-800 mr-3">Your</span>
+                <motion.span 
+                  className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"
+                  animate={{ 
+                    backgroundPosition: ["0% center", "100% center", "0% center"],
+                  }}
+                  transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  style={{ backgroundSize: "300% 100%" }}
+                >
+                  Vibe
+                </motion.span>
+              </motion.h1>
+              
+              {/* Animated underline effect - width matches the full text */}
+              <motion.div 
+                className="h-2 md:h-3 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c] rounded-full mt-2"
+                initial={{ scaleX: 0, originX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
+              ></motion.div>
+            </motion.div>
           </div>
           
-          {/* Slogan with slide-in animation */}
-          <motion.p 
+          {/* Enhanced slogan with slide-in animation - italic with no background */}
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-xl md:text-2xl font-semibold text-gray-700 mb-6"
+            className="mb-6"
           >
-            Your Network is Your Net Worth
-          </motion.p>
+            <p className="text-xl md:text-2xl font-semibold text-gray-700 italic relative z-10">
+              Your Network is Your Net Worth
+            </p>
+          </motion.div>
           
-          {/* Description paragraph with fade-in */}
+          {/* Description paragraph with enhanced animation */}
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-lg text-gray-600 max-w-lg mb-8"
           >
-            Connect with individuals who share your passions.
-            Build meaningful relationships and unlock endless opportunities 
-            through our vibrant community platform.
+            Connect with individuals who share your interests and passions.
+            Discover like-minded communities and unlock new experiences
+            through our vibrant platform.
           </motion.p>
           
           {/* Buttons with enhanced hover */}
@@ -238,14 +228,14 @@ const Hero = () => {
           </motion.div>
         </div>
         
-        {/* Enhanced Visual Content */}
-        <div className="relative h-[360px] md:h-[500px] md:mr-0 md:ml-8 mt-8 md:mt-0">
+        {/* Enhanced Visual Content - Added mt-12 for mobile spacing */}
+        <div className="relative h-[360px] md:h-[500px] md:mr-0 md:ml-8 mt-12 md:mt-0">
           <EnhancedFloatingIcons isLoaded={isLoaded} />
         </div>
       </div>
       
-      {/* Enhanced Full-width Animated Gradient Wave Separator */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden">
+      {/* Enhanced Full-width Animated Gradient Wave Separator - hidden on mobile */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden hidden md:block">
         <EnhancedAnimatedWave />
       </div>
     </section>
