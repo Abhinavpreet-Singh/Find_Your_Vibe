@@ -55,6 +55,7 @@ const DashboardNavbar = () => {
   const dashboardNavItems = [
     { path: '/dashboard/home', label: 'Home', icon: <FiHome className="mr-2" /> },
     { path: '/dashboard/connections', label: 'Vibes', icon: <FiUsers className="mr-2" /> },
+    { path: '/dashboard/groups', label: 'Groups', icon: <FiBriefcase className="mr-2" /> },
     { path: '/dashboard/events', label: 'Events', icon: <FiCalendar className="mr-2" /> },
     { path: '/dashboard/notifications', label: 'Notifications', icon: <FiBell className="mr-2" /> },
     { path: '/dashboard/profile', label: 'Profile', icon: <FiUser className="mr-2" /> },
