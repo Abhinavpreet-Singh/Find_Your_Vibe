@@ -1,7 +1,11 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 const Loader = () => {
+  // Get dark mode state from context
+  const { isDarkMode } = useTheme();
+  
   // Text for the loader
   const text = "Find Your Vibe";
   
@@ -15,7 +19,7 @@ const Loader = () => {
   }, []);
   
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-98 z-50">
+    <div className={`fixed inset-0 flex items-center justify-center ${isDarkMode ? 'bg-black bg-opacity-98' : 'bg-white bg-opacity-98'} z-50`}>
       <div className="relative">
         {/* Circular background animations */}
         <motion.div 
@@ -152,12 +156,16 @@ const Loader = () => {
               marginLeft: -40,
               marginTop: -40,
               borderColor: "rgba(164, 119, 171, 0.2)",
-              background: "rgba(255, 255, 255, 0.7)",
+              background: isDarkMode 
+                ? "rgba(0, 0, 0, 0.7)" // Pure black background in dark mode
+                : "rgba(255, 255, 255, 0.7)",
               backdropFilter: "blur(4px)",
-              boxShadow: "0 0 15px rgba(164, 119, 171, 0.3)",
+              boxShadow: isDarkMode 
+                ? "0 0 15px rgba(0, 0, 0, 0.5)" // Black glow in dark mode
+                : "0 0 15px rgba(164, 119, 171, 0.3)",
             }}
           >
-            {/* Central text - no animation */}
+            {/* Central text - always gradient */}
             <div className="text-center z-10">
               <div 
                 className="text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"
