@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Loader from './components/Loader';
 
 // Import pages with new folder structure
@@ -69,104 +70,106 @@ const PublicRoute = ({ children }) => {
 
 function App() {
   return (
-    <Router>
-      <div className="font-sans">
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<HomepageHome />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/cookies" element={<Cookies />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          {/* Auth routes - redirect to dashboard if already logged in */}
-          <Route 
-            path="/login" 
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            } 
-          />
-          <Route 
-            path="/signup" 
-            element={
-              <PublicRoute>
-                <Signup />
-              </PublicRoute>
-            } 
-          />
+    <ThemeProvider>
+      <Router>
+        <div className="font-sans">
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<HomepageHome />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/cookies" element={<Cookies />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            {/* Auth routes - redirect to dashboard if already logged in */}
+            <Route 
+              path="/login" 
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/signup" 
+              element={
+                <PublicRoute>
+                  <Signup />
+                </PublicRoute>
+              } 
+            />
 
-                    <Route 
-            path="/forgot-password" 
-            element={
-              <PublicRoute>
-                <ForgotPassword />
-              </PublicRoute>
-            } 
-          />
-          
-          {/* Dashboard routes - require authentication */}
-          <Route path="/dashboard" element={<Navigate to="/dashboard/home" />} />
-          
-          <Route 
-            path="/dashboard/home" 
-            element={
-              <ProfileProtectedRoute>
-                <DashboardHome />
-              </ProfileProtectedRoute>
-            } 
-          />
-          
-          <Route 
-            path="/dashboard/connections" 
-            element={
-              <ProfileProtectedRoute>
-                <Connections />
-              </ProfileProtectedRoute>
-            } 
-          />
-          
-          <Route 
-            path="/dashboard/events" 
-            element={
-              <ProfileProtectedRoute>
-                <Events />
-              </ProfileProtectedRoute>
-            } 
-          />
+            <Route 
+              path="/forgot-password" 
+              element={
+                <PublicRoute>
+                  <ForgotPassword />
+                </PublicRoute>
+              } 
+            />
+            
+            {/* Dashboard routes - require authentication */}
+            <Route path="/dashboard" element={<Navigate to="/dashboard/home" />} />
+            
+            <Route 
+              path="/dashboard/home" 
+              element={
+                <ProfileProtectedRoute>
+                  <DashboardHome />
+                </ProfileProtectedRoute>
+              } 
+            />
+            
+            <Route 
+              path="/dashboard/connections" 
+              element={
+                <ProfileProtectedRoute>
+                  <Connections />
+                </ProfileProtectedRoute>
+              } 
+            />
+            
+            <Route 
+              path="/dashboard/events" 
+              element={
+                <ProfileProtectedRoute>
+                  <Events />
+                </ProfileProtectedRoute>
+              } 
+            />
 
-                    <Route 
-            path="/dashboard/groups" 
-            element={
-              <ProfileProtectedRoute>
-                <Groups />
-              </ProfileProtectedRoute>
-            } 
-          />
-          
-          <Route 
-            path="/dashboard/notifications" 
-            element={
-              <ProfileProtectedRoute>
-                <Notifications />
-              </ProfileProtectedRoute>
-            } 
-          />
-          
-          <Route 
-            path="/dashboard/profile" 
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* Catch-all route for 404s */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </div>
-    </Router>
+            <Route 
+              path="/dashboard/groups" 
+              element={
+                <ProfileProtectedRoute>
+                  <Groups />
+                </ProfileProtectedRoute>
+              } 
+            />
+            
+            <Route 
+              path="/dashboard/notifications" 
+              element={
+                <ProfileProtectedRoute>
+                  <Notifications />
+                </ProfileProtectedRoute>
+              } 
+            />
+            
+            <Route 
+              path="/dashboard/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Catch-all route for 404s */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 

@@ -15,8 +15,8 @@ import Footer from '../../components/homepage/Footer';
 import Activities from '../../components/homepage/Activities';
 
 const Home = () => {
-  // Keep the useTheme hook for compatibility, but we won't use the toggle function
-  const { isDarkMode } = useTheme();
+  // Now we'll use both isDarkMode and toggleDarkMode from the context
+  const { isDarkMode, toggleDarkMode } = useTheme();
   const location = useLocation();
   
   // Handle scrolling to sections when redirected from other pages
@@ -45,18 +45,18 @@ const Home = () => {
   return (
     // Wrap the entire component with the ActiveSectionProvider
     <ActiveSectionProvider>
-      <div className={`min-h-screen bg-white ${isDarkMode ? 'dark' : ''}`}>
-        {/* Removed theme toggle button */}
-        
-        <Navbar />
-        <Hero id="hero" />
-        <Stats id="stats" />
-        <Hobbies id="hobbies" />
-        <Activities id="activities" />
-        <Testimonials id="testimonials" />
-        <CTA id="cta" />
-        <FAQ id="faq" />
-        <Footer />
+      <div className={isDarkMode ? 'dark' : ''}>
+        <div className="min-h-screen bg-white dark:bg-black">
+          <Navbar />
+          <Hero id="hero" />
+          <Stats id="stats" />
+          <Hobbies id="hobbies" />
+          <Activities id="activities" />
+          <Testimonials id="testimonials" />
+          <CTA id="cta" />
+          <FAQ id="faq" />
+          <Footer />
+        </div>
       </div>
     </ActiveSectionProvider>
   );

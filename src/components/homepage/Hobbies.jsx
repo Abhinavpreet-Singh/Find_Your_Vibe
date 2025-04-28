@@ -228,7 +228,7 @@ const DynamicHobbyCard = ({ category, index }) => {
           
           {/* Category title with hover effect */}
           <div className="flex items-center gap-2">
-            <h3 className="font-bold text-2xl mb-1 group-hover:text-[#333] transition-colors duration-300">
+            <h3 className="font-bold text-2xl mb-1 group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-300">
               {category.title}
             </h3>
             

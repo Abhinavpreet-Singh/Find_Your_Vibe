@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX, FiChevronDown, FiArrowRight, FiUser, FiLogOut } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiArrowRight, FiUser, FiLogOut, FiMoon, FiSun } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ActiveSectionContext } from '../../context/ActiveSectionContext';
+import { useTheme } from '../../context/ThemeContext';
 
 // Add activeSection state and IntersectionObserver to track the current section
 const Navbar = () => {
@@ -15,6 +16,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const { activeSection, setActiveSection } = useContext(ActiveSectionContext);
+  const { isDarkMode, toggleDarkMode } = useTheme();
   
   // Check if we're on the home page
   const isHomePage = location.pathname === '/' || location.pathname === '';
@@ -198,8 +200,8 @@ const Navbar = () => {
             <div 
               className={`relative z-10 transition-all duration-500 ${
                 isScrolled 
-                  ? "bg-white rounded-full shadow-md" 
-                  : "bg-white rounded-full shadow-sm"
+                  ? "bg-white dark:bg-black rounded-full shadow-md" 
+                  : "bg-white dark:bg-black/90 rounded-full shadow-sm"
               }`}
             >
               <nav>
@@ -216,7 +218,7 @@ const Navbar = () => {
                         onClick={(e) => handleSmoothScroll(e, "#hero")}
                       >
                         <div className="flex items-center">
-                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl shadow-md">
+                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl shadow-md dark:shadow-[#a477ab]/20">
                             <motion.div 
                               animate={{ 
                                 scale: [1, 1.05, 1],
@@ -231,8 +233,8 @@ const Navbar = () => {
                             </motion.div>
                           </div>
                           <div className="ml-2">
-                            <div className="text-lg font-bold text-gray-800">
-                              Find Your <span className="text-[#be70a9]">Vibe</span>
+                            <div className="text-lg font-bold text-gray-800 dark:text-white">
+                              Find Your <span className="text-[#be70a9] dark:text-[#d682bb]">Vibe</span>
                             </div>
                           </div>
                         </div>
@@ -312,8 +314,21 @@ const Navbar = () => {
                     />
                   </div>
                   
-                  {/* Auth Buttons */}
-                  <div className="hidden md:flex items-center space-x-3">
+                  {/* Auth Buttons and Theme Toggle - Simple Version */}
+                  <div className="hidden md:flex items-center space-x-4">
+                    {/* Simple Theme Toggle */}
+                    <button 
+                      onClick={toggleDarkMode}
+                      className={`p-2.5 rounded-full transition-all duration-300 ${
+                        isDarkMode 
+                          ? 'bg-gray-800 text-yellow-300 hover:bg-gray-700' 
+                          : 'bg-[#a477ab]/10 text-[#a477ab] hover:bg-[#a477ab]/20'
+                      }`}
+                      aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+                    >
+                      {isDarkMode ? <FiSun size={18} /> : <FiMoon size={18} />}
+                    </button>
+
                     {currentUser ? (
                       <div className="relative user-menu-dropdown">
                         <motion.button
@@ -373,7 +388,7 @@ const Navbar = () => {
                                   }}
                                 />
                                 
-                                <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
+                                <div className="relative bg-white dark:bg-black rounded-xl shadow-lg py-2 z-10">
                                   <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
                                     Dashboard
                                   </Link>
@@ -449,7 +464,7 @@ const Navbar = () => {
                             />
                             <Link to="/signup">
                               <motion.button
-                                className="relative px-5 py-2 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
+                                className="relative px-5 py-2 rounded-full bg-white dark:bg-black text-[#be70a9] font-medium shadow-sm z-10 hover:bg-[#be70a9] hover:text-black transition-colors"
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.97 }}
                               >
@@ -501,7 +516,20 @@ const Navbar = () => {
                   </div>
                   
                   {/* Mobile Menu Button */}
-                  <div className="md:hidden">
+                  <div className="md:hidden flex items-center space-x-3">
+                    {/* Simple Mobile Theme Toggle */}
+                    <button
+                      onClick={toggleDarkMode}
+                      className={`p-2 rounded-full transition-all duration-300 ${
+                        isDarkMode 
+                          ? 'bg-gray-800 text-yellow-300 hover:bg-gray-700' 
+                          : 'bg-[#a477ab]/10 text-[#a477ab] hover:bg-[#a477ab]/20'
+                      }`}
+                      aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+                    >
+                      {isDarkMode ? <FiSun size={18} /> : <FiMoon size={18} />}
+                    </button>
+
                     <motion.button
                       onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                       className={`p-2 rounded-full ${
@@ -532,7 +560,7 @@ const Navbar = () => {
           >
             {/* White backdrop */}
             <motion.div 
-              className="absolute inset-0 bg-white"
+              className="absolute inset-0 bg-white dark:bg-black"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.98 }}
               exit={{ opacity: 0 }}
@@ -558,7 +586,7 @@ const Navbar = () => {
                   }}
                 />
                 
-                <div className="relative bg-white rounded-2xl shadow-md overflow-hidden z-10">
+                <div className="relative bg-white dark:bg-black rounded-2xl shadow-md overflow-hidden z-10">
                   <motion.div
                     className="p-6 space-y-1"
                     initial="closed"
@@ -606,7 +634,27 @@ const Navbar = () => {
                       onClick={(e) => handleSmoothScroll(e, "#faq")}
                     />
                     
-                    <motion.div 
+                    {/* Dark mode toggle button for mobile */}
+                    <motion.div
+                      variants={{
+                        open: { opacity: 1, y: 0 },
+                        closed: { opacity: 0, y: 20 }
+                      }}
+                      className="mt-2"
+                    >
+                      <button
+                        onClick={toggleDarkMode}
+                        className={`flex items-center justify-between w-full py-4 px-3 text-lg font-medium rounded-xl transition-all duration-200 
+                        ${isDarkMode ? 'text-[#be70a9] bg-[#be70a9]/10' : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'}`}
+                      >
+                        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                        <span className="p-1 rounded-full">
+                          {isDarkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
+                        </span>
+                      </button>
+                    </motion.div>
+                    
+                    <motion.div
                       className="pt-6 space-y-3 border-t border-gray-100 mt-4"
                       variants={{
                         open: {
@@ -711,11 +759,23 @@ const Navbar = () => {
                               />
                               <Link to="/signup">
                                 <motion.button
-                                  className="relative w-full py-3 rounded-full bg-white text-[#be70a9] font-medium shadow-sm z-10"
+                                  className="relative px-5 py-2 rounded-full bg-white dark:bg-black text-[#be70a9] font-medium shadow-sm z-10 hover:bg-[#be70a9] hover:text-black transition-colors"
+                                  whileHover={{ scale: 1.03 }}
+                                  whileTap={{ scale: 0.97 }}
                                 >
                                   <span className="flex items-center">
                                     Sign up
-                                    <FiArrowRight className="ml-1.5" />
+                                    <motion.div
+                                      animate={{ x: [0, 3, 0] }}
+                                      transition={{ 
+                                        duration: 1.5, 
+                                        repeat: Infinity,
+                                        repeatType: "loop",
+                                        ease: "easeInOut",
+                                      }}
+                                    >
+                                      <FiArrowRight className="ml-1.5" />
+                                    </motion.div>
                                   </span>
                                 </motion.button>
                               </Link>
@@ -878,7 +938,7 @@ const NavDropdown = ({ label, items, isHomePage }) => {
                 }}
               />
               
-              <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
+              <div className="relative bg-white dark:bg-black rounded-xl shadow-lg py-2 z-10">
                 {items.map((item, i) => (
                   <DropdownItem 
                     key={i} 

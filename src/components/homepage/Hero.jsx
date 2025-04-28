@@ -3,6 +3,7 @@ import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { FiArrowRight } from 'react-icons/fi';
 import {Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const Hero = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -10,6 +11,7 @@ const Hero = () => {
   const orbitRef = useRef(null);
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const { isDarkMode } = useTheme();
 
   useEffect(() => {
     setIsLoaded(true);
@@ -34,7 +36,7 @@ const Hero = () => {
   };
 
   return (
-    <section id="hero" className="relative pt-28 pb-20 md:pt-28 md:pb-28 px-4 overflow-hidden">
+    <section id="hero" className="relative pt-24 pb-20 md:pt-28 md:pb-28 px-4 overflow-hidden">
       {/* Enhanced background gradients with subtle animation */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <motion.div 
@@ -77,7 +79,7 @@ const Hero = () => {
         />
       </div>
       
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-6 md:gap-10 items-center relative z-10 pr-0 md:pr-8">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-center relative z-10 pr-0 md:pr-8">
         {/* Text Content - shifted right with padding */}
         <div className="md:ml-8">
           {/* Enhanced animated heading with better visual treatment - no background */}
@@ -91,8 +93,8 @@ const Hero = () => {
               <motion.h1 
                 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight"
               >
-                <span className="relative z-10 text-gray-800 mr-3">Find</span>
-                <span className="relative z-10 text-gray-800 mr-3">Your</span>
+                <span className="relative z-10 text-gray-800 dark:text-gray-50 mr-3">Find</span>
+                <span className="relative z-10 text-gray-800 dark:text-gray-50 mr-3">Your</span>
                 <motion.span 
                   className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"
                   animate={{ 
@@ -126,7 +128,7 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mb-6"
           >
-            <p className="text-xl md:text-2xl font-semibold text-gray-700 italic relative z-10">
+            <p className="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-200 italic relative z-10">
               Your Network is Your Net Worth
             </p>
           </motion.div>
@@ -136,7 +138,7 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-lg text-gray-600 max-w-lg mb-8"
+            className="text-lg text-gray-600 dark:text-gray-300 max-w-lg mb-8"
           >
             Connect with individuals who share your interests and passions.
             Discover like-minded communities and unlock new experiences
@@ -176,7 +178,7 @@ const Hero = () => {
               
 {/* Button content */}
               <button 
-                className="relative px-7 py-4 rounded-full bg-white shadow-md z-10 flex items-center gap-2 transition-all duration-300 group-hover:bg-gray-50"
+                className="relative px-7 py-4 rounded-full bg-white dark:bg-black shadow-md z-10 flex items-center gap-2 transition-all duration-300 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
                 onClick={handleGetStarted}
               >
                 <span className="font-semibold text-lg text-[#a477ab]">
@@ -229,14 +231,9 @@ const Hero = () => {
         </div>
         
         {/* Enhanced Visual Content - Added mt-12 for mobile spacing */}
-        <div className="relative h-[360px] md:h-[500px] md:mr-0 md:ml-8 mt-12 md:mt-0">
+        <div className="relative h-[400px] md:h-[550px] md:mr-0 md:ml-8 mt-16 md:mt-0">
           <EnhancedFloatingIcons isLoaded={isLoaded} />
         </div>
-      </div>
-      
-      {/* Enhanced Full-width Animated Gradient Wave Separator - hidden on mobile */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden hidden md:block">
-        <EnhancedAnimatedWave />
       </div>
     </section>
   );
@@ -276,7 +273,7 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
       {/* Enhanced central logo with subtle 3D effect */}
       <div className="absolute z-30">
         <motion.div 
-          className="relative w-36 h-36 md:w-40 md:h-40 rounded-full bg-white flex items-center justify-center shadow-xl overflow-hidden"
+          className="relative w-36 h-36 md:w-40 md:h-40 rounded-full bg-white dark:bg-black flex items-center justify-center shadow-xl overflow-hidden"
           initial={{ scale: 0, rotateY: 0 }}
           animate={{ 
             scale: 1,
@@ -519,8 +516,8 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
                 
                 {/* Icon content with interactive hover effects */}
                 <motion.div
-                  className="w-[52px] h-[52px] md:w-[60px] md:h-[60px] rounded-xl bg-white shadow-lg flex items-center justify-center relative z-10"
-                  animate={{ 
+                  className="w-[52px] h-[52px] md:w-[60px] md:h-[60px] rounded-xl bg-white dark:bg-gray-900 shadow-lg flex items-center justify-center relative z-10"
+                  animate={{
                     y: moveUp ? [0, -12, 0] : [0, 12, 0],
                     rotate: index % 2 === 0 ? [0, 5, 0, -5, 0] : [0, -5, 0, 5, 0],
                     scale: activeIcon === index ? 1.1 : 1
@@ -551,7 +548,7 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
                 <AnimatePresence>
                   {activeIcon === index && (
                     <motion.div
-                      className="absolute left-0 top-0 bg-white/90 backdrop-blur-sm rounded-md shadow-lg px-3 py-2 text-center w-max max-w-[160px] pointer-events-none"
+                      className="absolute left-0 top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-md shadow-lg px-3 py-2 text-center w-max max-w-[160px] pointer-events-none"
                       initial={{ opacity: 0, y: 10, scale: 0.8 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 5, scale: 0.9 }}
@@ -559,7 +556,7 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
                       style={{ zIndex: 50 }}
                     >
                       <p className="font-medium text-sm" style={{ color: item.color }}>{item.name}</p>
-                      <p className="text-xs text-gray-600 mt-0.5">{item.description}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">{item.description}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -671,229 +668,6 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
           );
         })}
       </svg>
-    </div>
-  );
-};
-
-// Enhanced Wave Animation with more dynamic effects
-const EnhancedAnimatedWave = () => {
-  // Add check for mobile view
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  
-  // Return null if on mobile to hide the wave
-  if (isMobile) {
-    return null;
-  }
-  
-  return (
-    <div className="relative h-[100px]">
-      <svg
-        preserveAspectRatio="none"
-        width="100%"
-        height="100%"
-        viewBox="0 0 1440 160"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="absolute bottom-0"
-        style={{ 
-          width: "100vw", 
-          left: "50%", 
-          transform: "translateX(-50%)",
-          maxWidth: "none"
-        }}
-      >
-        <defs>
-          {/* Enhanced dynamic animated gradients */}
-          <linearGradient id="waveGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <animate
-              attributeName="x1"
-              values="0%;100%;0%"
-              dur="15s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="x2"
-              values="100%;200%;100%"
-              dur="15s"
-              repeatCount="indefinite"
-            />
-            <stop offset="0%" stopColor="#a477ab" stopOpacity="0.25">
-              <animate
-                attributeName="stop-color"
-                values="#a477ab;#c36376;#edb04c;#a477ab"
-                dur="10s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="stop-opacity"
-                values="0.25;0.35;0.25"
-                dur="7s"
-                repeatCount="indefinite"
-              />
-            </stop>
-            <stop offset="100%" stopColor="#edb04c" stopOpacity="0.25">
-              <animate
-                attributeName="stop-color"
-                values="#edb04c;#a477ab;#c36376;#edb04c"
-                dur="10s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="stop-opacity"
-                values="0.25;0.35;0.25"
-                dur="9s"
-                repeatCount="indefinite"
-              />
-            </stop>
-          </linearGradient>
-          
-          <linearGradient id="waveGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <animate
-              attributeName="x1"
-              values="0%;100%;0%"
-              dur="12s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="x2"
-              values="100%;200%;100%"
-              dur="12s"
-              repeatCount="indefinite"
-            />
-            <stop offset="0%" stopColor="#c36376" stopOpacity="0.2">
-              <animate
-                attributeName="stop-color"
-                values="#c36376;#edb04c;#a477ab;#c36376"
-                dur="12s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="stop-opacity"
-                values="0.2;0.3;0.2"
-                dur="8s"
-                repeatCount="indefinite"
-              />
-            </stop>
-            <stop offset="100%" stopColor="#a477ab" stopOpacity="0.2">
-              <animate
-                attributeName="stop-color"
-                values="#a477ab;#c36376;#edb04c;#a477ab"
-                dur="12s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="stop-opacity"
-                values="0.2;0.3;0.2"
-                dur="10s"
-                repeatCount="indefinite"
-              />
-            </stop>
-          </linearGradient>
-          
-          <linearGradient id="waveGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
-            <animate
-              attributeName="x1"
-              values="0%;100%;0%"
-              dur="18s"
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="x2"
-              values="100%;200%;100%"
-              dur="18s"
-              repeatCount="indefinite"
-            />
-            <stop offset="0%" stopColor="#edb04c" stopOpacity="0.15">
-              <animate
-                attributeName="stop-color"
-                values="#edb04c;#a477ab;#c36376;#edb04c"
-                dur="15s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="stop-opacity"
-                values="0.15;0.25;0.15"
-                dur="12s"
-                repeatCount="indefinite"
-              />
-            </stop>
-            <stop offset="100%" stopColor="#c36376" stopOpacity="0.15">
-              <animate
-                attributeName="stop-color"
-                values="#c36376;#edb04c;#a477ab;#c36376"
-                dur="15s"
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="stop-opacity"
-                values="0.15;0.25;0.15"
-                dur="11s"
-                repeatCount="indefinite"
-              />
-            </stop>
-          </linearGradient>
-          
-          {/* Enhanced wave path animation with more dramatic morphing */}
-          <filter id="blur" x="-5%" y="-5%" width="110%" height="110%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
-          </filter>
-          <path 
-            id="wavePath1"
-            d="M0,0V70c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,52.43,512.34,73.67,583,92.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,45,1113,5.71,1200,72.47V0Z"
-          >
-            <animate
-              attributeName="d"
-              values="
-                M0,0V70c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,52.43,512.34,73.67,583,92.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,45,1113,5.71,1200,72.47V0Z;
-                M0,0V70c77.79,12.2,153.59,52.17,208,18,50.36-35.37,106.33-13.31,176.8-67.5C458.64,12.43,532.34,93.67,583,62.05c89.27-58,118.3,44.88,189.4,43.08,46.15-16,89.85-37.84,124.45-19.34C979.49,95,1113,24.29,1200,52.47V0Z;
-                M0,0V70c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,52.43,512.34,73.67,583,92.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,45,1113,5.71,1200,72.47V0Z
-              "
-              dur="20s"
-              repeatCount="indefinite"
-            />
-          </path>
-          
-          <path 
-            id="wavePath2"
-            d="M0,0V35.81C13,56.92,27.64,76.86,47.69,92.05,99.41,131.27,165,131,224.58,111.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z"
-          >
-            <animate
-              attributeName="d"
-              values="
-                M0,0V35.81C13,56.92,27.64,76.86,47.69,92.05,99.41,131.27,165,131,224.58,111.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z;
-                M0,0V55.81C33,46.92,57.64,66.86,87.69,82.05,129.41,101.27,185,111,244.58,91.58c51.15-40.15,40.09-26.07,79.67-69.8,60.92-29,94.73-26,140.83-19.67,46.26-22.85,70.9,49.42,118.6,31.56,41.77,25.39,52.32,52,103.63,103,50.44,10.79,91.35-36.69,119.13-24.28s65.16-29,136.92-73.05c49.73-15.85,103.28,42.88,158.9,38.84,40.2,18.66,49,26.17,87.09-27.5,12.43-30.89,38-26.93,60.65-39.24V0Z;
-                M0,0V35.81C13,56.92,27.64,76.86,47.69,92.05,99.41,131.27,165,131,224.58,111.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z
-              "
-              dur="25s"
-              repeatCount="indefinite"
-            />
-          </path>
-          
-          <path 
-            id="wavePath3"
-            d="M0,0V15.63C149.93,69,314.09,81.32,475.83,52.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,87.22,886,105.24,951.2,100c86.53-7,172.46-45.71,248.8-84.81V0Z"
-          >
-            <animate
-              attributeName="d"
-              values="
-                M0,0V15.63C149.93,69,314.09,81.32,475.83,52.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,87.22,886,105.24,951.2,100c86.53-7,172.46-45.71,248.8-84.81V0Z;
-                M0,0V35.63C129.93,49,294.09,61.32,455.83,32.57c63-17.64,104.23-10.12,157.61-46.46c39-18.63,102.48,42.24,195.56,25.4C857.93,47.22,886,75.24,951.2,80c96.53-17,192.46-35.71,268.8-74.81V0Z;
-                M0,0V15.63C149.93,69,314.09,81.32,475.83,52.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,87.22,886,105.24,951.2,100c86.53-7,172.46-45.71,248.8-84.81V0Z
-              "
-              dur="30s"
-              repeatCount="indefinite"
-            />
-          </path>
-        </defs>
-        
-        {/* Use the paths with animated gradients */}
-        <use xlinkHref="#wavePath1" fill="url(#waveGradient1)" />
-        <use xlinkHref="#wavePath2" fill="url(#waveGradient2)" />
-        <use xlinkHref="#wavePath3" fill="url(#waveGradient3)" />
-      </svg>
-      
-      {/* White fade overlay for smooth transition */}
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-white to-transparent"></div>
     </div>
   );
 };
