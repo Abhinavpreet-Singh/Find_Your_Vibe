@@ -227,11 +227,11 @@ const Footer = () => {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="h-14 w-14 rounded-lg bg-white dark:bg-black shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 border border-gray-100 dark:border-gray-800 hover:border-0"
+                  className="h-14 w-14 rounded-lg bg-white dark:bg-black shadow-md flex items-center justify-center text-black dark:text-white border border-gray-100 dark:border-gray-800 hover:border-0"
                   whileHover={{ 
                     y: -5,
                     backgroundColor: link.color,
-                    color: "#000000",
+                    color: "#ffffff",
                     boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
                   }}
                   whileTap={{ scale: 0.95 }}

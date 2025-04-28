@@ -21,57 +21,6 @@ const Loader = () => {
   return (
     <div className={`fixed inset-0 flex items-center justify-center ${isDarkMode ? 'bg-black bg-opacity-98' : 'bg-white bg-opacity-98'} z-50`}>
       <div className="relative">
-        {/* Circular background animations */}
-        <motion.div 
-          className="absolute rounded-full bg-[#a477ab]/10 blur-xl"
-          initial={{ width: 180, height: 180, x: -90, y: -90 }}
-          animate={{ 
-            width: [180, 230, 180],
-            height: [180, 230, 180],
-            opacity: [0.5, 0.8, 0.5]
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut"
-          }}
-        />
-        
-        <motion.div 
-          className="absolute rounded-full bg-[#c36376]/10 blur-xl"
-          initial={{ width: 220, height: 220, x: -110, y: -110 }}
-          animate={{ 
-            width: [220, 270, 220],
-            height: [220, 270, 220],
-            opacity: [0.4, 0.7, 0.4]
-          }}
-          transition={{
-            duration: 3.5,
-            delay: 0.3,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut"
-          }}
-        />
-        
-        <motion.div 
-          className="absolute rounded-full bg-[#edb04c]/10 blur-xl"
-          initial={{ width: 250, height: 250, x: -125, y: -125 }}
-          animate={{ 
-            width: [250, 300, 250],
-            height: [250, 300, 250],
-            opacity: [0.3, 0.6, 0.3]
-          }}
-          transition={{
-            duration: 4,
-            delay: 0.5,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut"
-          }}
-        />
-        
         {/* Main loader container with larger dimensions */}
         <div className="relative w-52 h-52" key={animationKey}>
           {/* Outermost rotating ring */}
