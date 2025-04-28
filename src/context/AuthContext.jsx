@@ -27,6 +27,7 @@ export function AuthProvider({ children }) {
   const [profileCompleted, setProfileCompleted] = useState(false);
   const [authInitialized, setAuthInitialized] = useState(false);
 
+  // Effect to handle auth state changes
   useEffect(() => {
     // Set persistence to LOCAL to survive page reloads
     setPersistence(auth, browserLocalPersistence)
@@ -60,6 +61,11 @@ export function AuthProvider({ children }) {
 
     return unsubscribe;
   }, []);
+
+  // Function to update profile completion status
+  async function updateProfileCompletionStatus(isCompleted) {
+    setProfileCompleted(isCompleted);
+  }
 
   // Email/Password Sign Up
   async function signup(email, password) {
@@ -188,7 +194,8 @@ export function AuthProvider({ children }) {
     googleSignIn,
     githubSignIn,
     resetPassword,
-    logout
+    logout,
+    updateProfileCompletionStatus
   };
 
   if (loading) {

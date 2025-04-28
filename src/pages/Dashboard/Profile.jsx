@@ -50,7 +50,7 @@ const programs = [
 ];
 
 export default function Profile() {
-  const { currentUser } = useAuth();
+  const { currentUser, updateProfileCompletionStatus } = useAuth();
   const navigate = useNavigate();
   
   const [loading, setLoading] = useState(true);
@@ -271,15 +271,16 @@ export default function Profile() {
         await saveUserProfile(currentUser.uid, finalProfile);
         console.log("Profile saved successfully");
         
-        // Then update local state
+        // Then update local state and auth context
         setProfile(finalProfile);
         setProfileComplete(true);
         
-        // Delay navigation slightly to ensure state updates
-        setTimeout(() => {
-          console.log("Redirecting to dashboard home");
-          navigate('/dashboard/home');
-        }, 500);
+        // Update the profile completion status in AuthContext
+        // This is the key change that fixes the navigation issue
+        await updateProfileCompletionStatus(true);
+        
+        // Now navigate to the dashboard home
+        navigate('/dashboard/home');
       } else {
         // Otherwise just go to next step
         console.log("Moving to next step");
