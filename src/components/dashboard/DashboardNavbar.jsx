@@ -64,148 +64,180 @@ const DashboardNavbar = () => {
     <>
       <header 
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 px-4 ${
-          isScrolled ? 'py-2 bg-white shadow-md' : 'py-3 bg-white shadow-sm'
+          isScrolled ? 'py-2' : 'py-5 bg-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto">
-          <nav>
-            <div className="flex items-center justify-between h-16 px-6">
-              {/* Logo */}
+        <div className="max-w-7xl mx-auto relative">
+          {/* Dynamic container with gradient border */}
+          <div className="relative">
+            {/* Animated gradient border - appears only when scrolled */}
+            {isScrolled && (
               <motion.div 
-                className="flex items-center"
-                whileHover={{ scale: 1.05 }}
-                // Fixed whileTap issue by properly setting the correct HTML element with motion
-              >
-                <Link to="/">
-                  <div className="flex items-center">
-                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl shadow-md">
-                      <motion.div 
-                        animate={{ 
-                          scale: [1, 1.05, 1],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      >
-                        FYV
-                      </motion.div>
-                    </div>
-                    <div className="ml-2">
-                      <div className="text-lg font-bold text-gray-800">
-                        Find Your <span className="text-[#be70a9]">Vibe</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-              
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center space-x-1">
-                {dashboardNavItems.map((item, index) => (
-                  <DashboardNavItem 
-                    key={index}
-                    to={item.path} 
-                    label={item.label}
-                    icon={item.icon}
-                  />
-                ))}
-              </div>
-              
-              {/* User Menu */}
-              <div className="hidden md:flex items-center">
-                <div className="relative user-menu-dropdown">
-                  <motion.button
-                    onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center p-1 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
-                    whileHover={{ scale: 1.03 }}
+                className="absolute -inset-[3px] rounded-full z-0 overflow-hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{
+                  background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                  backgroundSize: "300% 100%",
+                  backgroundPosition: "0% 0%",
+                  animation: "gradientMove 8s linear infinite",
+                }}
+              />
+            )}
+            
+            {/* Background - changes with scroll */}
+            <div 
+              className={`relative z-10 transition-all duration-500 ${
+                isScrolled 
+                  ? "bg-white rounded-full shadow-md" 
+                  : "bg-white rounded-full shadow-sm"
+              }`}
+            >
+              <nav>
+                <div className="flex items-center justify-between h-16 px-6">
+                  {/* Logo */}
+                  <motion.div 
+                    className="flex items-center"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-[#a477ab]/30">
-                      {currentUser.photoURL ? (
-                        <img 
-                          src={currentUser.photoURL} 
-                          alt="Profile" 
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div className="h-full w-full bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold">
-                          {currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0)?.toUpperCase() || 'U'}
-                        </div>
-                      )}
-                    </div>
-                    {/* Added username display */}
-                    <span className="mx-2 font-medium text-gray-700">
-                      {currentUser.customDisplayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
-                    </span>
-                    <motion.div
-                      animate={{ rotate: userMenuOpen ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <FiChevronDown />
-                    </motion.div>
-                  </motion.button>
-                  
-                  <AnimatePresence>
-                    {userMenuOpen && (
-                      <motion.div
-                        className="absolute right-0 mt-2 w-48 z-10"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <div className="relative">
+                    <Link to="/">
+                      <div className="flex items-center">
+                        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl shadow-md">
                           <motion.div 
-                            className="absolute -inset-[3px] rounded-xl z-0 overflow-hidden"
-                            animate={{
-                              backgroundPosition: ["0% 0%", "200% 200%"],
+                            animate={{ 
+                              scale: [1, 1.05, 1],
                             }}
                             transition={{
+                              duration: 2,
                               repeat: Infinity,
-                              repeatType: "loop",
-                              duration: 8,
-                              ease: "linear"
+                              ease: "easeInOut"
                             }}
-                            style={{
-                              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-                              backgroundSize: "300% 100%",
-                            }}
-                          />
-                          
-                          <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
-                            <Link to="/dashboard/profile" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
-                              Profile Settings
-                            </Link>
-                            <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
-                              Dashboard
-                            </Link>
-                            <button
-                              onClick={handleLogout}
-                              className="w-full text-left px-4 py-2 text-gray-700 hover:text-red-600 hover:bg-red-50 flex items-center"
-                            >
-                              <FiLogOut className="mr-2" /> Log out
-                            </button>
+                          >
+                            FYV
+                          </motion.div>
+                        </div>
+                        <div className="ml-2">
+                          <div className="text-lg font-bold text-gray-800">
+                            Find Your <span className="text-[#be70a9]">Vibe</span>
                           </div>
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                      </div>
+                    </Link>
+                  </motion.div>
+                  
+                  {/* Desktop Navigation */}
+                  <div className="hidden md:flex items-center space-x-1">
+                    {dashboardNavItems.map((item, index) => (
+                      <DashboardNavItem 
+                        key={index}
+                        to={item.path} 
+                        label={item.label}
+                        icon={item.icon}
+                      />
+                    ))}
+                  </div>
+                  
+                  {/* User Menu */}
+                  <div className="hidden md:flex items-center">
+                    <div className="relative user-menu-dropdown">
+                      <motion.button
+                        onClick={() => setUserMenuOpen(!userMenuOpen)}
+                        className="flex items-center p-1 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
+                        whileHover={{ scale: 1.03 }}
+                      >
+                        <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-[#a477ab]/30">
+                          {currentUser?.photoURL ? (
+                            <img 
+                              src={currentUser.photoURL} 
+                              alt="Profile" 
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-full w-full bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold">
+                              {currentUser?.displayName?.charAt(0) || currentUser?.email?.charAt(0)?.toUpperCase() || 'U'}
+                            </div>
+                          )}
+                        </div>
+                        {/* Added username display */}
+                        <span className="mx-2 font-medium text-gray-700">
+                          {currentUser?.customDisplayName || currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User'}
+                        </span>
+                        <motion.div
+                          animate={{ rotate: userMenuOpen ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <FiChevronDown />
+                        </motion.div>
+                      </motion.button>
+                      
+                      <AnimatePresence>
+                        {userMenuOpen && (
+                          <motion.div
+                            className="absolute right-0 mt-2 w-48 z-10"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <div className="relative">
+                              <motion.div 
+                                className="absolute -inset-[3px] rounded-xl z-0 overflow-hidden"
+                                animate={{
+                                  backgroundPosition: ["0% 0%", "200% 200%"],
+                                }}
+                                transition={{
+                                  repeat: Infinity,
+                                  repeatType: "loop",
+                                  duration: 8,
+                                  ease: "linear"
+                                }}
+                                style={{
+                                  background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
+                                  backgroundSize: "300% 100%",
+                                }}
+                              />
+                              
+                              <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
+                                <Link to="/dashboard/profile" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
+                                  Profile Settings
+                                </Link>
+                                <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
+                                  Dashboard
+                                </Link>
+                                <button
+                                  onClick={handleLogout}
+                                  className="w-full text-left px-4 py-2 text-gray-700 hover:text-red-600 hover:bg-red-50 flex items-center"
+                                >
+                                  <FiLogOut className="mr-2" /> Log out
+                                </button>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Menu Button */}
+                  <div className="md:hidden">
+                    <motion.button
+                      onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                      className={`p-2 rounded-full ${
+                        isMobileMenuOpen ? 'bg-[#a477ab]/10' : isScrolled ? 'bg-gray-50' : 'bg-white'
+                      } border border-gray-100`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      {isMobileMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+                    </motion.button>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Mobile Menu Button */}
-              <div className="md:hidden">
-                <motion.button
-                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className={`p-2 rounded-full border border-gray-200`}
-                  // Fixed whileTap issue by properly setting the correct HTML element with motion
-                >
-                  {isMobileMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
-                </motion.button>
-              </div>
+              </nav>
             </div>
-          </nav>
+          </div>
         </div>
       </header>
       
@@ -268,7 +300,7 @@ const DashboardNavbar = () => {
                       }}
                     >
                       <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-[#a477ab]/30">
-                        {currentUser.photoURL ? (
+                        {currentUser?.photoURL ? (
                           <img 
                             src={currentUser.photoURL} 
                             alt="Profile" 
@@ -276,13 +308,13 @@ const DashboardNavbar = () => {
                           />
                         ) : (
                           <div className="h-full w-full bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl">
-                            {currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0)?.toUpperCase() || 'U'}
+                            {currentUser?.displayName?.charAt(0) || currentUser?.email?.charAt(0)?.toUpperCase() || 'U'}
                           </div>
                         )}
                       </div>
                       <div className="ml-3">
                         <div className="font-semibold text-gray-800">
-                          {currentUser.customDisplayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
+                          {currentUser?.customDisplayName || currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User'}
                         </div>
                         <Link to="/dashboard/profile" className="text-sm text-[#be70a9]">
                           View Profile
@@ -290,7 +322,6 @@ const DashboardNavbar = () => {
                       </div>
                     </motion.div>
                     
-                    {/* Fixed the startsWith error by adding proper null checks */}
                     {dashboardNavItems.map((item, index) => (
                       <MobileNavItem 
                         key={index}
@@ -328,63 +359,39 @@ const DashboardNavbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Add CSS keyframes for gradient animation */}
+      <style jsx global>{`
+        @keyframes gradientMove {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 200% 0%; }
+        }
+      `}</style>
     </>
   );
 };
 
-// Dashboard Nav Item with animated gradient underline
+// Dashboard Nav Item with hover effect but no underline
 const DashboardNavItem = ({ to, label, icon }) => {
-  const [isHovered, setIsHovered] = useState(false);
   const location = useLocation();
   const isActive = location.pathname === to;
 
   return (
-    <div 
-      className="relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <Link
+      to={to}
+      className={`px-4 py-2 font-medium rounded-full flex items-center transition-all duration-200 ${
+        isActive 
+          ? 'text-[#be70a9] bg-[#be70a9]/10' 
+          : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
+      }`}
     >
-      <Link
-        to={to}
-        className={`px-4 py-2 font-medium rounded-full flex items-center ${
-          isActive ? 'text-[#be70a9] bg-[#be70a9]/10' : 'text-gray-800'
-        }`}
-      >
-        {icon}
-        {label}
-      </Link>
-      
-      {/* Animated Gradient Underline */}
-      <div className="absolute -bottom-1 left-2.5 right-2.5 h-[2px] overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 rounded-full overflow-hidden"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: isHovered || isActive ? 1 : 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        >
-          <motion.div 
-            className="w-full h-full"
-            style={{
-              background: "linear-gradient(90deg, #a477ab, #c36376, #edb04c, #c36376, #a477ab)",
-              backgroundSize: "300% 100%",
-            }}
-            animate={{
-              backgroundPosition: ["0% 0%", "200% 0%"],
-            }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 3,
-              ease: "linear"
-            }}
-          />
-        </motion.div>
-      </div>
-    </div>
+      {icon}
+      {label}
+    </Link>
   );
 };
 
-// Fixed mobile nav item with proper null checking for startsWith
+// Mobile nav item
 const MobileNavItem = ({ to, label, icon }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
@@ -399,7 +406,7 @@ const MobileNavItem = ({ to, label, icon }) => {
       <Link
         to={to || '/'}
         className={`block py-4 px-3 text-lg font-medium rounded-xl flex items-center ${
-          isActive ? 'bg-[#a477ab]/10 text-[#be70a9]' : 'text-gray-800 hover:bg-[#a477ab]/5'
+          isActive ? 'bg-[#a477ab]/10 text-[#be70a9]' : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
         }`}
       >
         {icon}
