@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FiPlus, FiUsers, FiCalendar } from "react-icons/fi";
 import DashboardNavbar from "../../components/dashboard/DashboardNavbar";
 import { useAuth } from "../../context/AuthContext";
+import Loader from "../../components/Loader";
 
 const Groups = () => {
   const { currentUser } = useAuth();
@@ -125,9 +126,7 @@ const Groups = () => {
         </motion.div>
 
         {loading ? (
-          <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c36376]"></div>
-          </div>
+          <Loader />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {groupCategories.map((group, index) => (
