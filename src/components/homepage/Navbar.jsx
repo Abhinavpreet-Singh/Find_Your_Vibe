@@ -290,10 +290,13 @@ const Navbar = () => {
                               </div>
                             )}
                           </div>
+                          {/* Added username display */}
+                          <span className="mx-2 font-medium text-gray-700">
+                            {currentUser.customDisplayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
+                          </span>
                           <motion.div
                             animate={{ rotate: userMenuOpen ? 180 : 0 }}
                             transition={{ duration: 0.2 }}
-                            className="ml-1"
                           >
                             <FiChevronDown />
                           </motion.div>
@@ -595,11 +598,11 @@ const Navbar = () => {
                                   />
                                 ) : (
                                   <div className="h-full w-full bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xs">
-                                    {currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0)?.toUpperCase() || 'U'}
+                                    {currentUser.customDisplayName?.charAt(0) || currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0)?.toUpperCase() || 'U'}
                                   </div>
                                 )}
                               </div>
-                              Profile Settings
+                              {currentUser.customDisplayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
                             </motion.button>
                           </Link>
                           <button

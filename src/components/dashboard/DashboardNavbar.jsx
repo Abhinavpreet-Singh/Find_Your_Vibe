@@ -134,10 +134,13 @@ const DashboardNavbar = () => {
                         </div>
                       )}
                     </div>
+                    {/* Added username display */}
+                    <span className="mx-2 font-medium text-gray-700">
+                      {currentUser.customDisplayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
+                    </span>
                     <motion.div
                       animate={{ rotate: userMenuOpen ? 180 : 0 }}
                       transition={{ duration: 0.2 }}
-                      className="ml-1"
                     >
                       <FiChevronDown />
                     </motion.div>
@@ -256,6 +259,37 @@ const DashboardNavbar = () => {
                       closed: {}
                     }}
                   >
+                    {/* Add profile section to mobile menu */}
+                    <motion.div
+                      className="flex items-center p-3 mb-4 rounded-xl bg-[#a477ab]/5"
+                      variants={{
+                        open: { opacity: 1, y: 0 },
+                        closed: { opacity: 0, y: -20 }
+                      }}
+                    >
+                      <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-[#a477ab]/30">
+                        {currentUser.photoURL ? (
+                          <img 
+                            src={currentUser.photoURL} 
+                            alt="Profile" 
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="h-full w-full bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white font-bold text-xl">
+                            {currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0)?.toUpperCase() || 'U'}
+                          </div>
+                        )}
+                      </div>
+                      <div className="ml-3">
+                        <div className="font-semibold text-gray-800">
+                          {currentUser.customDisplayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
+                        </div>
+                        <Link to="/dashboard/profile" className="text-sm text-[#be70a9]">
+                          View Profile
+                        </Link>
+                      </div>
+                    </motion.div>
+                    
                     {/* Fixed the startsWith error by adding proper null checks */}
                     {dashboardNavItems.map((item, index) => (
                       <MobileNavItem 

@@ -23,6 +23,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profileCompleted, setProfileCompleted] = useState(false);
   const [authInitialized, setAuthInitialized] = useState(false);
@@ -45,13 +46,25 @@ export function AuthProvider({ children }) {
       if (user) {
         // Check if user has completed their profile
         try {
-          const userProfile = await getUserProfile(user.uid);
-          setProfileCompleted(userProfile?.completedProfile === true);
+          const profile = await getUserProfile(user.uid);
+          setUserProfile(profile || null);
+          setProfileCompleted(profile?.completedProfile === true);
+          
+          // If the profile has a custom display name, enhance the currentUser object
+          if (profile && profile.displayName) {
+            // Create an enhanced user object that includes the custom displayName
+            const enhancedUser = {
+              ...user,
+              customDisplayName: profile.displayName
+            };
+            setCurrentUser(enhancedUser);
+          }
         } catch (error) {
           console.error("Error checking profile completion:", error);
           setProfileCompleted(false);
         }
       } else {
+        setUserProfile(null);
         setProfileCompleted(false);
       }
       
@@ -65,6 +78,19 @@ export function AuthProvider({ children }) {
   // Function to update profile completion status
   async function updateProfileCompletionStatus(isCompleted) {
     setProfileCompleted(isCompleted);
+  }
+
+  // Function to update the user profile in context
+  async function updateUserProfile(profile) {
+    setUserProfile(profile);
+    
+    // Update the enhanced user object with the new display name
+    if (currentUser && profile.displayName) {
+      setCurrentUser({
+        ...currentUser,
+        customDisplayName: profile.displayName
+      });
+    }
   }
 
   // Email/Password Sign Up
@@ -186,6 +212,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
+    userProfile,
     profileCompleted,
     loading,
     authInitialized,
@@ -195,7 +222,8 @@ export function AuthProvider({ children }) {
     githubSignIn,
     resetPassword,
     logout,
-    updateProfileCompletionStatus
+    updateProfileCompletionStatus,
+    updateUserProfile
   };
 
   if (loading) {
