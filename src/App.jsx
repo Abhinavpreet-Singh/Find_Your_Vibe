@@ -6,6 +6,7 @@ import Loader from './components/Loader';
 import HomepageHome from './pages/Homepage/Home';
 import Login from './pages/Homepage/Login';
 import Signup from './pages/Homepage/Signup';
+import ForgotPassword from './pages/Homepage/ForgotPassword';
 import Contact from './pages/Homepage/Contact';
 import Cookies from './pages/Homepage/Cookies';
 import Privacy from './pages/Homepage/Privacy';
@@ -91,6 +92,15 @@ function App() {
             element={
               <PublicRoute>
                 <Signup />
+              </PublicRoute>
+            } 
+          />
+
+                    <Route 
+            path="/forgot-password" 
+            element={
+              <PublicRoute>
+                <ForgotPassword />
               </PublicRoute>
             } 
           />
