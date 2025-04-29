@@ -244,7 +244,7 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
   const [activeIcon, setActiveIcon] = useState(null);
   const controls = useAnimation();
   
-  // Define icons and themes with colors - extended with more data
+  // Define icons and themes with colors
   const icons = [
     { emoji: "💻", color: "#a477ab", animationDuration: 8, name: "Tech", description: "Connect with tech enthusiasts" },
     { emoji: "🎮", color: "#c36376", animationDuration: 10, name: "Gaming", description: "Find your gaming community" },
@@ -259,140 +259,138 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
   // Check if window is defined (client-side rendering)
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   
-  // Particles configuration
-  const particles = Array.from({ length: 30 }).map((_, i) => ({
-    id: i,
-    x: Math.random() * 400 - 200,
-    y: Math.random() * 400 - 200,
-    size: Math.random() * 3 + 1,
-    color: icons[Math.floor(Math.random() * icons.length)].color
-  }));
-
   return (
     <div className="absolute inset-0 flex items-center justify-center scale-90 md:scale-100 md:translate-x-6">
-      {/* Enhanced central logo with subtle 3D effect */}
+      {/* Enhanced central logo with refined design */}
       <div className="absolute z-30">
         <motion.div 
-          className="relative w-36 h-36 md:w-40 md:h-40 rounded-full bg-white dark:bg-black flex items-center justify-center shadow-xl overflow-hidden"
-          initial={{ scale: 0, rotateY: 0 }}
-          animate={{ 
-            scale: 1,
-            rotateY: [0, 5, 0, -5, 0], // Subtle 3D rotation
-            boxShadow: [
-              "0px 0px 30px rgba(164, 119, 171, 0.3)",
-              "0px 0px 40px rgba(195, 99, 118, 0.3)",
-              "0px 0px 30px rgba(237, 176, 76, 0.3)",
-              "0px 0px 30px rgba(164, 119, 171, 0.3)"
-            ]
-          }}
+          className="relative w-36 h-36 md:w-40 md:h-40 rounded-full bg-white dark:bg-black flex items-center justify-center shadow-lg"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
           transition={{ 
             type: "spring", 
             stiffness: 60,
-            rotateY: {
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut"
-            },
-            boxShadow: {
+            duration: 0.8
+          }}
+        >
+          {/* Improved gradient border with subtle animation */}
+          <motion.div 
+            className="absolute inset-0 rounded-full overflow-hidden"
+            initial={{ opacity: 0.3 }}
+            animate={{ opacity: [0.3, 0.5, 0.3] }}
+            transition={{
               duration: 8,
               repeat: Infinity,
               ease: "easeInOut"
-            }
-          }}
-          style={{ perspective: 1000 }} // For 3D effect
-        >
-          {/* Logo content with animated text */}
+            }}
+          >
+            <div className="absolute inset-0 rounded-full border-2 border-[#a477ab]/30 dark:border-[#a477ab]/40"></div>
+            <motion.div 
+              className="absolute inset-0" 
+              animate={{
+                background: [
+                  "conic-gradient(from 0deg at 50% 50%, #a477ab20, #c3637620, #edb04c20, #a477ab20)",
+                  "conic-gradient(from 180deg at 50% 50%, #a477ab20, #c3637620, #edb04c20, #a477ab20)",
+                  "conic-gradient(from 360deg at 50% 50%, #a477ab20, #c3637620, #edb04c20, #a477ab20)"
+                ]
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            />
+          </motion.div>
+          
+          {/* Logo content with improved text treatment */}
           <div className="text-center p-4 relative z-10">
             <motion.h3 
-              className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"
-              animate={{ 
-                scale: [1, 1.05, 1],
+              className="text-xl md:text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"
+              style={{ backgroundSize: "200% 100%" }}
+              animate={{
                 backgroundPosition: ["0% center", "100% center", "0% center"],
               }}
-              transition={{ 
-                scale: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-                backgroundPosition: { duration: 8, repeat: Infinity, ease: "easeInOut" }
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: "easeInOut",
               }}
-              style={{ backgroundSize: "300% 100%" }}
             >
               Find your vibe
             </motion.h3>
           </div>
           
-          {/* Enhanced gradient border with animated glow */}
+          {/* Enhanced inner effect - more visible on light mode, subtle on dark */}
+          <motion.div
+            className="absolute inset-[8px] rounded-full opacity-20 dark:opacity-30 mix-blend-multiply dark:mix-blend-soft-light"
+            animate={{
+              background: [
+                "radial-gradient(circle at 40% 40%, rgba(164, 119, 171, 0.4), rgba(195, 99, 118, 0.2), rgba(237, 176, 76, 0.1), transparent 70%)",
+                "radial-gradient(circle at 60% 60%, rgba(164, 119, 171, 0.1), rgba(195, 99, 118, 0.4), rgba(237, 176, 76, 0.2), transparent 70%)",
+                "radial-gradient(circle at 50% 50%, rgba(164, 119, 171, 0.2), rgba(195, 99, 118, 0.1), rgba(237, 176, 76, 0.4), transparent 70%)"
+              ],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+
+          {/* Subtle decorative elements */}
           <div className="absolute inset-0 rounded-full overflow-hidden">
             <motion.div 
-              className="absolute inset-0"
+              className="absolute top-0 right-0 w-16 h-16 rounded-full opacity-20 dark:opacity-25 blur-sm"
               animate={{
                 background: [
-                  "linear-gradient(135deg, rgba(164, 119, 171, 0.2), rgba(195, 99, 118, 0.2), rgba(237, 176, 76, 0.2))",
-                  "linear-gradient(225deg, rgba(164, 119, 171, 0.2), rgba(195, 99, 118, 0.2), rgba(237, 176, 76, 0.2))",
-                  "linear-gradient(315deg, rgba(164, 119, 171, 0.2), rgba(195, 99, 118, 0.2), rgba(237, 176, 76, 0.2))",
-                  "linear-gradient(45deg, rgba(164, 119, 171, 0.2), rgba(195, 99, 118, 0.2), rgba(237, 176, 76, 0.2))",
+                  "radial-gradient(circle at center, #a477ab80, transparent 70%)",
+                  "radial-gradient(circle at center, #c3637680, transparent 70%)",
+                  "radial-gradient(circle at center, #edb04c80, transparent 70%)"
                 ],
-                backgroundPosition: ["0% 0%", "100% 100%"] 
+                x: [0, -5, 0],
+                y: [0, -5, 0]
               }}
               transition={{
-                background: {
-                  duration: 15,
-                  repeat: Infinity
-                },
-                backgroundPosition: {
-                  duration: 10,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }
+                background: { duration: 10, repeat: Infinity, ease: "easeInOut" },
+                x: { duration: 12, repeat: Infinity, ease: "easeInOut" },
+                y: { duration: 15, repeat: Infinity, ease: "easeInOut" }
               }}
-              style={{
-                backgroundSize: "300% 300%"
+            />
+            <motion.div 
+              className="absolute bottom-0 left-0 w-10 h-10 rounded-full opacity-15 dark:opacity-20 blur-sm"
+              animate={{
+                background: [
+                  "radial-gradient(circle at center, #edb04c80, transparent 70%)",
+                  "radial-gradient(circle at center, #a477ab80, transparent 70%)",
+                  "radial-gradient(circle at center, #c3637680, transparent 70%)"
+                ],
+                x: [0, 5, 0],
+                y: [0, 5, 0]
+              }}
+              transition={{
+                background: { duration: 10, repeat: Infinity, ease: "easeInOut" },
+                x: { duration: 12, repeat: Infinity, ease: "easeInOut" },
+                y: { duration: 15, repeat: Infinity, ease: "easeInOut" }
               }}
             />
           </div>
           
-          {/* Subtle pulsing rings emanating from center */}
-          <div className="absolute inset-0 z-0 overflow-hidden rounded-full">
-            {[1, 2, 3].map((ring) => (
-              <motion.div
-                key={ring}
-                className="absolute inset-0 rounded-full border border-[#a477ab]/10"
-                initial={{ scale: 0.8, opacity: 0.8 }}
-                animate={{ 
-                  scale: 2 + (ring * 0.3), 
-                  opacity: 0 
-                }}
-                transition={{ 
-                  duration: 3 + ring, 
-                  repeat: Infinity,
-                  delay: ring * 0.8
-                }}
-              />
-            ))}
-          </div>
+          {/* Subtle rotating ring to add motion */}
+          <motion.div 
+            className="absolute inset-0 rounded-full border-2 border-dashed border-transparent"
+            style={{
+              borderImageSource: "linear-gradient(to right, rgba(164, 119, 171, 0.1), rgba(195, 99, 118, 0.1), rgba(237, 176, 76, 0.1), rgba(164, 119, 171, 0.1))",
+              borderImageSlice: 1
+            }}
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 60,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
         </motion.div>
       </div>
-      
-      {/* Enhanced orbital path with rotation and glowing effect */}
-      <motion.div
-        className="absolute rounded-full border border-dashed border-[#a477ab]/30"
-        style={{
-          width: isMobile ? "360px" : "480px",
-          height: isMobile ? "360px" : "480px",
-          boxShadow: "0 0 40px rgba(164, 119, 171, 0.05)"
-        }}
-        animate={{ 
-          rotate: 360,
-          boxShadow: [
-            "0 0 40px rgba(164, 119, 171, 0.03)",
-            "0 0 60px rgba(195, 99, 118, 0.05)",
-            "0 0 40px rgba(237, 176, 76, 0.03)",
-            "0 0 40px rgba(164, 119, 171, 0.03)"
-          ]
-        }}
-        transition={{ 
-          rotate: { duration: 180, repeat: Infinity, ease: "linear" },
-          boxShadow: { duration: 10, repeat: Infinity, ease: "easeInOut" }
-        }}
-      />
       
       {/* Circular arrangement of icons with enhanced interactive hover effects */}
       <motion.div
@@ -483,9 +481,9 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
                   }}
                 />
                 
-                {/* Icon content with interactive hover effects */}
+                {/* Icon content with interactive hover effects - all icon backgrounds black in dark mode */}
                 <motion.div
-                  className="w-[52px] h-[52px] md:w-[60px] md:h-[60px] rounded-xl bg-white dark:bg-gray-900 shadow-lg flex items-center justify-center relative z-10"
+                  className="w-[52px] h-[52px] md:w-[60px] md:h-[60px] rounded-xl bg-white dark:bg-black shadow-lg flex items-center justify-center relative z-10"
                   animate={{
                     y: moveUp ? [0, -12, 0] : [0, 12, 0],
                     rotate: index % 2 === 0 ? [0, 5, 0, -5, 0] : [0, -5, 0, 5, 0],
@@ -513,11 +511,11 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
                   <span className="text-2xl md:text-3xl">{item.emoji}</span>
                 </motion.div>
                 
-                {/* Tooltip that appears on hover */}
+                {/* Tooltip that appears on hover - black background only when hovered */}
                 <AnimatePresence>
                   {activeIcon === index && (
                     <motion.div
-                      className="absolute left-0 top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-md shadow-lg px-3 py-2 text-center w-max max-w-[160px] pointer-events-none"
+                      className="absolute left-0 top-0 bg-white dark:bg-black backdrop-blur-sm rounded-md shadow-lg px-3 py-2 text-center w-max max-w-[160px] pointer-events-none"
                       initial={{ opacity: 0, y: 10, scale: 0.8 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 5, scale: 0.9 }}
@@ -535,13 +533,13 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
         })}
       </motion.div>
       
-      {/* Connection lines with enhanced styling and animation */}
+      {/* Enhanced connection lines to ensure all icons are connected to the center */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 500 500">
         <defs>
           <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#a477ab" stopOpacity="0.3" />
-            <stop offset="50%" stopColor="#c36376" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#edb04c" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#a477ab" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#c36376" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#edb04c" stopOpacity="0.4" />
             
             <animate 
               attributeName="x1"
@@ -578,6 +576,7 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
           </filter>
         </defs>
         
+        {/* Connection lines - ensuring all 8 icons are connected to the center */}
         <g stroke="url(#lineGradient)" strokeWidth="1.5" filter="url(#glow)">
           {icons.map((_, index) => {
             const angle = (index / icons.length) * 2 * Math.PI;
@@ -607,9 +606,39 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
               />
             );
           })}
+          
+          {/* Additional orbital connectors between surrounding icons */}
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((index) => {
+            const nextIndex = (index + 1) % 8;
+            const angle1 = (index / 8) * 2 * Math.PI;
+            const angle2 = (nextIndex / 8) * 2 * Math.PI;
+            const radius = isMobile ? 160 : 220;
+            
+            const x1 = Math.cos(angle1) * radius + 250;
+            const y1 = Math.sin(angle1) * radius + 250;
+            const x2 = Math.cos(angle2) * radius + 250;
+            const y2 = Math.sin(angle2) * radius + 250;
+            
+            return (
+              <motion.path
+                key={`connector-${index}`}
+                d={`M ${x1} ${y1} Q ${250} ${250} ${x2} ${y2}`}
+                fill="none"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ 
+                  pathLength: 1,
+                  opacity: [0.15, 0.3, 0.15],
+                }}
+                transition={{ 
+                  pathLength: { delay: 1.5 + (index * 0.1), duration: 1.5 },
+                  opacity: { duration: 8, repeat: Infinity }
+                }}
+              />
+            );
+          })}
         </g>
         
-        {/* Additional connection circles that pulse along the lines */}
+        {/* Pulse circles moving along the main connection lines */}
         {icons.map((item, index) => {
           const angle = (index / icons.length) * 2 * Math.PI;
           const radius = isMobile ? 160 : 220;
@@ -623,14 +652,42 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
               fill={`${item.color}80`}
               initial={{ opacity: 0 }}
               animate={{
-                cx: 250 + Math.cos(angle) * radius * 0.3,
-                cy: 250 + Math.sin(angle) * radius * 0.3,
+                cx: 250 + Math.cos(angle) * radius * 0.7,
+                cy: 250 + Math.sin(angle) * radius * 0.7,
                 opacity: [0, 0.8, 0],
+              }}
+              transition={{
+                duration: item.animationDuration * 0.6,
+                repeat: Infinity,
+                delay: index * 0.5,
+                ease: "easeInOut"
+              }}
+            />
+          );
+        })}
+        
+        {/* Smaller pulse circles moving in the opposite direction */}
+        {icons.map((item, index) => {
+          const angle = (index / icons.length) * 2 * Math.PI;
+          const radius = isMobile ? 160 : 220;
+          
+          return (
+            <motion.circle
+              key={`pulse-rev-${index}`}
+              cx={250 + Math.cos(angle) * radius * 0.7}
+              cy={250 + Math.sin(angle) * radius * 0.7}
+              r="3"
+              fill={`${item.color}60`}
+              initial={{ opacity: 0 }}
+              animate={{
+                cx: 250,
+                cy: 250,
+                opacity: [0, 0.6, 0],
               }}
               transition={{
                 duration: item.animationDuration * 0.5,
                 repeat: Infinity,
-                delay: index * 0.5,
+                delay: index * 0.3 + 2,
                 ease: "easeInOut"
               }}
             />
