@@ -10,6 +10,191 @@ const XLogo = ({ size }) => (
   </svg>
 );
 
+// Confetti component for success animation
+const Confetti = ({ colors }) => {
+  const confettiItems = Array.from({ length: 50 }).map((_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: -20 - Math.random() * 80,
+    rotation: Math.random() * 360,
+    scale: 0.5 + Math.random() * 0.5,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    shape: Math.random() > 0.5 ? 'circle' : 'rect'
+  }));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-50">
+      {confettiItems.map(item => (
+        <motion.div
+          key={item.id}
+          className={`absolute ${item.shape === 'circle' ? 'rounded-full' : ''}`}
+          style={{
+            left: `${item.x}%`,
+            top: `${item.y}%`,
+            width: item.shape === 'circle' ? '8px' : '12px',
+            height: item.shape === 'circle' ? '8px' : '6px',
+            backgroundColor: item.color,
+            transformOrigin: 'center'
+          }}
+          animate={{
+            y: ['0%', '120%'],
+            x: [`${item.x}%`, `${item.x + (Math.random() * 20 - 10)}%`],
+            rotate: [0, item.rotation],
+            opacity: [1, 0.8, 0],
+          }}
+          transition={{
+            duration: 1.5 + Math.random() * 2,
+            ease: "easeOut"
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// SuccessMessage component with envelope animation
+const SuccessMessage = () => {
+  return (
+    <motion.div 
+      className="relative mt-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="bg-gradient-to-r from-[#a477ab]/10 via-[#c36376]/10 to-[#edb04c]/10 rounded-xl p-4 relative overflow-hidden">
+        {/* Animated envelope */}
+        <div className="flex items-center mb-3">
+          <motion.div 
+            className="relative mr-3 flex-shrink-0"
+            initial={{ scale: 0.5, rotate: -15 }}
+            animate={{ 
+              scale: 1, 
+              rotate: [0, 5, 0, -5, 0],
+              y: [0, -5, 0]
+            }}
+            transition={{ 
+              scale: { duration: 0.4 },
+              rotate: { repeat: Infinity, duration: 4 },
+              y: { repeat: Infinity, duration: 2 }
+            }}
+          >
+            <motion.div 
+              className="w-10 h-7 bg-gradient-to-r from-[#a477ab] to-[#c36376] rounded-md flex items-center justify-center"
+              animate={{ 
+                boxShadow: [
+                  "0px 4px 8px rgba(0,0,0,0.1)", 
+                  "0px 8px 16px rgba(0,0,0,0.15)", 
+                  "0px 4px 8px rgba(0,0,0,0.1)"
+                ]
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 2,
+              }}
+            >
+              <motion.div 
+                className="w-8 h-5 bg-white rounded-sm flex items-center justify-center"
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ delay: 0.5, duration: 0.3 }}
+              >
+                <motion.div 
+                  className="flex items-center h-3 w-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 }}
+                >
+                  <motion.div 
+                    className="h-0.5 bg-[#c36376] flex-1"
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                  />
+                  <motion.div 
+                    className="h-2 w-2 rounded-full bg-[#a477ab] mx-0.5"
+                    animate={{ scale: [1, 1.3, 1] }}
+                    transition={{ repeat: Infinity, duration: 2, delay: 0.3 }}
+                  />
+                  <motion.div 
+                    className="h-0.5 bg-[#c36376] flex-1"
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ repeat: Infinity, duration: 2, delay: 0.6 }}
+                  />
+                </motion.div>
+              </motion.div>
+            </motion.div>
+            
+            {/* Flying check marks */}
+            <motion.div 
+              className="absolute -right-1 -top-1 text-green-500"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 1, duration: 0.3 }}
+            >
+              <FiCheck size={16} />
+            </motion.div>
+            
+            {/* Animated sparkles */}
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute text-[#edb04c]"
+                style={{ 
+                  left: `${10 + i * 30}%`, 
+                  top: i % 2 === 0 ? '-15px' : '15px',
+                  fontSize: `${8 + i * 2}px`
+                }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ 
+                  opacity: [0, 1, 0], 
+                  scale: [0, 1, 0],
+                  y: [0, i % 2 === 0 ? -15 : 15, 0]
+                }}
+                transition={{ 
+                  delay: 1.2 + (i * 0.2),
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatDelay: i * 0.5
+                }}
+              >
+                ✨
+              </motion.div>
+            ))}
+          </motion.div>
+          
+          <div>
+            <motion.h4
+              className="font-medium text-[#a477ab]"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              You're all set!
+            </motion.h4>
+            <motion.p
+              className="text-sm text-gray-600 dark:text-gray-300"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              We've added you to our newsletter
+            </motion.p>
+          </div>
+        </div>
+        
+        {/* Message content */}
+        <motion.div 
+          className="text-sm text-gray-600 dark:text-gray-300"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <p>Thanks for subscribing! Your first email will arrive soon with updates on events, activities, and connections that match your interests.</p>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
 const Footer = () => {
   const { isDarkMode } = useTheme();
   const currentYear = new Date().getFullYear();
@@ -292,15 +477,7 @@ const Footer = () => {
             <div className="relative m-[2px] p-8 bg-white dark:bg-black rounded-2xl z-10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="sm:w-2/5">
-                  <motion.div 
-                    className="inline-block px-4 py-1.5 rounded-full bg-[#be70a9] bg-opacity-10 dark:bg-opacity-20 text-[#be70a9] text-sm font-medium mb-3"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
-                    viewport={{ once: true }}
-                  >
-                    Find Your Tribe
-                  </motion.div>
+
                   <h3 className="text-2xl font-bold mb-3 dark:text-white">
                     Get the latest <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#be70a9] to-[#c36376]">updates & events</span>
                   </h3>
@@ -397,14 +574,10 @@ const Footer = () => {
                   {/* Success message */}
                   <AnimatePresence>
                     {subscriptionStatus === 'success' && (
-                      <motion.p 
-                        className="text-green-600 text-xs mt-3"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                      >
-                        Thanks for subscribing! Get ready for good vibes in your inbox.
-                      </motion.p>
+                      <>
+                        <Confetti colors={[colors.lavender, colors.red, colors.purple, colors.gold]} />
+                        <SuccessMessage />
+                      </>
                     )}
                   </AnimatePresence>
                   
