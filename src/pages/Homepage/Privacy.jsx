@@ -2,8 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Footer from '../../components/homepage/Footer';
 import Navbar from '../../components/homepage/Navbar';
+import { useTheme } from '../../context/ThemeContext';
 
 const Privacy = () => {
+  const { isDarkMode } = useTheme();
+  
   // Animation variants
   const pageVariants = {
     initial: { opacity: 0 },
@@ -29,7 +32,7 @@ const Privacy = () => {
     <>
       <Navbar />
       <motion.div 
-        className="min-h-screen bg-white"
+        className={`min-h-screen ${isDarkMode ? 'bg-black text-gray-300' : 'bg-white text-gray-500'}`}
         initial="initial"
         animate="animate"
         variants={pageVariants}
@@ -45,22 +48,22 @@ const Privacy = () => {
               </span>
             </motion.h1>
             <motion.p 
-              className="mt-4 text-xl text-gray-500 max-w-3xl mx-auto"
+              className={`mt-4 text-xl ${isDarkMode ? 'text-gray-300' : 'text-gray-500'} max-w-3xl mx-auto`}
               variants={itemVariants}
             >
               Protecting your data and respecting your privacy is important to us
             </motion.p>
             <motion.p 
-              className="mt-2 text-sm text-gray-500"
+              className={`mt-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
               variants={itemVariants}
             >
               Last updated: April 28, 2025
             </motion.p>
           </motion.div>
           
-          <div className="prose prose-lg prose-indigo mx-auto text-gray-500">
+          <div className={`prose prose-lg ${isDarkMode ? 'prose-invert' : 'prose-indigo'} mx-auto ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>
             <motion.section variants={itemVariants} className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900">Our Commitment to Privacy</h2>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Our Commitment to Privacy</h2>
               <p>
                 At Find Your Vibe, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, 
                 and safeguard your information when you use our platform. Please read this privacy policy carefully. If you do
@@ -69,7 +72,7 @@ const Privacy = () => {
             </motion.section>
             
             <motion.section variants={itemVariants} className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900">Information We Collect</h2>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Information We Collect</h2>
               <p>
                 We collect information that you provide directly to us when you:
               </p>
@@ -87,7 +90,7 @@ const Privacy = () => {
                 and any other information you choose to provide.
               </p>
               
-              <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">Automatically Collected Information</h3>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-[#be70a9]' : 'text-gray-900'} mt-8 mb-4`}>Automatically Collected Information</h3>
               <p>
                 When you access our platform, we automatically collect certain information about your device and 
                 usage of the platform, including:
@@ -101,7 +104,7 @@ const Privacy = () => {
             </motion.section>
             
             <motion.section variants={itemVariants} className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900">How We Use Your Information</h2>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>How We Use Your Information</h2>
               <p>We use the information we collect to:</p>
               <ul className="list-disc pl-5 space-y-2">
                 <li>Provide, maintain, and improve our services</li>
@@ -117,7 +120,7 @@ const Privacy = () => {
             </motion.section>
             
             <motion.section variants={itemVariants} className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900">Sharing of Information</h2>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Sharing of Information</h2>
               <p>
                 We may share your information with:
               </p>
@@ -133,7 +136,7 @@ const Privacy = () => {
             </motion.section>
             
             <motion.section variants={itemVariants} className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900">Data Security</h2>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Data Security</h2>
               <p>
                 We implement appropriate security measures to protect your personal information from unauthorized access,
                 alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic
@@ -142,7 +145,7 @@ const Privacy = () => {
             </motion.section>
             
             <motion.section variants={itemVariants} className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900">Your Rights and Choices</h2>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Your Rights and Choices</h2>
               <p>
                 You have several rights regarding your personal information:
               </p>
@@ -153,12 +156,12 @@ const Privacy = () => {
                 <li>Disable cookies through your browser settings</li>
               </ul>
               <p className="mt-4">
-                To exercise these rights, please contact us at privacy@findyourvibe.com
+                To exercise these rights, please contact us at <span className={`${isDarkMode ? 'text-[#be70a9]' : 'text-[#a477ab]'}`}>privacy@findyourvibe.com</span>
               </p>
             </motion.section>
             
             <motion.section variants={itemVariants} className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900">Children's Privacy</h2>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Children's Privacy</h2>
               <p>
                 Our platform is not directed to children under 13, and we do not knowingly collect personal information
                 from children under 13. If you learn that a child has provided us with personal information in violation
@@ -167,13 +170,13 @@ const Privacy = () => {
             </motion.section>
             
             <motion.section variants={itemVariants}>
-              <h2 className="text-2xl font-bold text-gray-900">Changes to This Policy</h2>
+              <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Changes to This Policy</h2>
               <p>
                 We may update this policy from time to time. We will notify you of any changes by posting the new
                 policy on this page and updating the "Last Updated" date at the top of this policy.
               </p>
               <p className="mt-4">
-                For questions about this privacy policy, please contact us at privacy@findyourvibe.com
+                For questions about this privacy policy, please contact us at <span className={`${isDarkMode ? 'text-[#be70a9]' : 'text-[#a477ab]'}`}>privacy@findyourvibe.com</span>
               </p>
             </motion.section>
           </div>
