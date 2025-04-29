@@ -33,13 +33,13 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-white to-orange-100 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 px-4">
       <Navbar />
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md mt-4"
+        className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md mt-4 border-2 border-orange-400"
       >
         <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-orange-400 leading-relaxed">
           Reset Your Password
