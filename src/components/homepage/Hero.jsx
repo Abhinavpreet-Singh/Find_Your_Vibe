@@ -371,37 +371,6 @@ const EnhancedFloatingIcons = ({ isLoaded }) => {
         </motion.div>
       </div>
       
-      {/* Floating particles in background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {particles.map((particle) => (
-          <motion.div
-            key={particle.id}
-            className="absolute rounded-full"
-            style={{ 
-              width: particle.size,
-              height: particle.size,
-              background: `${particle.color}50`,
-              left: "50%",
-              top: "50%",
-              x: particle.x,
-              y: particle.y,
-              opacity: 0.6,
-            }}
-            animate={{ 
-              x: [particle.x, particle.x + (Math.random() * 40 - 20)],
-              y: [particle.y, particle.y + (Math.random() * 40 - 20)],
-              opacity: [0.4, 0.8, 0.4]
-            }}
-            transition={{ 
-              duration: 3 + Math.random() * 5, 
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: "easeInOut"
-            }}
-          />
-        ))}
-      </div>
-      
       {/* Enhanced orbital path with rotation and glowing effect */}
       <motion.div
         className="absolute rounded-full border border-dashed border-[#a477ab]/30"

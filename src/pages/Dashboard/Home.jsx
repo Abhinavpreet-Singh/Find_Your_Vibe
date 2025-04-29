@@ -1,72 +1,32 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import DashboardNavbar from '../../components/dashboard/DashboardNavbar';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import Loader from '../../components/Loader';
-import { FiActivity, FiClock, FiHeart, FiAward, FiCalendar, FiUsers, FiSettings, 
-  FiGlobe, FiLock, FiUserPlus, FiFilter, FiPlus, FiBell, FiSend } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { 
+  FiActivity, FiClock, FiCalendar, FiUsers, FiGlobe, FiLock, 
+  FiUserPlus, FiFilter, FiPlus, FiBell, FiSend, FiTrendingUp,
+  FiStar, FiBookmark, FiTag, FiMapPin, FiLayers, FiMessageCircle
+} from 'react-icons/fi';
 
 const Home = () => {
   const { currentUser } = useAuth();
+  const { isDarkMode } = useTheme();
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState('sessions');
-  const [stats, setStats] = useState({
-    activeSessions: 0,
-    collaborationsThisMonth: 0,
-    pendingInvites: 0
-  });
+  const [activeTab, setActiveTab] = useState('upcoming');
   
-  // Mock user data
-  const [userData, setUserData] = useState({
-    vibeTags: ['🎵 Music', '⚽ Sports', '💻 Coding'],
-  });
-
-  // Mock sessions data
-  const [ongoingSessions, setOngoingSessions] = useState([]);
+  // Mock data states
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [suggestedConnections, setSuggestedConnections] = useState([]);
-  const [externalEvents, setExternalEvents] = useState([]);
+  const [matchedVibes, setMatchedVibes] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [trendingVibes, setTrendingVibes] = useState([]);
   
-  // Simulate loading user data
   useEffect(() => {
     const timer = setTimeout(() => {
-      // This would normally be a fetch from your database
-      setStats({
-        activeSessions: 10,
-        collaborationsThisMonth: 150,
-        pendingInvites: 3
-      });
-
-      // Set mock ongoing sessions
-      setOngoingSessions([
-        {
-          id: 1,
-          name: "Basketball Match",
-          host: {
-            name: "Mike Johnson",
-            avatar: "https://i.pravatar.cc/150?img=11"
-          },
-          time: "Now (Started 30m ago)",
-          participants: 8,
-          tags: ["Sports", "Basketball"],
-          visibility: "public"
-        },
-        {
-          id: 2,
-          name: "Jazz Jam Session",
-          host: {
-            name: "Sarah Davis",
-            avatar: "https://i.pravatar.cc/150?img=5"
-          },
-          time: "Now (Started 15m ago)",
-          participants: 4,
-          tags: ["Music", "Jazz"],
-          visibility: "connections"
-        }
-      ]);
-
-      // Set mock upcoming sessions
+      // Mock data for upcoming sessions
       setUpcomingSessions([
         {
           id: 3,
@@ -76,6 +36,7 @@ const Home = () => {
             avatar: "https://i.pravatar.cc/150?img=3"
           },
           time: "Today, 7:00 PM",
+          location: "Virtual",
           participants: 5,
           tags: ["Study", "Coding"],
           visibility: "public"
@@ -88,6 +49,7 @@ const Home = () => {
             avatar: "https://i.pravatar.cc/150?img=9"
           },
           time: "Tomorrow, 5:30 PM",
+          location: "Riverside Park",
           participants: 10,
           tags: ["Sports", "Volleyball"],
           visibility: "connections"
@@ -100,74 +62,107 @@ const Home = () => {
             avatar: "https://i.pravatar.cc/150?img=12"
           },
           time: "Wed, 6:00 PM",
+          location: "Virtual",
           participants: 6,
           tags: ["Books", "Discussion"],
           visibility: "public"
         }
       ]);
 
-      // Set mock suggested connections
+      // Mock matched vibes
+      setMatchedVibes([
+        {
+          id: 201,
+          name: "Guitar Jam Sessions",
+          members: 32,
+          matchScore: 95,
+          icon: "🎸",
+          categories: ["Music", "Performing Arts"],
+          description: "Weekly jam sessions for guitar enthusiasts of all levels"
+        },
+        {
+          id: 202,
+          name: "Tech Startup Network",
+          members: 48,
+          matchScore: 88,
+          icon: "💻",
+          categories: ["Technology", "Business"],
+          description: "Connect with fellow entrepreneurs and tech visionaries"
+        },
+        {
+          id: 203,
+          name: "Urban Photography",
+          members: 27,
+          matchScore: 82,
+          icon: "📷",
+          categories: ["Photography", "Arts"],
+          description: "Capture city life through your unique lens"
+        }
+      ]);
+
+      // Mock suggested connections
       setSuggestedConnections([
         {
           id: 101,
           name: "Priya Sharma",
           avatar: "https://i.pravatar.cc/150?img=25",
+          title: "Full-stack Developer",
           interests: ["Music", "Coding"],
-          bio: "Full-stack dev & guitar enthusiast"
+          connectionStrength: 4,
+          mutualConnections: 3
         },
         {
           id: 102,
           name: "Mark Zhang",
           avatar: "https://i.pravatar.cc/150?img=15",
+          title: "Sports Photographer",
           interests: ["Sports", "Photography"],
-          bio: "Sports photographer & basketball player"
+          connectionStrength: 3,
+          mutualConnections: 2
         },
         {
           id: 103,
           name: "Olivia Kim",
           avatar: "https://i.pravatar.cc/150?img=29",
+          title: "Classical Musician",
           interests: ["Books", "Music"],
-          bio: "Classical pianist & book lover"
-        },
-        {
-          id: 104,
-          name: "Raj Patel",
-          avatar: "https://i.pravatar.cc/150?img=18",
-          interests: ["Coding", "Gaming"],
-          bio: "Game developer & esports fan"
+          connectionStrength: 5,
+          mutualConnections: 4
         }
       ]);
 
-      // Set mock external events
-      setExternalEvents([
+      // Mock notifications
+      setNotifications([
         {
-          id: 201,
-          title: "Campus Hackathon",
-          platform: "Devfolio",
-          logo: "https://i.pravatar.cc/150?img=50",
-          link: "#"
+          id: 301,
+          type: "invitation",
+          content: "Hiking Adventure Group invited you to join",
+          time: "2h ago",
+          read: false
         },
         {
-          id: 202,
-          title: "Open Jam Night",
-          platform: "MusicMates",
-          logo: "https://i.pravatar.cc/150?img=51",
-          link: "#"
+          id: 302,
+          type: "connection",
+          content: "Jamie Rivera accepted your connection request",
+          time: "5h ago",
+          read: false
         },
         {
-          id: 203,
-          title: "Community Basketball",
-          platform: "SportMatch",
-          logo: "https://i.pravatar.cc/150?img=52",
-          link: "#"
-        },
-        {
-          id: 204,
-          title: "Tech Conference",
-          platform: "Eventix",
-          logo: "https://i.pravatar.cc/150?img=53",
-          link: "#"
+          id: 303,
+          type: "event",
+          content: "Your \"Film Discussion\" event starts in 3 hours",
+          time: "1d ago",
+          read: true
         }
+      ]);
+
+      // Set trending vibes
+      setTrendingVibes([
+        { id: 1, name: "Urban Sketching", growth: "+28%" },
+        { id: 2, name: "Tech Meetups", growth: "+23%" },
+        { id: 3, name: "Foodie Adventures", growth: "+19%" },
+        { id: 4, name: "Language Exchange", growth: "+15%" },
+        { id: 5, name: "Sustainable Living", growth: "+12%" }
       ]);
 
       setLoading(false);
@@ -181,301 +176,351 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-orange-50">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-black text-white' : 'bg-gradient-to-br from-pink-50 via-white to-orange-50'}`}>
       <DashboardNavbar />
       
-      <div className="pt-24 px-4 max-w-7xl mx-auto">
-        {/* 1. Welcome Banner with Personalized Greeting */}
-        <motion.div 
-          className="bg-white rounded-2xl p-6 md:p-8 shadow-lg mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="flex flex-col md:flex-row justify-between gap-4">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-              {/* User Avatar */}
-              <motion.div 
-                className="relative flex shrink-0"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {currentUser?.photoURL ? (
-                  <img 
-                    src={currentUser.photoURL} 
-                    alt="Profile" 
-                    className="h-16 w-16 rounded-full border-2 border-pink-300"
-                  />
-                ) : (
-                  <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white text-xl font-bold">
-                    {currentUser?.email?.charAt(0).toUpperCase() || 'U'}
-                  </div>
-                )}
-                <div className="absolute -bottom-1 -right-1 h-7 w-7 bg-green-400 rounded-full flex items-center justify-center border-2 border-white">
-                  <span className="text-white text-xs font-bold">✓</span>
-                </div>
-              </motion.div>
-              
-              {/* Greeting and Vibe Tagline */}
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold mb-1">
-                  Hey, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#a477ab] to-[#c36376]">
-                    {currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Friend'}
-                  </span>! Ready to find your vibe today?
-                </h1>
-                <p className="text-gray-600 text-lg">
-                  Collaborate, Jam, Compete, Learn — Dive into your passions!
-                </p>
-                {/* Vibe Tags */}
-                <div className="flex flex-wrap mt-2 gap-2">
-                  {userData.vibeTags.map((tag, index) => (
-                    <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
-                      {tag}
-                    </span>
-                  ))}
-                  <button className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition flex items-center">
-                    <FiPlus size={14} className="mr-1" /> Add more
-                  </button>
-                </div>
+      <div className="pt-24 px-4 pb-12 max-w-7xl mx-auto">
+        {/* Main Dashboard Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Left Column - Profile & Quick Links */}
+          <div className="space-y-6">
+            {/* Profile Summary Card */}
+            <ProfileSummaryCard isDarkMode={isDarkMode} currentUser={currentUser} />
+            
+            {/* Quick Links */}
+            <QuickLinksCard isDarkMode={isDarkMode} notificationsCount={notifications.filter(n => !n.read).length} />
+            
+            {/* Trending Vibes */}
+            <TrendingVibesCard isDarkMode={isDarkMode} trendingVibes={trendingVibes} />
+          </div>
+          
+          {/* Middle Column - Activity Feed */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Top Navigation Tabs with gradient border */}
+            <div className="relative rounded-xl overflow-hidden shadow-md">
+              <div className="absolute -inset-0.5 rounded-xl z-0 overflow-hidden opacity-70">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"></div>
+              </div>
+              <div className={`relative z-10 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl flex overflow-hidden`}>
+                <TabButton 
+                  label="Upcoming" 
+                  icon={<FiCalendar />} 
+                  active={activeTab === 'upcoming'} 
+                  onClick={() => setActiveTab('upcoming')}
+                  isDarkMode={isDarkMode} 
+                />
+                <TabButton 
+                  label="For You" 
+                  icon={<FiStar />} 
+                  active={activeTab === 'foryou'} 
+                  onClick={() => setActiveTab('foryou')}
+                  isDarkMode={isDarkMode} 
+                />
+                <TabButton 
+                  label="Saved" 
+                  icon={<FiBookmark />} 
+                  active={activeTab === 'saved'} 
+                  onClick={() => setActiveTab('saved')}
+                  isDarkMode={isDarkMode} 
+                />
               </div>
             </div>
             
-            {/* Quick Stats */}
-            <div className="flex gap-4 mt-4 md:mt-0">
-              <div className="bg-purple-50 rounded-xl p-3 flex items-center">
-                <div className="p-2 rounded-lg bg-white mr-2 text-[#a477ab]">
-                  <FiBell />
+            {/* Tab Content */}
+            <div className="relative rounded-xl overflow-hidden shadow-md">
+              {/* Gradient border */}
+              <div className="absolute -inset-0.5 rounded-xl z-0 overflow-hidden opacity-70">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"></div>
+              </div>
+              <div className={`relative z-10 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl p-5`}>
+                {activeTab === 'upcoming' && (
+                  <div className="space-y-5">
+                    <div className="flex justify-between items-center">
+                      <h2 className={`font-semibold text-lg ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+                        Upcoming Sessions
+                      </h2>
+                      <Link to="/dashboard/events" className="flex items-center text-sm font-medium text-[#c36376] hover:text-[#a477ab]">
+                        View All <FiCalendar className="ml-1" />
+                      </Link>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      {upcomingSessions.length > 0 ? (
+                        upcomingSessions.map(session => (
+                          <SessionCard key={session.id} session={session} isDarkMode={isDarkMode} />
+                        ))
+                      ) : (
+                        <EmptyState 
+                          message="No upcoming sessions yet!" 
+                          subMessage="Create or join one to get started"
+                          isDarkMode={isDarkMode}
+                        />
+                      )}
+                    </div>
+                    
+                    <button className={`w-full py-3 mt-2 rounded-lg border border-dashed flex items-center justify-center font-medium ${
+                      isDarkMode 
+                        ? 'border-[#a477ab]/40 text-[#be70a9] hover:bg-[#a477ab]/10' 
+                        : 'border-[#a477ab]/30 text-[#a477ab] hover:bg-[#a477ab]/5'
+                    }`}>
+                      <FiPlus className="mr-2" /> Create New Session
+                    </button>
+                  </div>
+                )}
+                
+                {activeTab === 'foryou' && (
+                  <div className="space-y-5">
+                    <div className="flex justify-between items-center">
+                      <h2 className={`font-semibold text-lg ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+                        Matched Vibes For You
+                      </h2>
+                      <button className={`text-sm flex items-center ${
+                        isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                      }`}>
+                        <FiFilter className="mr-1" /> Filter
+                      </button>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      {matchedVibes.map(vibe => (
+                        <VibeMatchCard key={vibe.id} vibe={vibe} isDarkMode={isDarkMode} />
+                      ))}
+                    </div>
+                    
+                    <Link to="/dashboard/connections" className={`block w-full text-center py-3 rounded-lg ${
+                      isDarkMode 
+                        ? 'bg-[#a477ab]/20 text-[#be70a9] hover:bg-[#a477ab]/30' 
+                        : 'bg-[#a477ab]/10 text-[#a477ab] hover:bg-[#a477ab]/20'
+                    }`}>
+                      Explore More Vibes
+                    </Link>
+                  </div>
+                )}
+                
+                {activeTab === 'saved' && (
+                  <EmptyState 
+                    message="No saved items yet!" 
+                    subMessage="Bookmark sessions and vibes that interest you"
+                    isDarkMode={isDarkMode}
+                  />
+                )}
+              </div>
+            </div>
+            
+            {/* Connection Recommendations */}
+            <div className="relative rounded-xl overflow-hidden shadow-md">
+              {/* Gradient border */}
+              <div className="absolute -inset-0.5 rounded-xl z-0 overflow-hidden opacity-70">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"></div>
+              </div>
+              <div className={`relative z-10 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl p-5`}>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className={`font-semibold text-lg ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+                    People You May Connect With
+                  </h2>
+                  <Link to="/dashboard/connections" className="text-sm font-medium text-[#c36376] hover:text-[#a477ab]">
+                    View All
+                  </Link>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-500">Invites</p>
-                  <p className="text-[#a477ab] font-bold">{stats.pendingInvites}</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {suggestedConnections.map(connection => (
+                    <ConnectionCard key={connection.id} connection={connection} isDarkMode={isDarkMode} />
+                  ))}
                 </div>
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Profile Summary Card Component
+const ProfileSummaryCard = ({ isDarkMode, currentUser }) => {
+  return (
+    <div className="relative rounded-xl overflow-hidden shadow-md">
+      {/* Gradient border */}
+      <div className="absolute -inset-0.5 rounded-xl z-0 overflow-hidden opacity-70">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"></div>
+      </div>
+      <div className={`relative z-10 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl overflow-hidden`}>
+        {/* Profile Header with Cover Image */}
+        <div className="h-24 relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] to-[#c36376]"></div>
+          <div className="absolute bottom-0 left-0 w-full h-full bg-black/10"></div>
+        </div>
         
-        {/* Main Dashboard Layout: Sidebar + Content */}
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left Sidebar: Quick Actions Panel */}
-          <motion.div
-            className="lg:w-1/4 bg-white rounded-2xl shadow-lg overflow-hidden"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <div className="p-5 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-gray-800">Quick Actions</h2>
-            </div>
-            
-            <div className="p-5 space-y-4">
-              {/* Host New Session Button */}
-              <button className="w-full py-3 px-4 bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white rounded-xl font-medium hover:opacity-90 transition flex items-center justify-center">
-                <FiPlus className="mr-2" /> Host a New Session
-              </button>
-              
-              {/* Browse Categories */}
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-500 uppercase">Browse Vibes</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  <button className="py-2 px-3 bg-purple-50 text-[#a477ab] rounded-lg font-medium text-sm hover:bg-purple-100 transition flex items-center justify-center">
-                    <FiActivity className="mr-1.5" /> Study
-                  </button>
-                  <button className="py-2 px-3 bg-pink-50 text-[#c36376] rounded-lg font-medium text-sm hover:bg-pink-100 transition flex items-center justify-center">
-                    <FiActivity className="mr-1.5" /> Music
-                  </button>
-                  <button className="py-2 px-3 bg-orange-50 text-orange-500 rounded-lg font-medium text-sm hover:bg-orange-100 transition flex items-center justify-center">
-                    <FiActivity className="mr-1.5" /> Sports
-                  </button>
-                  <button className="py-2 px-3 bg-yellow-50 text-yellow-500 rounded-lg font-medium text-sm hover:bg-yellow-100 transition flex items-center justify-center">
-                    <FiActivity className="mr-1.5" /> Gaming
-                  </button>
-                </div>
+        {/* Profile Info */}
+        <div className="p-5 pt-12 relative">
+          {/* Avatar */}
+          <div className="absolute -top-8 left-5 rounded-full shadow-md overflow-hidden border-4 border-gray-50 dark:border-gray-800">
+            {currentUser?.photoURL ? (
+              <img 
+                src={currentUser.photoURL} 
+                alt="Profile" 
+                className="h-16 w-16 object-cover" 
+              />
+            ) : (
+              <div className="h-16 w-16 bg-gradient-to-br from-[#a477ab] to-[#c36376] flex items-center justify-center text-white text-xl font-bold">
+                {currentUser?.email?.charAt(0).toUpperCase() || 'U'}
               </div>
-              
-              {/* View Invites */}
-              <div className="pt-3 border-t border-gray-100">
-                <button className="w-full py-2.5 px-4 border border-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition flex items-center justify-center">
-                  <FiBell className="mr-2" /> 
-                  View Invites 
-                  {stats.pendingInvites > 0 && <span className="ml-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{stats.pendingInvites}</span>}
-                </button>
-              </div>
-            </div>
-            
-            {/* Collaboration Stats */}
-            <div className="p-5 bg-gradient-to-r from-pink-50 to-purple-50">
-              <div className="mb-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-500">Active sessions</span>
-                  <span className="font-bold text-[#a477ab]">{stats.activeSessions}</span>
-                </div>
-                <div className="mt-1 w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-[#a477ab] to-[#c36376] rounded-full" style={{ width: `${Math.min(100, stats.activeSessions * 5)}%` }}></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-500">This month's collabs</span>
-                  <span className="font-bold text-[#c36376]">{stats.collaborationsThisMonth}</span>
-                </div>
-                <div className="mt-1 w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-[#c36376] to-[#edb04c] rounded-full" style={{ width: `${Math.min(100, stats.collaborationsThisMonth / 2)}%` }}></div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+            )}
+          </div>
           
-          {/* Main Content: Session Feed */}
-          <motion.div 
-            className="lg:w-2/4 bg-white rounded-2xl shadow-lg overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            {/* Tab Navigation */}
-            <div className="flex border-b border-gray-200">
-              <TabButton 
-                active={selectedTab === 'sessions'} 
-                onClick={() => setSelectedTab('sessions')}
-                icon={<FiActivity />}
-                label="Sessions"
-              />
-              <TabButton 
-                active={selectedTab === 'discover'} 
-                onClick={() => setSelectedTab('discover')}
-                icon={<FiGlobe />}
-                label="Discover"
-              />
-              <TabButton 
-                active={selectedTab === 'my-activities'} 
-                onClick={() => setSelectedTab('my-activities')}
-                icon={<FiCalendar />}
-                label="My Activities"
-              />
-            </div>
-            
-            {/* Tab Content */}
-            <div className="p-6">
-              {selectedTab === 'sessions' && (
-                <div className="space-y-6">
-                  {/* Filter Bar */}
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold">Your Session Feed</h2>
-                    <button className="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-700 flex items-center text-sm hover:bg-gray-50 transition">
-                      <FiFilter className="mr-2" /> Filter
-                    </button>
-                  </div>
-                  
-                  {/* Ongoing Sessions */}
-                  <div>
-                    <div className="mb-3 flex items-center">
-                      <span className="h-3 w-3 bg-green-500 rounded-full mr-2"></span>
-                      <h3 className="font-medium text-gray-800">Happening Now</h3>
-                    </div>
-                    
-                    {ongoingSessions.length > 0 ? (
-                      <div className="space-y-3">
-                        {ongoingSessions.map(session => (
-                          <SessionCard key={session.id} session={session} />
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 text-sm">No ongoing sessions at the moment.</p>
-                    )}
-                  </div>
-                  
-                  {/* Upcoming Sessions */}
-                  <div>
-                    <div className="mb-3 flex items-center">
-                      <span className="h-3 w-3 bg-blue-500 rounded-full mr-2"></span>
-                      <h3 className="font-medium text-gray-800">Upcoming</h3>
-                    </div>
-                    
-                    {upcomingSessions.length > 0 ? (
-                      <div className="space-y-3">
-                        {upcomingSessions.map(session => (
-                          <SessionCard key={session.id} session={session} />
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 text-sm">No upcoming sessions scheduled.</p>
-                    )}
-                  </div>
-                </div>
-              )}
-              
-              {selectedTab === 'discover' && (
-                <div className="space-y-6">
-                  <h2 className="text-xl font-semibold">Discover Sessions</h2>
-                  <p className="text-gray-600">
-                    Find new sessions to join based on your interests. Coming soon!
-                  </p>
-                </div>
-              )}
-              
-              {selectedTab === 'my-activities' && (
-                <div className="space-y-6">
-                  <h2 className="text-xl font-semibold">My Activities</h2>
-                  <p className="text-gray-600">
-                    View and manage sessions you've joined or created. Coming soon!
-                  </p>
-                </div>
-              )}
-            </div>
-          </motion.div>
+          {/* Profile Details */}
+          <div className="mb-4">
+            <h2 className={`text-lg font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+              {currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User'}
+            </h2>
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              {currentUser?.email || 'email@example.com'}
+            </p>
+          </div>
           
-          {/* Right Sidebar: Suggestions & Events */}
-          <motion.div 
-            className="lg:w-1/4 space-y-6"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-          >
-            {/* Suggested Connections */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="p-5 border-b border-gray-100">
-                <h2 className="text-lg font-bold text-gray-800">Suggested Connections</h2>
-              </div>
-              <div className="p-3 max-h-64 overflow-y-auto">
-                <div className="space-y-3">
-                  {suggestedConnections.map(connection => (
-                    <ConnectionCard key={connection.id} connection={connection} />
-                  ))}
-                </div>
-              </div>
-              <div className="p-4 border-t border-gray-100">
-                <button className="w-full py-2 px-4 text-[#c36376] border border-[#c36376] rounded-lg text-sm font-medium hover:bg-pink-50 transition">
-                  View All Suggestions
-                </button>
-              </div>
+          {/* Profile Completeness */}
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-1">
+              <span className={`text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                Profile Completeness
+              </span>
+              <span className="text-xs text-[#be70a9]">65%</span>
             </div>
-            
-            {/* External Collab Events */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="p-5 border-b border-gray-100">
-                <h2 className="text-lg font-bold text-gray-800">External Events</h2>
-              </div>
-              <div className="p-3">
-                {externalEvents.map(event => (
-                  <div key={event.id} className="p-3 hover:bg-gray-50 rounded-lg transition">
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-gray-100 overflow-hidden mr-3 flex-shrink-0">
-                        <img src={event.logo} alt={event.platform} className="w-full h-full object-cover" />
-                      </div>
-                      <div className="flex-grow">
-                        <p className="font-medium text-gray-800 truncate">{event.title}</p>
-                        <p className="text-xs text-gray-500">via {event.platform}</p>
-                      </div>
-                      <a href={event.link} className="text-[#a477ab] text-sm hover:underline">
-                        Know More
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className={`h-1.5 w-full rounded-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+              <div 
+                className="h-full rounded-full bg-gradient-to-r from-[#a477ab] to-[#c36376]" 
+                style={{ width: "65%" }}
+              ></div>
             </div>
-          </motion.div>
+          </div>
+          
+          {/* Action Button */}
+          <Link to="/dashboard/profile" className={`w-full py-2 px-3 rounded-lg text-sm font-medium flex items-center justify-center ${
+            isDarkMode 
+              ? 'bg-[#a477ab]/20 text-[#be70a9] hover:bg-[#a477ab]/30' 
+              : 'bg-[#a477ab]/10 text-[#a477ab] hover:bg-[#a477ab]/20'
+          }`}>
+            <FiUsers className="mr-2" /> Complete Your Profile
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Quick Links Card Component
+const QuickLinksCard = ({ isDarkMode, notificationsCount }) => {
+  const links = [
+    { icon: <FiUsers />, label: "My Connections", path: "/dashboard/connections" },
+    { icon: <FiCalendar />, label: "My Sessions", path: "/dashboard/events" },
+    { icon: <FiLayers />, label: "My Groups", path: "/dashboard/groups" },
+    { icon: <FiBell />, label: "Notifications", path: "/dashboard/notifications", count: notificationsCount }
+  ];
+  
+  return (
+    <div className="relative rounded-xl overflow-hidden shadow-md">
+      {/* Gradient border */}
+      <div className="absolute -inset-0.5 rounded-xl z-0 overflow-hidden opacity-70">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"></div>
+      </div>
+      <div className={`relative z-10 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl overflow-hidden`}>
+        <div className={`px-5 py-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <h2 className={`font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>Quick Links</h2>
+        </div>
+        
+        <div className="p-3">
+          {links.map((link, index) => (
+            <Link 
+              key={index} 
+              to={link.path} 
+              className={`flex items-center justify-between p-2 rounded-lg ${
+                isDarkMode 
+                  ? 'hover:bg-gray-700 text-gray-300' 
+                  : 'hover:bg-gray-100 text-gray-700'
+              }`}
+            >
+              <div className="flex items-center">
+                <span className={`mr-3 p-2 rounded-lg ${
+                  isDarkMode ? 'bg-gray-700 text-[#be70a9]' : 'bg-[#a477ab]/10 text-[#a477ab]'
+                }`}>
+                  {link.icon}
+                </span>
+                <span className="font-medium text-sm">{link.label}</span>
+              </div>
+              {link.count > 0 && (
+                <span className="px-2 py-0.5 rounded-full text-xs bg-[#c36376] text-white">
+                  {link.count}
+                </span>
+              )}
+            </Link>
+          ))}
+        </div>
+        
+        <div className={`px-5 py-4 ${isDarkMode ? 'bg-[#a477ab]/20' : 'bg-[#a477ab]/10'}`}>
+          <div className="flex items-center space-x-2">
+            <div className={`p-2 rounded-full ${
+              isDarkMode ? 'bg-[#a477ab]/30 text-[#be70a9]' : 'bg-[#a477ab]/20 text-[#a477ab]'
+            }`}>
+              <FiPlus size={14} />
+            </div>
+            <Link to="/dashboard/events/new" className={`text-sm font-medium ${
+              isDarkMode ? 'text-[#be70a9]' : 'text-[#a477ab]'
+            }`}>
+              Create New Session
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Trending Vibes Card Component
+const TrendingVibesCard = ({ isDarkMode, trendingVibes }) => {
+  return (
+    <div className="relative rounded-xl overflow-hidden shadow-md">
+      {/* Gradient border */}
+      <div className="absolute -inset-0.5 rounded-xl z-0 overflow-hidden opacity-70">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"></div>
+      </div>
+      <div className={`relative z-10 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl overflow-hidden`}>
+        <div className={`px-5 py-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <div className="flex items-center">
+            <FiTrendingUp className={`mr-2 ${isDarkMode ? 'text-[#be70a9]' : 'text-[#a477ab]'}`} />
+            <h2 className={`font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+              Trending Vibes
+            </h2>
+          </div>
+        </div>
+        
+        <div className="p-3">
+          {trendingVibes.map((vibe, index) => (
+            <div 
+              key={index} 
+              className={`flex items-center justify-between p-2 rounded-lg ${
+                isDarkMode 
+                  ? 'hover:bg-gray-700' 
+                  : 'hover:bg-gray-100'
+              }`}
+            >
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                {index + 1}. {vibe.name}
+              </span>
+              <span className="text-xs font-medium text-green-500">
+                {vibe.growth}
+              </span>
+            </div>
+          ))}
+        </div>
+        
+        <div className={`p-3 border-t text-center ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <Link to="/dashboard/discover" className={`text-sm ${
+            isDarkMode ? 'text-[#be70a9] hover:text-[#c36376]' : 'text-[#a477ab] hover:text-[#c36376]'
+          }`}>
+            Explore All Trends
+          </Link>
         </div>
       </div>
     </div>
@@ -483,103 +528,275 @@ const Home = () => {
 };
 
 // Session Card Component
-const SessionCard = ({ session }) => {
-  const bgColor = session.visibility === "public" ? "bg-blue-50" : 
-                  session.visibility === "connections" ? "bg-purple-50" : "bg-gray-50";
-  const textColor = session.visibility === "public" ? "text-blue-600" : 
-                    session.visibility === "connections" ? "text-purple-600" : "text-gray-600";
+const SessionCard = ({ session, isDarkMode }) => {
+  const getBgColor = () => {
+    if (isDarkMode) {
+      return session.visibility === "public" ? "bg-[#a477ab]/20" : "bg-[#c36376]/20";
+    } else {
+      return session.visibility === "public" ? "bg-[#a477ab]/10" : "bg-[#c36376]/10";
+    }
+  };
+  
+  const getTextColor = () => {
+    if (isDarkMode) {
+      return session.visibility === "public" ? "text-[#be70a9]" : "text-[#c36376]";
+    } else {
+      return session.visibility === "public" ? "text-[#a477ab]" : "text-[#c36376]";
+    }
+  };
+  
   const icon = session.visibility === "public" ? <FiGlobe /> : <FiLock />;
   
   return (
-    <motion.div 
-      className={`${bgColor} rounded-xl p-4 hover:shadow-md transition border border-gray-100`}
-      whileHover={{ scale: 1.01, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
-    >
-      <div className="flex items-start">
-        <div className="mr-4">
-          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white">
-            <img src={session.host.avatar} alt={session.host.name} className="w-full h-full object-cover" />
+    <div className={`${getBgColor()} rounded-lg p-4 ${
+      isDarkMode ? 'border border-gray-700' : 'border border-gray-100'
+    }`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center">
+          <div className="mr-3 h-10 w-10 rounded-full overflow-hidden border-2 border-white/30">
+            <img 
+              src={session.host.avatar} 
+              alt={session.host.name} 
+              className="h-full w-full object-cover" 
+            />
+          </div>
+          <div>
+            <h3 className={`font-medium ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+              {session.name}
+            </h3>
+            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              by {session.host.name}
+            </p>
           </div>
         </div>
-        <div className="flex-grow">
-          <div className="flex justify-between items-start">
-            <h3 className="font-bold text-gray-800">{session.name}</h3>
-            <div className={`flex items-center ${textColor} text-xs font-medium`}>
-              {icon}
-              <span className="ml-1">{session.visibility === "connections" ? "Connections" : "Public"}</span>
-            </div>
-          </div>
-          <p className="text-sm text-gray-600">Hosted by {session.host.name}</p>
-          <div className="flex flex-wrap mt-2 gap-2">
-            {session.tags.map((tag, index) => (
-              <span key={index} className="px-2 py-0.5 bg-white text-gray-700 rounded-full text-xs">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <div className="flex justify-between items-center mt-3">
-            <div className="flex items-center text-sm text-gray-600">
-              <FiClock className="mr-1" />
-              <span>{session.time}</span>
-            </div>
-            <div className="flex items-center text-sm text-gray-600">
-              <FiUsers className="mr-1" />
-              <span>{session.participants} joined</span>
-            </div>
-          </div>
-          <div className="mt-3 flex justify-end">
-            <button className="px-3 py-1.5 bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white text-sm font-medium rounded-lg hover:opacity-90 transition flex items-center">
-              <FiSend className="mr-1.5" /> Join Request
-            </button>
-          </div>
+        
+        <div className={`flex items-center ${getTextColor()} text-xs rounded-full px-2 py-1 ${
+          isDarkMode ? 'bg-gray-800/50' : 'bg-white/50'
+        }`}>
+          {icon}
+          <span className="ml-1">{session.visibility === "public" ? "Public" : "Connections"}</span>
         </div>
       </div>
-    </motion.div>
+      
+      <div className={`flex flex-wrap gap-2 mb-3`}>
+        {session.tags.map((tag, index) => (
+          <span key={index} className={`text-xs px-2 py-0.5 rounded-full ${
+            isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-700'
+          }`}>
+            {tag}
+          </span>
+        ))}
+      </div>
+      
+      <div className={`grid grid-cols-2 gap-2 mb-3`}>
+        <div className="flex items-center">
+          <FiClock className={`mr-1.5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} size={14} />
+          <span className={`text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            {session.time}
+          </span>
+        </div>
+        
+        <div className="flex items-center">
+          <FiMapPin className={`mr-1.5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} size={14} />
+          <span className={`text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            {session.location}
+          </span>
+        </div>
+        
+        <div className="flex items-center">
+          <FiUsers className={`mr-1.5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} size={14} />
+          <span className={`text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            {session.participants} participants
+          </span>
+        </div>
+      </div>
+      
+      <div className="flex justify-end space-x-2">
+        <button className={`p-1.5 rounded-lg ${
+          isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+        }`}>
+          <FiBookmark size={16} />
+        </button>
+        
+        <button className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white text-sm font-medium flex items-center">
+          <FiSend className="mr-1.5" /> Join
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Vibe Match Card Component
+const VibeMatchCard = ({ vibe, isDarkMode }) => {
+  return (
+    <div className={`rounded-lg p-4 ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-50'} border ${
+      isDarkMode ? 'border-gray-600' : 'border-gray-200'
+    } transition duration-200`}>
+      <div className="flex items-center">
+        <div className={`h-12 w-12 rounded-lg flex items-center justify-center text-2xl ${
+          isDarkMode ? 'bg-gray-800' : 'bg-[#a477ab]/5'
+        }`}>
+          {vibe.icon}
+        </div>
+        
+        <div className="ml-4 flex-grow">
+          <h3 className={`font-medium ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+            {vibe.name}
+          </h3>
+          <div className="flex items-center">
+            <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              {vibe.members} members
+            </span>
+            <span className="mx-2 text-xs text-gray-400">•</span>
+            <div className="flex items-center">
+              {vibe.categories.map((category, index) => (
+                <span key={index} className={`text-xs ${
+                  isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                } ${index > 0 ? 'ml-1' : ''}`}>
+                  {category}{index < vibe.categories.length - 1 ? ',' : ''}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <div className={`ml-2 p-1.5 rounded-full ${
+          isDarkMode ? 'bg-[#a477ab]/20 text-[#be70a9]' : 'bg-[#a477ab]/10 text-[#a477ab]'
+        } font-medium text-sm flex items-center`}>
+          {vibe.matchScore}%
+        </div>
+      </div>
+      
+      <p className={`mt-3 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        {vibe.description}
+      </p>
+      
+      <div className="flex justify-between mt-3">
+        <button className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center ${
+          isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-800/80' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        }`}>
+          <FiMessageCircle className="mr-1.5" /> Message
+        </button>
+        
+        <button className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center ${
+          isDarkMode 
+            ? 'bg-[#a477ab]/20 text-[#be70a9] hover:bg-[#a477ab]/30' 
+            : 'bg-[#a477ab]/10 text-[#a477ab] hover:bg-[#a477ab]/20'
+        }`}>
+          <FiUserPlus className="mr-1.5" /> Join Vibe
+        </button>
+      </div>
+    </div>
   );
 };
 
 // Connection Card Component
-const ConnectionCard = ({ connection }) => {
+const ConnectionCard = ({ connection, isDarkMode }) => {
+  const connectionStrength = Array(5).fill(0).map((_, i) => (
+    <div 
+      key={i}
+      className={`h-1 w-4 rounded-sm ${i < connection.connectionStrength 
+        ? isDarkMode ? 'bg-[#be70a9]' : 'bg-[#a477ab]'
+        : isDarkMode ? 'bg-gray-600' : 'bg-gray-300'
+      }`}
+    ></div>
+  ));
+
   return (
-    <div className="flex items-start p-2 hover:bg-gray-50 rounded-lg transition">
-      <div className="mr-3">
-        <div className="w-10 h-10 rounded-full overflow-hidden">
-          <img src={connection.avatar} alt={connection.name} className="w-full h-full object-cover" />
+    <div className={`rounded-lg p-3 flex flex-col ${
+      isDarkMode 
+        ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' 
+        : 'bg-white border-gray-200 hover:bg-gray-50'
+    } border transition-colors`}>
+      <div className="flex items-center mb-3">
+        <div className="h-12 w-12 rounded-full overflow-hidden mr-3 border-2 border-[#a477ab]/30">
+          <img 
+            src={connection.avatar} 
+            alt={connection.name} 
+            className="h-full w-full object-cover" 
+          />
+        </div>
+        
+        <div>
+          <h3 className={`font-medium ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+            {connection.name}
+          </h3>
+          <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+            {connection.title}
+          </p>
         </div>
       </div>
-      <div className="flex-grow">
-        <h3 className="font-medium text-gray-800">{connection.name}</h3>
-        <p className="text-xs text-gray-500 truncate max-w-[150px]">{connection.bio}</p>
-        <div className="flex flex-wrap mt-1 gap-1">
-          {connection.interests.map((interest, index) => (
-            <span key={index} className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs">
-              {interest}
-            </span>
-          ))}
+      
+      <div className="flex flex-wrap gap-1 mb-3">
+        {connection.interests.map((interest, index) => (
+          <span key={index} className={`text-xs px-2 py-0.5 rounded-full ${
+            isDarkMode ? 'bg-gray-600 text-gray-300' : 'bg-[#a477ab]/5 text-gray-700'
+          }`}>
+            {interest}
+          </span>
+        ))}
+      </div>
+      
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-1`}>
+            Connection Strength
+          </p>
+          <div className="flex space-x-0.5">
+            {connectionStrength}
+          </div>
+        </div>
+        
+        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+          {connection.mutualConnections} mutual
         </div>
       </div>
-      <button className="ml-2 p-1.5 bg-[#a477ab]/10 text-[#a477ab] rounded-md hover:bg-[#a477ab]/20 transition">
-        <FiUserPlus size={16} />
+      
+      <button className={`mt-auto w-full py-1.5 rounded-lg text-sm font-medium flex items-center justify-center ${
+        isDarkMode 
+          ? 'bg-[#a477ab]/20 text-[#be70a9] hover:bg-[#a477ab]/30' 
+          : 'bg-[#a477ab]/10 text-[#a477ab] hover:bg-[#a477ab]/20'
+      }`}>
+        <FiUserPlus className="mr-1.5" /> Connect
       </button>
     </div>
   );
 };
 
 // Tab Button Component
-const TabButton = ({ active, onClick, icon, label }) => {
-  return (
-    <button
-      className={`px-6 py-4 flex items-center whitespace-nowrap transition-colors ${
-        active 
-          ? 'text-[#a477ab] border-b-2 border-[#a477ab] font-medium' 
-          : 'text-gray-600 hover:text-[#a477ab]'
-      }`}
-      onClick={onClick}
-    >
-      <span className="mr-2">{icon}</span>
-      {label}
-    </button>
-  );
-};
+const TabButton = ({ icon, label, active, onClick, isDarkMode }) => (
+  <button 
+    onClick={onClick}
+    className={`flex-1 py-3.5 flex items-center justify-center transition-colors ${
+      active 
+        ? isDarkMode 
+          ? 'text-[#be70a9] border-b-2 border-[#be70a9]'
+          : 'text-[#a477ab] border-b-2 border-[#a477ab]'
+        : isDarkMode
+          ? 'text-gray-400 hover:text-gray-300'
+          : 'text-gray-500 hover:text-gray-700'
+    }`}
+  >
+    <span className="mr-2">{icon}</span>
+    <span className="font-medium text-sm">{label}</span>
+  </button>
+);
+
+// Empty State Component
+const EmptyState = ({ message, subMessage, isDarkMode }) => (
+  <div className="py-10 flex flex-col items-center justify-center text-center">
+    <div className={`h-16 w-16 rounded-full ${
+      isDarkMode ? 'bg-[#a477ab]/10 text-[#be70a9]' : 'bg-[#a477ab]/10 text-[#a477ab]'
+    } flex items-center justify-center mb-4`}>
+      <FiCalendar size={24} />
+    </div>
+    <h3 className={`text-lg font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+      {message}
+    </h3>
+    <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+      {subMessage}
+    </p>
+  </div>
+);
 
 export default Home;

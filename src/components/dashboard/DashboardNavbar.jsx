@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut, FiHome, FiSettings, FiUsers, FiBriefcase, FiCalendar, FiBell } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut, FiHome, FiSettings, FiUsers, FiBriefcase, FiCalendar, FiBell, FiMoon, FiSun } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const DashboardNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -11,6 +12,7 @@ const DashboardNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
+  const { isDarkMode, toggleDarkMode } = useTheme();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -87,12 +89,16 @@ const DashboardNavbar = () => {
               />
             )}
             
-            {/* Background - changes with scroll */}
+            {/* Background - changes with scroll and theme */}
             <div 
               className={`relative z-10 transition-all duration-500 ${
                 isScrolled 
-                  ? "bg-white rounded-full shadow-md" 
-                  : "bg-white rounded-full shadow-sm"
+                  ? isDarkMode 
+                    ? "bg-gray-900 rounded-full shadow-md" 
+                    : "bg-white rounded-full shadow-md"
+                  : isDarkMode 
+                    ? "bg-gray-900 rounded-full shadow-sm" 
+                    : "bg-white rounded-full shadow-sm"
               }`}
             >
               <nav>
@@ -120,7 +126,7 @@ const DashboardNavbar = () => {
                           </motion.div>
                         </div>
                         <div className="ml-2">
-                          <div className="text-lg font-bold text-gray-800">
+                          <div className={`text-lg font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
                             Find Your <span className="text-[#be70a9]">Vibe</span>
                           </div>
                         </div>
@@ -136,16 +142,35 @@ const DashboardNavbar = () => {
                         to={item.path} 
                         label={item.label}
                         icon={item.icon}
+                        isDarkMode={isDarkMode}
                       />
                     ))}
                   </div>
                   
-                  {/* User Menu */}
-                  <div className="hidden md:flex items-center">
+                  {/* User Menu and Theme Toggle */}
+                  <div className="hidden md:flex items-center space-x-3">
+                    {/* Theme Toggle Button */}
+                    <motion.button
+                      onClick={toggleDarkMode}
+                      className={`p-2 rounded-full ${
+                        isDarkMode 
+                          ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      } transition-colors`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                    >
+                      {isDarkMode ? <FiSun size={18} /> : <FiMoon size={18} />}
+                    </motion.button>
+                    
+                    {/* User Menu Dropdown */}
                     <div className="relative user-menu-dropdown">
                       <motion.button
                         onClick={() => setUserMenuOpen(!userMenuOpen)}
-                        className="flex items-center p-1 rounded-full border border-[#a477ab] text-[#a477ab] font-medium hover:bg-[#a477ab]/5 transition-colors"
+                        className={`flex items-center p-1 rounded-full border border-[#a477ab] ${
+                          isDarkMode ? 'text-[#be70a9] hover:bg-gray-800' : 'text-[#a477ab] hover:bg-[#a477ab]/5'
+                        } transition-colors`}
                         whileHover={{ scale: 1.03 }}
                       >
                         <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-[#a477ab]/30">
@@ -162,14 +187,14 @@ const DashboardNavbar = () => {
                           )}
                         </div>
                         {/* Added username display */}
-                        <span className="mx-2 font-medium text-gray-700">
+                        <span className={`mx-2 font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                           {currentUser?.customDisplayName || currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User'}
                         </span>
                         <motion.div
                           animate={{ rotate: userMenuOpen ? 180 : 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <FiChevronDown />
+                          <FiChevronDown className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />
                         </motion.div>
                       </motion.button>
                       
@@ -200,16 +225,16 @@ const DashboardNavbar = () => {
                                 }}
                               />
                               
-                              <div className="relative bg-white rounded-xl shadow-lg py-2 z-10">
-                                <Link to="/dashboard/profile" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
+                              <div className={`relative ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg py-2 z-10`}>
+                                <Link to="/dashboard/profile" className={`block px-4 py-2 ${isDarkMode ? 'text-gray-300 hover:text-[#be70a9] hover:bg-gray-700' : 'text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5'}`}>
                                   Profile Settings
                                 </Link>
-                                <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5">
+                                <Link to="/dashboard" className={`block px-4 py-2 ${isDarkMode ? 'text-gray-300 hover:text-[#be70a9] hover:bg-gray-700' : 'text-gray-700 hover:text-[#be70a9] hover:bg-[#a477ab]/5'}`}>
                                   Dashboard
                                 </Link>
                                 <button
                                   onClick={handleLogout}
-                                  className="w-full text-left px-4 py-2 text-gray-700 hover:text-red-600 hover:bg-red-50 flex items-center"
+                                  className={`w-full text-left px-4 py-2 ${isDarkMode ? 'text-gray-300 hover:text-red-400 hover:bg-gray-700' : 'text-gray-700 hover:text-red-600 hover:bg-red-50'} flex items-center`}
                                 >
                                   <FiLogOut className="mr-2" /> Log out
                                 </button>
@@ -221,17 +246,38 @@ const DashboardNavbar = () => {
                     </div>
                   </div>
                   
-                  {/* Mobile Menu Button */}
-                  <div className="md:hidden">
+                  {/* Mobile Menu Button with Theme Toggle */}
+                  <div className="md:hidden flex items-center space-x-2">
+                    {/* Theme Toggle for Mobile */}
+                    <motion.button
+                      onClick={toggleDarkMode}
+                      className={`p-2 rounded-full ${
+                        isDarkMode 
+                          ? 'bg-gray-800 text-yellow-400' 
+                          : 'bg-gray-100 text-gray-700'
+                      }`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.9 }}
+                      aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                    >
+                      {isDarkMode ? <FiSun size={18} /> : <FiMoon size={18} />}
+                    </motion.button>
+                    
+                    {/* Mobile Menu Toggle */}
                     <motion.button
                       onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                       className={`p-2 rounded-full ${
-                        isMobileMenuOpen ? 'bg-[#a477ab]/10' : isScrolled ? 'bg-gray-50' : 'bg-white'
-                      } border border-gray-100`}
+                        isMobileMenuOpen 
+                          ? isDarkMode ? 'bg-gray-800' : 'bg-[#a477ab]/10' 
+                          : isDarkMode ? 'bg-gray-800' : isScrolled ? 'bg-gray-50' : 'bg-white'
+                      } border ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.9 }}
                     >
-                      {isMobileMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+                      {isMobileMenuOpen 
+                        ? <FiX size={22} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} /> 
+                        : <FiMenu size={22} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />
+                      }
                     </motion.button>
                   </div>
                 </div>
@@ -251,9 +297,9 @@ const DashboardNavbar = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {/* White backdrop */}
+            {/* Theme-based backdrop */}
             <motion.div 
-              className="absolute inset-0 bg-white"
+              className={`absolute inset-0 ${isDarkMode ? 'bg-black' : 'bg-white'}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.98 }}
               exit={{ opacity: 0 }}
@@ -279,7 +325,7 @@ const DashboardNavbar = () => {
                   }}
                 />
                 
-                <div className="relative bg-white rounded-2xl shadow-md overflow-hidden z-10">
+                <div className={`relative ${isDarkMode ? 'bg-gray-900' : 'bg-white'} rounded-2xl shadow-md overflow-hidden z-10`}>
                   <motion.div
                     className="p-6 space-y-1"
                     initial="closed"
@@ -293,7 +339,7 @@ const DashboardNavbar = () => {
                   >
                     {/* Add profile section to mobile menu */}
                     <motion.div
-                      className="flex items-center p-3 mb-4 rounded-xl bg-[#a477ab]/5"
+                      className={`flex items-center p-3 mb-4 rounded-xl ${isDarkMode ? 'bg-gray-800' : 'bg-[#a477ab]/5'}`}
                       variants={{
                         open: { opacity: 1, y: 0 },
                         closed: { opacity: 0, y: -20 }
@@ -313,7 +359,7 @@ const DashboardNavbar = () => {
                         )}
                       </div>
                       <div className="ml-3">
-                        <div className="font-semibold text-gray-800">
+                        <div className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                           {currentUser?.customDisplayName || currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User'}
                         </div>
                         <Link to="/dashboard/profile" className="text-sm text-[#be70a9]">
@@ -328,11 +374,12 @@ const DashboardNavbar = () => {
                         to={item.path} 
                         label={item.label}
                         icon={item.icon}
+                        isDarkMode={isDarkMode}
                       />
                     ))}
                     
                     <motion.div 
-                      className="pt-6 space-y-3 border-t border-gray-100 mt-4"
+                      className={`pt-6 space-y-3 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'} mt-4`}
                       variants={{
                         open: {
                           opacity: 1,
@@ -347,7 +394,11 @@ const DashboardNavbar = () => {
                     >
                       <button
                         onClick={handleLogout}
-                        className="w-full py-3 rounded-full bg-red-50 text-red-600 border border-red-200 font-medium flex items-center justify-center"
+                        className={`w-full py-3 rounded-full ${
+                          isDarkMode 
+                            ? 'bg-red-900/30 text-red-400 border border-red-900/50' 
+                            : 'bg-red-50 text-red-600 border border-red-200'
+                        } font-medium flex items-center justify-center`}
                       >
                         <FiLogOut className="mr-2" /> Log out
                       </button>
@@ -372,7 +423,7 @@ const DashboardNavbar = () => {
 };
 
 // Dashboard Nav Item with hover effect but no underline
-const DashboardNavItem = ({ to, label, icon }) => {
+const DashboardNavItem = ({ to, label, icon, isDarkMode }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
 
@@ -382,7 +433,9 @@ const DashboardNavItem = ({ to, label, icon }) => {
       className={`px-4 py-2 font-medium rounded-full flex items-center transition-all duration-200 ${
         isActive 
           ? 'text-[#be70a9] bg-[#be70a9]/10' 
-          : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
+          : isDarkMode
+            ? 'text-gray-300 hover:bg-gray-800 hover:text-[#be70a9]'
+            : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
       }`}
     >
       {icon}
@@ -392,7 +445,7 @@ const DashboardNavItem = ({ to, label, icon }) => {
 };
 
 // Mobile nav item
-const MobileNavItem = ({ to, label, icon }) => {
+const MobileNavItem = ({ to, label, icon, isDarkMode }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
   
@@ -406,7 +459,13 @@ const MobileNavItem = ({ to, label, icon }) => {
       <Link
         to={to || '/'}
         className={`block py-4 px-3 text-lg font-medium rounded-xl flex items-center ${
-          isActive ? 'bg-[#a477ab]/10 text-[#be70a9]' : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
+          isActive 
+            ? isDarkMode
+              ? 'bg-gray-800 text-[#be70a9]'
+              : 'bg-[#a477ab]/10 text-[#be70a9]' 
+            : isDarkMode
+              ? 'text-gray-300 hover:bg-gray-800 hover:text-[#be70a9]'
+              : 'text-gray-800 hover:bg-[#a477ab]/5 hover:text-[#be70a9]'
         }`}
       >
         {icon}

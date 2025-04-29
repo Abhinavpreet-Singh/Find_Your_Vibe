@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { FiX, FiPlus, FiArrowRight, FiChevronDown, FiSkipForward } from 'react-icons/fi';
 import DashboardNavbar from '../../components/dashboard/DashboardNavbar';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import Loader from '../../components/Loader';
 import { 
-  saveUserProfile, 
+  saveUserProfile,
   getUserProfile, 
   interestCategories,
   interestsByCategory,
@@ -23,7 +24,7 @@ const universities = [
   "University of Oxford", 
   "University of Cambridge", 
   "University of Toronto",
-  "Chitkara University", // Added Chitkara University
+  "Chitkara University",
   "University of California, Berkeley",
   "New York University",
   "Columbia University",
@@ -51,6 +52,7 @@ const programs = [
 
 export default function Profile() {
   const { currentUser, updateProfileCompletionStatus, updateUserProfile } = useAuth();
+  const { isDarkMode } = useTheme();
   const navigate = useNavigate();
   
   const [loading, setLoading] = useState(true);
@@ -325,28 +327,40 @@ export default function Profile() {
     placeholder = "Select an option..."
   }) => (
     <div className="relative">
-      <label className="block text-sm font-medium mb-1 text-gray-700">
+      <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
         {label}
       </label>
       <button
         type="button"
-        className="w-full px-4 py-2 border border-gray-300 rounded-md flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white"
+        className={`w-full px-4 py-2 border rounded-md flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-pink-500 ${
+          isDarkMode 
+            ? 'bg-gray-700 border-gray-600 text-gray-100' 
+            : 'bg-white border-gray-300 text-gray-900'
+        }`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className={value ? "text-gray-900" : "text-gray-400"}>
+        <span className={value ? (isDarkMode ? "text-gray-100" : "text-gray-900") : (isDarkMode ? "text-gray-400" : "text-gray-400")}>
           {value || placeholder}
         </span>
         <FiChevronDown className={`ml-2 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       
       {isOpen && (
-        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className={`absolute z-10 mt-1 w-full border rounded-md shadow-lg max-h-60 overflow-auto ${
+          isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'
+        }`}>
           <ul className="py-1">
             {options.map((option, index) => (
               <li
                 key={index}
-                className={`px-4 py-2 hover:bg-pink-50 cursor-pointer ${
-                  option === value ? 'bg-pink-50 text-pink-700' : 'text-gray-800'
+                className={`px-4 py-2 cursor-pointer ${
+                  option === value 
+                    ? isDarkMode 
+                      ? 'bg-pink-900/30 text-pink-300' 
+                      : 'bg-pink-50 text-pink-700'
+                    : isDarkMode
+                      ? 'text-gray-200 hover:bg-gray-700'
+                      : 'text-gray-800 hover:bg-pink-50'
                 }`}
                 onClick={() => onSelect(option)}
               >
@@ -357,12 +371,16 @@ export default function Profile() {
           
           {/* Custom input for "Other" option */}
           {value === 'Other' && (
-            <div className="p-2 border-t border-gray-200">
+            <div className={`p-2 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
               <input
                 type="text"
                 value={customValue}
                 onChange={(e) => setCustomValue(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 ${
+                  isDarkMode 
+                    ? 'bg-gray-700 border-gray-600 text-gray-100' 
+                    : 'border-gray-300 text-gray-800'
+                }`}
                 placeholder={`Enter custom ${label.toLowerCase()}`}
                 onBlur={() => {
                   if (customValue) {
@@ -417,11 +435,11 @@ export default function Profile() {
       transition={{ duration: 0.5 }}
       className="space-y-6"
     >
-      <h2 className="text-2xl font-bold mb-6">Basic Information</h2>
+      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>Basic Information</h2>
       
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700">
+          <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Display Name
           </label>
           <input
@@ -429,12 +447,16 @@ export default function Profile() {
             name="displayName"
             value={profile.displayName}
             onChange={handleInputChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 ${
+              isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-white' 
+                : 'bg-white border-gray-300 text-gray-900'
+            }`}
             placeholder="How you'd like to be known"
             required
           />
           {currentUser?.providerData?.[0]?.providerId === 'google.com' && profile.displayName && (
-            <p className="mt-1 text-xs text-gray-500">
+            <p className={`mt-1 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               Using name from your Google account. You can change it if you'd like.
             </p>
           )}
@@ -468,14 +490,18 @@ export default function Profile() {
           />
           
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Year
             </label>
             <select
               name="year"
               value={profile.year}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 ${
+                isDarkMode 
+                  ? 'bg-gray-700 border-gray-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              }`}
             >
               <option value="">Select Year</option>
               <option value="1st Year">1st Year</option>
@@ -489,7 +515,7 @@ export default function Profile() {
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700">
+          <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             About Me
           </label>
           <textarea
@@ -497,7 +523,11 @@ export default function Profile() {
             value={profile.bio}
             onChange={handleInputChange}
             rows="3"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 ${
+              isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-white' 
+                : 'bg-white border-gray-300 text-gray-900'
+            }`}
             placeholder="Share a little about yourself..."
           />
         </div>
@@ -507,7 +537,11 @@ export default function Profile() {
         <button
           onClick={handleSkip}
           disabled={skipping || !profile.displayName}
-          className="py-2 px-6 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition flex items-center disabled:opacity-50"
+          className={`py-2 px-6 border font-medium rounded-lg transition flex items-center disabled:opacity-50 ${
+            isDarkMode
+              ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
+              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+          }`}
         >
           {skipping ? "Skipping..." : (
             <>
@@ -537,12 +571,12 @@ export default function Profile() {
       transition={{ duration: 0.5 }}
       className="space-y-6"
     >
-      <h2 className="text-2xl font-bold mb-6">Your Interests</h2>
+      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>Your Interests</h2>
       
       <div className="space-y-6">
         {/* Interest categories in grid with active state */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Select interest categories
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -553,7 +587,9 @@ export default function Profile() {
                 className={`py-2 px-3 rounded-lg text-sm text-center transition
                   ${selectedCategory === category 
                     ? 'bg-gradient-to-r from-pink-500 to-orange-400 text-white' 
-                    : 'bg-white border border-gray-300 hover:border-pink-400'}`}
+                    : isDarkMode 
+                      ? 'bg-gray-700 border border-gray-600 hover:border-pink-400 text-gray-200'
+                      : 'bg-white border border-gray-300 hover:border-pink-400'}`}
               >
                 {category}
               </button>
@@ -568,7 +604,7 @@ export default function Profile() {
             animate={{ opacity: 1, height: "auto" }}
             className="space-y-2"
           >
-            <label className="block text-sm font-medium text-gray-700">
+            <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Select specific interests in {selectedCategory}
             </label>
             <div className="flex flex-wrap gap-2">
@@ -579,7 +615,9 @@ export default function Profile() {
                   className={`py-1 px-3 rounded-full text-sm transition
                     ${profile.interests.includes(interest) 
                       ? 'bg-gradient-to-r from-pink-500 to-orange-400 text-white' 
-                      : 'bg-gray-100 hover:bg-gray-200'}`}
+                      : isDarkMode 
+                        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                        : 'bg-gray-100 hover:bg-gray-200'}`}
                 >
                   {interest}
                 </button>
@@ -590,8 +628,10 @@ export default function Profile() {
         
         {/* Selected interests display */}
         {profile.interests.length > 0 && (
-          <div className="border-t border-gray-200 pt-4">
-            <p className="text-sm font-medium text-gray-700 mb-2">Selected interests ({profile.interests.length})</p>
+          <div className={`border-t pt-4 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+            <p className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Selected interests ({profile.interests.length})
+            </p>
             <div className="flex flex-wrap gap-2">
               {profile.interests.map((interest, index) => (
                 <div 
@@ -613,13 +653,17 @@ export default function Profile() {
         
         {/* Custom hobbies input */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Add custom hobbies or activities
           </label>
           <form onSubmit={handleHobbyAdd} className="flex gap-2">
             <input
               name="hobby"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className={`flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 ${
+                isDarkMode 
+                  ? 'bg-gray-700 border-gray-600 text-white' 
+                  : 'border-gray-300 text-gray-800'
+              }`}
               placeholder="E.g., Drone photography, Cooking Italian food"
             />
             <button
@@ -632,22 +676,31 @@ export default function Profile() {
           
           {profile.hobbies.length > 0 && (
             <div className="mt-3">
-              <p className="text-sm text-gray-600 mb-2">Your custom hobbies:</p>
+              <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Your custom hobbies:</p>
               <div className="flex flex-wrap gap-2">
                 {profile.hobbies.map((hobby, index) => (
                   <div 
                     key={index}
-                    className="group bg-orange-100 text-orange-800 py-1 px-3 rounded-full text-sm flex items-center gap-1"
+                    className={`group py-1 px-3 rounded-full text-sm flex items-center gap-1 ${
+                      isDarkMode 
+                        ? 'bg-orange-900/30 text-orange-200' 
+                        : 'bg-orange-100 text-orange-800'
+                    }`}
                   >
                     <span>{hobby}</span>
                     <button 
                       onClick={() => handleRemoveItem('hobbies', hobby)}
-                      className="text-orange-800 hover:bg-orange-200 rounded-full h-4 w-4 flex items-center justify-center ml-1"
+                      className={`${
+                        isDarkMode
+                          ? 'text-orange-200 hover:bg-orange-800/50'
+                          : 'text-orange-800 hover:bg-orange-200'
+                      } rounded-full h-4 w-4 flex items-center justify-center ml-1`}
                     >
                       <FiX size={12} />
                     </button>
                   </div>
                 ))}
+
               </div>
             </div>
           )}
@@ -657,7 +710,11 @@ export default function Profile() {
       <div className="flex justify-between pt-4">
         <button
           onClick={prevStep}
-          className="py-2 px-6 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition"
+          className={`py-2 px-6 border font-medium rounded-lg transition ${
+            isDarkMode
+              ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
+              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+          }`}
         >
           Back
         </button>
@@ -666,7 +723,11 @@ export default function Profile() {
           <button
             onClick={handleSkip}
             disabled={skipping}
-            className="py-2 px-6 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition flex items-center"
+            className={`py-2 px-6 border font-medium rounded-lg transition flex items-center ${
+              isDarkMode
+                ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            }`}
           >
             {skipping ? "Skipping..." : (
               <>
@@ -697,11 +758,11 @@ export default function Profile() {
       transition={{ duration: 0.5 }}
       className="space-y-6"
     >
-      <h2 className="text-2xl font-bold mb-6">Collaboration Preferences</h2>
+      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>Collaboration Preferences</h2>
       
       <div className="space-y-6">
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             How would you like to collaborate with others?
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -712,7 +773,9 @@ export default function Profile() {
                 className={`py-2 px-3 rounded-lg text-sm text-center transition
                   ${profile.collaborationPreferences.includes(type) 
                     ? 'bg-gradient-to-r from-pink-500 to-orange-400 text-white' 
-                    : 'bg-white border border-gray-300 hover:border-pink-400'}`}
+                    : isDarkMode 
+                      ? 'bg-gray-700 border border-gray-600 hover:border-pink-400 text-gray-200'
+                      : 'bg-white border border-gray-300 hover:border-pink-400'}`}
               >
                 {type}
               </button>
@@ -722,8 +785,10 @@ export default function Profile() {
 
         {/* Selected collaboration preferences display */}
         {profile.collaborationPreferences.length > 0 && (
-          <div className="border-t border-gray-200 pt-4">
-            <p className="text-sm font-medium text-gray-700 mb-2">Selected preferences ({profile.collaborationPreferences.length})</p>
+          <div className={`border-t pt-4 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+            <p className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Selected preferences ({profile.collaborationPreferences.length})
+            </p>
             <div className="flex flex-wrap gap-2">
               {profile.collaborationPreferences.map((pref, index) => (
                 <div 
@@ -745,13 +810,17 @@ export default function Profile() {
         
         {/* Skills section */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Add skills you'd like to share or develop
           </label>
           <form onSubmit={handleSkillAdd} className="flex gap-2">
             <input
               name="skill"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className={`flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 ${
+                isDarkMode 
+                  ? 'bg-gray-700 border-gray-600 text-white' 
+                  : 'border-gray-300 text-gray-800'
+              }`}
               placeholder="E.g., Guitar, Python programming, Public speaking"
             />
             <button
@@ -764,17 +833,25 @@ export default function Profile() {
           
           {profile.skills.length > 0 && (
             <div className="mt-3">
-              <p className="text-sm text-gray-600 mb-2">Your skills:</p>
+              <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Your skills:</p>
               <div className="flex flex-wrap gap-2">
                 {profile.skills.map((skill, index) => (
                   <div 
                     key={index}
-                    className="group bg-pink-100 text-pink-800 py-1 px-3 rounded-full text-sm flex items-center gap-1"
+                    className={`group py-1 px-3 rounded-full text-sm flex items-center gap-1 ${
+                      isDarkMode 
+                        ? 'bg-pink-900/30 text-pink-200' 
+                        : 'bg-pink-100 text-pink-800'
+                    }`}
                   >
                     <span>{skill}</span>
                     <button 
                       onClick={() => handleRemoveItem('skills', skill)}
-                      className="text-pink-800 hover:bg-pink-200 rounded-full h-4 w-4 flex items-center justify-center ml-1"
+                      className={`${
+                        isDarkMode
+                          ? 'text-pink-200 hover:bg-pink-800/50'
+                          : 'text-pink-800 hover:bg-pink-200'
+                      } rounded-full h-4 w-4 flex items-center justify-center ml-1`}
                     >
                       <FiX size={12} />
                     </button>
@@ -789,7 +866,11 @@ export default function Profile() {
       <div className="flex justify-between pt-4">
         <button
           onClick={prevStep}
-          className="py-2 px-6 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition"
+          className={`py-2 px-6 border font-medium rounded-lg transition ${
+            isDarkMode
+              ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
+              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+          }`}
         >
           Back
         </button>
@@ -798,7 +879,11 @@ export default function Profile() {
           <button
             onClick={handleSkip}
             disabled={skipping}
-            className="py-2 px-6 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition flex items-center"
+            className={`py-2 px-6 border font-medium rounded-lg transition flex items-center ${
+              isDarkMode
+                ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            }`}
           >
             {skipping ? "Skipping..." : (
               <>
@@ -829,9 +914,11 @@ export default function Profile() {
       transition={{ duration: 0.5 }}
       className="space-y-6"
     >
-      <h2 className="text-2xl font-bold mb-6">Review Your Profile</h2>
+      <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>Review Your Profile</h2>
       
-      <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+      <div className={`rounded-lg border p-6 space-y-6 ${
+        isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+      }`}>
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           {profile.profileImage ? (
             <img 
@@ -845,8 +932,10 @@ export default function Profile() {
             </div>
           )}
           <div>
-            <h3 className="text-xl font-semibold">{profile.displayName}</h3>
-            <p className="text-gray-600">
+            <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+              {profile.displayName}
+            </h3>
+            <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
               {[profile.program, profile.university, profile.year].filter(Boolean).join(', ')}
             </p>
           </div>
@@ -854,13 +943,17 @@ export default function Profile() {
         
         {profile.bio && (
           <div>
-            <h4 className="text-sm font-medium text-gray-500 uppercase mb-1">About</h4>
-            <p className="text-gray-800">{profile.bio}</p>
+            <h4 className={`text-sm font-medium uppercase mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              About
+            </h4>
+            <p className={isDarkMode ? 'text-gray-300' : 'text-gray-800'}>{profile.bio}</p>
           </div>
         )}
         
         <div>
-          <h4 className="text-sm font-medium text-gray-500 uppercase mb-1">Interests</h4>
+          <h4 className={`text-sm font-medium uppercase mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+            Interests
+          </h4>
           <div className="flex flex-wrap gap-2">
             {profile.interests.length > 0 ? profile.interests.map((interest, index) => (
               <span 
@@ -870,19 +963,25 @@ export default function Profile() {
                 {interest}
               </span>
             )) : (
-              <p className="text-sm text-gray-500 italic">No interests selected</p>
+              <p className={`text-sm italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                No interests selected
+              </p>
             )}
           </div>
         </div>
         
         {profile.hobbies.length > 0 && (
           <div>
-            <h4 className="text-sm font-medium text-gray-500 uppercase mb-1">Hobbies</h4>
+            <h4 className={`text-sm font-medium uppercase mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              Hobbies
+            </h4>
             <div className="flex flex-wrap gap-2">
               {profile.hobbies.map((hobby, index) => (
                 <span 
                   key={index}
-                  className="bg-orange-100 text-orange-800 py-1 px-3 rounded-full text-sm"
+                  className={`py-1 px-3 rounded-full text-sm ${
+                    isDarkMode ? 'bg-orange-900/30 text-orange-200' : 'bg-orange-100 text-orange-800'
+                  }`}
                 >
                   {hobby}
                 </span>
@@ -893,12 +992,16 @@ export default function Profile() {
         
         {profile.skills.length > 0 && (
           <div>
-            <h4 className="text-sm font-medium text-gray-500 uppercase mb-1">Skills</h4>
+            <h4 className={`text-sm font-medium uppercase mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              Skills
+            </h4>
             <div className="flex flex-wrap gap-2">
               {profile.skills.map((skill, index) => (
                 <span 
                   key={index}
-                  className="bg-pink-100 text-pink-800 py-1 px-3 rounded-full text-sm"
+                  className={`py-1 px-3 rounded-full text-sm ${
+                    isDarkMode ? 'bg-pink-900/30 text-pink-200' : 'bg-pink-100 text-pink-800'
+                  }`}
                 >
                   {skill}
                 </span>
@@ -909,12 +1012,16 @@ export default function Profile() {
         
         {profile.collaborationPreferences.length > 0 && (
           <div>
-            <h4 className="text-sm font-medium text-gray-500 uppercase mb-1">Looking For</h4>
+            <h4 className={`text-sm font-medium uppercase mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              Looking For
+            </h4>
             <div className="flex flex-wrap gap-2">
               {profile.collaborationPreferences.map((pref, index) => (
                 <span 
                   key={index}
-                  className="bg-gray-200 text-gray-800 py-1 px-3 rounded-full text-sm"
+                  className={`py-1 px-3 rounded-full text-sm ${
+                    isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-800'
+                  }`}
                 >
                   {pref}
                 </span>
@@ -927,7 +1034,11 @@ export default function Profile() {
       <div className="flex justify-between pt-4">
         <button
           onClick={prevStep}
-          className="py-2 px-6 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition"
+          className={`py-2 px-6 border font-medium rounded-lg transition ${
+            isDarkMode
+              ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
+              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+          }`}
         >
           Back
         </button>
@@ -951,13 +1062,15 @@ export default function Profile() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-orange-50">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-black text-white' : 'bg-gradient-to-br from-pink-50 via-white to-orange-50'}`}>
       <DashboardNavbar />
       {/* Added padding-top to prevent navbar overlap */}
       <div className="container mx-auto px-4 py-8 pt-28">
         {renderStepIndicator()}
         
-        <div className="bg-white shadow-lg rounded-xl p-6 md:p-8 max-w-3xl mx-auto">
+        <div className={`shadow-lg rounded-xl p-6 md:p-8 max-w-3xl mx-auto ${
+          isDarkMode ? 'bg-gray-800 text-white border border-gray-700' : 'bg-white'
+        }`}>
           {steps[activeStep]()}
         </div>
       </div>

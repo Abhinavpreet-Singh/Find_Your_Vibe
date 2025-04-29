@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DashboardNavbar from '../../components/dashboard/DashboardNavbar';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import Loader from '../../components/Loader';
 import { FiCalendar, FiClock, FiMapPin, FiUsers, FiSearch, FiFilter, FiPlus, FiChevronRight, FiStar, FiChevronLeft, FiChevronDown } from 'react-icons/fi';
 
 const Events = () => {
   const { currentUser } = useAuth();
+  const { isDarkMode } = useTheme();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('upcoming');
   const [searchQuery, setSearchQuery] = useState('');
@@ -236,7 +238,7 @@ const Events = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-orange-50">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-black text-white' : 'bg-gradient-to-br from-pink-50 via-white to-orange-50'}`}>
       <DashboardNavbar />
       
       <div className="pt-24 px-4 max-w-7xl mx-auto pb-12">
@@ -249,14 +251,13 @@ const Events = () => {
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">Events</h1>
-              <p className="text-gray-600">Discover and join exciting activities</p>
+              <h1 className={`text-3xl font-bold ${isDarkMode ? "text-gray-100" : "text-gray-800"}`}>Events</h1>
+              <p className={isDarkMode ? "text-gray-400" : "text-gray-600"}>Discover and join exciting activities</p>
             </div>
             
             <motion.button
               className="px-4 py-2 bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white rounded-lg flex items-center font-medium shadow-md"
               whileHover={{ y: -2, boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}
-              whileTap={{ y: 0, boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
             >
               <FiPlus className="mr-2" />
               Create Event
@@ -264,7 +265,7 @@ const Events = () => {
           </div>
         </motion.div>
         
-        {/* Featured Events */}
+        {/* Featured Events Section */}
         {featuredEvents.length > 0 && (
           <motion.div
             className="mb-8"
@@ -272,19 +273,13 @@ const Events = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
           >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-                <FiStar className="mr-2 text-[#c36376]" />
-                Featured Events
-              </h2>
-              <button className="text-[#a477ab] text-sm font-medium flex items-center hover:underline">
-                See all <FiChevronRight className="ml-1" />
-              </button>
-            </div>
+            <h2 className={`text-xl font-bold mb-4 flex items-center ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}>
+              <FiStar className="mr-2 text-[#edb04c]" /> Featured Events
+            </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {featuredEvents.map(event => (
-                <FeaturedEventCard key={event.id} event={event} />
+                <EventCard key={event.id} event={event} featured isDarkMode={isDarkMode} />
               ))}
             </div>
           </motion.div>
@@ -297,118 +292,140 @@ const Events = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <div className="bg-white p-4 rounded-xl shadow-md">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
-              <div className="flex-grow max-w-md relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FiSearch className="text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search events by title, category, location..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a477ab] focus:border-transparent"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              
-              <button 
-                className="px-4 py-2 flex items-center text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                <FiFilter className="mr-2" />
-                Filters
-                <FiChevronDown className={`ml-2 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-              </button>
+          <div className={`relative rounded-xl overflow-hidden shadow-md`}>
+            {/* Gradient border */}
+            <div className="absolute -inset-0.5 rounded-xl z-0 overflow-hidden opacity-70">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"></div>
             </div>
-            
-            {/* Filters */}
-            {showFilters && (
-              <motion.div 
-                className="pt-4 border-t border-gray-100 mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                transition={{ duration: 0.3 }}
-              >
-                {/* Category Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map(category => (
-                      <button
-                        key={category}
-                        className={`px-3 py-1 rounded-full text-sm ${
-                          selectedCategory === category.toLowerCase() 
-                            ? 'bg-[#a477ab] text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                        onClick={() => setSelectedCategory(category.toLowerCase())}
-                      >
-                        {category}
-                      </button>
-                    ))}
+            <div className={`relative z-10 ${isDarkMode ? "bg-gray-800" : "bg-white"} rounded-xl p-4`}>
+              <div className="flex flex-wrap gap-4 items-center justify-between">
+                {/* Search */}
+                <div className="w-full md:w-auto flex-grow max-w-md relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FiSearch className={isDarkMode ? "text-gray-500" : "text-gray-400"} />
                   </div>
+                  <input
+                    type="text"
+                    placeholder="Search events by title, category, location..."
+                    className={`w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a477ab] focus:border-transparent ${
+                      isDarkMode 
+                        ? "bg-gray-700 text-gray-100 border-gray-700" 
+                        : "bg-white border border-gray-200 text-gray-800"
+                    }`}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
                 </div>
                 
-                {/* Date Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
-                  <div className="flex flex-wrap gap-2">
-                    {dateFilters.map(filter => (
-                      <button
-                        key={filter}
-                        className={`px-3 py-1 rounded-full text-sm ${
-                          selectedDate === filter.toLowerCase() 
-                            ? 'bg-[#a477ab] text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                        onClick={() => setSelectedDate(filter.toLowerCase())}
-                      >
-                        {filter}
-                      </button>
-                    ))}
+                {/* Filter Button */}
+                <button 
+                  className={`px-4 py-2 rounded-lg flex items-center ${
+                    isDarkMode 
+                      ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
+                      : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+                  }`}
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  <FiFilter className="mr-2" />
+                  Filter
+                  {showFilters ? <FiChevronUp className="ml-2" /> : <FiChevronDown className="ml-2" />}
+                </button>
+              </div>
+              
+              {/* Expanded Filters */}
+              {showFilters && (
+                <div className={`mt-4 pt-4 ${isDarkMode ? "border-t border-gray-700" : "border-t border-gray-100"}`}>
+                  <div className="flex flex-wrap gap-6">
+                    {/* Category Filter */}
+                    <div className="w-full sm:w-auto">
+                      <p className={`text-sm font-medium mb-2 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Category</p>
+                      <div className="flex flex-wrap gap-2">
+                        {categories.map((category, index) => (
+                          <button
+                            key={index}
+                            className={`px-3 py-1 text-sm rounded-full ${
+                              selectedCategory.toLowerCase() === category.toLowerCase()
+                                ? "bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white"
+                                : isDarkMode
+                                  ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                            }`}
+                            onClick={() => setSelectedCategory(category.toLowerCase())}
+                          >
+                            {category}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Date Filter */}
+                    <div className="w-full sm:w-auto">
+                      <p className={`text-sm font-medium mb-2 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Date</p>
+                      <div className="flex flex-wrap gap-2">
+                        {dateFilters.map((dateFilter, index) => (
+                          <button
+                            key={index}
+                            className={`px-3 py-1 text-sm rounded-full ${
+                              selectedDate.toLowerCase() === dateFilter.toLowerCase()
+                                ? "bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white"
+                                : isDarkMode
+                                  ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                            }`}
+                            onClick={() => setSelectedDate(dateFilter.toLowerCase())}
+                          >
+                            {dateFilter}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </motion.div>
-            )}
+              )}
+            </div>
           </div>
         </motion.div>
         
-        {/* Tabs Navigation */}
+        {/* Events Tabs Navigation */}
         <motion.div 
-          className="mb-6"
+          className="mb-6 relative rounded-lg overflow-hidden shadow-md"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <div className="flex bg-white rounded-lg shadow-md p-1">
+          {/* Gradient border */}
+          <div className="absolute -inset-0.5 rounded-lg z-0 overflow-hidden opacity-70">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"></div>
+          </div>
+          <div className={`relative z-10 flex p-1 rounded-lg ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
             <TabButton 
               active={activeTab === 'upcoming'} 
               onClick={() => setActiveTab('upcoming')}
               label="Upcoming"
               count={filteredUpcomingEvents.length}
+              isDarkMode={isDarkMode}
             />
-            {filteredOngoingEvents.length > 0 && (
-              <TabButton 
-                active={activeTab === 'happening'} 
-                onClick={() => setActiveTab('happening')}
-                label="Happening Now"
-                count={filteredOngoingEvents.length}
-                highlight={true}
-              />
-            )}
+            <TabButton 
+              active={activeTab === 'ongoing'} 
+              onClick={() => setActiveTab('ongoing')}
+              label="Happening Now"
+              count={filteredOngoingEvents.length}
+              highlight={filteredOngoingEvents.length > 0}
+              isDarkMode={isDarkMode}
+            />
             <TabButton 
               active={activeTab === 'past'} 
               onClick={() => setActiveTab('past')}
-              label="Past"
+              label="Past Events"
               count={filteredPastEvents.length}
+              isDarkMode={isDarkMode}
             />
           </div>
         </motion.div>
         
-        {/* Events List */}
+        {/* Events Grid */}
         <motion.div
-          className="grid gap-6 mb-10"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
@@ -417,29 +434,33 @@ const Events = () => {
             <>
               {filteredUpcomingEvents.length > 0 ? (
                 filteredUpcomingEvents.map(event => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.id} event={event} isDarkMode={isDarkMode} />
                 ))
               ) : (
                 <EmptyState 
-                  message="No upcoming events found" 
-                  subMessage={searchQuery || selectedCategory !== 'all' || selectedDate !== 'all' 
-                    ? "Try changing your filters to see more events" 
-                    : "Check back later for upcoming events"} 
+                  text={searchQuery || selectedCategory !== 'all' || selectedDate !== 'all' 
+                    ? "No events match your search criteria."
+                    : "No upcoming events found."
+                  }
+                  isDarkMode={isDarkMode}
                 />
               )}
             </>
           )}
           
-          {activeTab === 'happening' && (
+          {activeTab === 'ongoing' && (
             <>
               {filteredOngoingEvents.length > 0 ? (
                 filteredOngoingEvents.map(event => (
-                  <EventCard key={event.id} event={event} isHappening={true} />
+                  <EventCard key={event.id} event={event} isDarkMode={isDarkMode} />
                 ))
               ) : (
                 <EmptyState 
-                  message="No events happening now" 
-                  subMessage="Check back later or explore upcoming events" 
+                  text={searchQuery || selectedCategory !== 'all' || selectedDate !== 'all' 
+                    ? "No events match your search criteria."
+                    : "No events happening right now."
+                  }
+                  isDarkMode={isDarkMode}
                 />
               )}
             </>
@@ -449,12 +470,15 @@ const Events = () => {
             <>
               {filteredPastEvents.length > 0 ? (
                 filteredPastEvents.map(event => (
-                  <EventCard key={event.id} event={event} isPast={true} />
+                  <EventCard key={event.id} event={event} isDarkMode={isDarkMode} />
                 ))
               ) : (
                 <EmptyState 
-                  message="No past events found" 
-                  subMessage="Your event history will appear here" 
+                  text={searchQuery || selectedCategory !== 'all' || selectedDate !== 'all' 
+                    ? "No events match your search criteria."
+                    : "No past events found."
+                  }
+                  isDarkMode={isDarkMode}
                 />
               )}
             </>
@@ -466,15 +490,21 @@ const Events = () => {
 };
 
 // Tab Button Component
-const TabButton = ({ active, onClick, label, count, highlight }) => {
+const TabButton = ({ active, onClick, label, count, highlight = false, isDarkMode }) => {
   return (
     <button
-      className={`flex-1 py-3 px-4 rounded-lg transition-colors relative ${
+      className={`flex-1 py-2 px-4 rounded-lg transition-colors relative ${
         active 
-          ? 'bg-[#a477ab]/10 text-[#a477ab]'
-          : highlight 
-            ? 'text-[#c36376] hover:bg-[#c36376]/5'
-            : 'text-gray-600 hover:bg-gray-50'
+          ? isDarkMode 
+            ? 'bg-[#a477ab]/20 text-[#be70a9]' 
+            : 'bg-[#a477ab]/10 text-[#a477ab]'
+          : highlight
+            ? isDarkMode
+              ? 'text-[#e47a8f] hover:bg-[#c36376]/10'
+              : 'text-[#c36376] hover:bg-[#c36376]/5'
+            : isDarkMode
+              ? 'text-gray-400 hover:bg-gray-700'
+              : 'text-gray-600 hover:bg-gray-50'
       }`}
       onClick={onClick}
     >
@@ -483,10 +513,10 @@ const TabButton = ({ active, onClick, label, count, highlight }) => {
         {count > 0 && (
           <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${
             active 
-              ? 'bg-[#a477ab]/20'
-              : highlight 
-                ? 'bg-[#c36376]/20'
-                : 'bg-gray-200'
+              ? isDarkMode ? 'bg-[#a477ab]/30' : 'bg-[#a477ab]/20' 
+              : highlight
+                ? isDarkMode ? 'bg-[#c36376]/30' : 'bg-[#c36376]/20'
+                : isDarkMode ? 'bg-gray-700' : 'bg-gray-200'
           }`}>
             {count}
           </span>
@@ -499,178 +529,119 @@ const TabButton = ({ active, onClick, label, count, highlight }) => {
   );
 };
 
-// Featured Event Card Component
-const FeaturedEventCard = ({ event }) => {
+// Event Card Component
+const EventCard = ({ event, featured = false, isDarkMode }) => {
+  const isRemote = event.isRemote || event.location?.toLowerCase() === 'virtual event';
+  
   return (
     <motion.div 
-      className="bg-white rounded-xl shadow-md overflow-hidden"
+      className={`relative rounded-xl overflow-hidden shadow-md ${featured ? 'border-2 md:col-span-2' : ''}`}
       whileHover={{ y: -5, boxShadow: '0 10px 20px rgba(0, 0, 0, 0.1)' }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      {/* Event Image */}
-      <div className="h-48 w-full relative">
-        <img 
-          src={event.imgSrc} 
-          alt={event.title} 
-          className="h-full w-full object-cover" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <div className="flex items-center mb-2">
-            <span className={`px-2.5 py-1 ${
-              event.isRemote 
-                ? 'bg-blue-100 text-blue-600' 
-                : 'bg-green-100 text-green-600'
-            } rounded-full text-xs font-medium`}>
-              {event.isRemote ? 'Virtual' : 'In-Person'}
-            </span>
-            <span className="ml-2 px-2.5 py-1 bg-purple-100 text-purple-600 rounded-full text-xs font-medium">
-              {event.category}
-            </span>
-          </div>
-          <h3 className="text-white font-bold text-lg">{event.title}</h3>
-        </div>
+      {/* Gradient border */}
+      <div className="absolute -inset-0.5 rounded-xl z-0 overflow-hidden opacity-70">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#a477ab] via-[#c36376] to-[#edb04c]"></div>
       </div>
+      <div className={`relative z-10 rounded-xl overflow-hidden h-full ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+        {featured && (
+          <div className="absolute top-4 right-4 z-10 px-2 py-1 bg-gradient-to-r from-[#edb04c] to-[#e47a8f] rounded-full text-white text-xs font-medium flex items-center">
+            <FiStar className="mr-1" size={12} />
+            Featured
+          </div>
+        )}
       
-      {/* Event Details */}
-      <div className="p-4">
-        {/* Date and Time */}
-        <div className="flex items-center text-sm text-gray-600 mb-2">
-          <FiCalendar className="mr-2" />
-          <span>{event.date}</span>
-        </div>
-        
-        {/* Location */}
-        <div className="flex items-start text-sm text-gray-600 mb-3">
-          <FiMapPin className="mr-2 mt-0.5 flex-shrink-0" />
-          <span>{event.location}</span>
-        </div>
-        
-        {/* Participants */}
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center text-sm text-gray-600">
-            <FiUsers className="mr-2" />
-            <span>{event.participants} participating</span>
-          </div>
-          <motion.button
-            className="px-3 py-1.5 bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white text-sm font-medium rounded-lg hover:opacity-90 transition"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View Details
-          </motion.button>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-// Standard Event Card Component
-const EventCard = ({ event, isHappening, isPast }) => {
-  return (
-    <motion.div 
-      className={`bg-white rounded-xl shadow-md overflow-hidden ${
-        isHappening ? 'border-2 border-[#c36376]' : ''
-      }`}
-      whileHover={{ y: -3, boxShadow: '0 8px 15px rgba(0, 0, 0, 0.1)' }}
-    >
-      <div className="flex flex-col md:flex-row">
         {/* Event Image */}
-        <div className="md:w-1/4 h-48 md:h-auto relative">
+        <div className="h-40 relative">
           <img 
             src={event.imgSrc} 
             alt={event.title} 
-            className="h-full w-full object-cover"
+            className="w-full h-full object-cover"
           />
-          {isHappening && (
-            <div className="absolute top-2 left-2 px-2.5 py-1 bg-red-500 text-white rounded-full text-xs font-medium flex items-center animate-pulse">
-              <span className="mr-1">●</span> Live Now
-            </div>
-          )}
-          {isPast && (
-            <div className="absolute inset-0 bg-gray-900/50 flex items-center justify-center">
-              <span className="px-3 py-1 bg-white/80 rounded-full text-gray-800 text-sm font-medium">
-                Past Event
-              </span>
-            </div>
-          )}
+          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+          
+          {/* Event Date */}
+          <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+            <p className="text-white text-sm font-medium flex items-center">
+              <FiClock className="mr-1" size={14} />
+              {event.date}
+            </p>
+          </div>
         </div>
         
-        {/* Event Details */}
-        <div className="p-5 flex-grow flex flex-col">
-          <div className="flex flex-wrap gap-2 mb-2">
-            <span className={`px-2 py-0.5 ${
-              event.isRemote
-                ? 'bg-blue-100 text-blue-600' 
-                : 'bg-green-100 text-green-600'
-            } rounded-full text-xs font-medium`}>
-              {event.isRemote ? 'Virtual' : 'In-Person'}
-            </span>
-            <span className="px-2 py-0.5 bg-purple-100 text-purple-600 rounded-full text-xs font-medium">
+        {/* Event Content */}
+        <div className="p-5">
+          {/* Event Category */}
+          <div className="mb-2">
+            <span className={`px-2 py-1 text-xs rounded-full ${
+              isDarkMode 
+                ? 'bg-[#a477ab]/20 text-[#be70a9]' 
+                : 'bg-[#a477ab]/10 text-[#a477ab]'
+            }`}>
               {event.category}
             </span>
           </div>
           
-          <h3 className="text-xl font-bold text-gray-800 mb-2">{event.title}</h3>
+          {/* Event Title */}
+          <h3 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>{event.title}</h3>
           
-          <div className="space-y-2 mb-4 flex-grow">
-            {/* Date and Time */}
-            <div className="flex items-center text-sm text-gray-600">
-              <FiCalendar className="mr-2 text-gray-500" />
-              <span>{event.date}</span>
-            </div>
-            
-            {/* Location */}
-            <div className="flex items-start text-sm text-gray-600">
-              <FiMapPin className="mr-2 mt-0.5 text-gray-500 flex-shrink-0" />
-              <div>
-                <span>{event.location}</span>
-                {event.address && (
-                  <p className="text-gray-500 text-xs mt-0.5">{event.address}</p>
-                )}
-              </div>
-            </div>
-            
-            {/* Host */}
-            <div className="flex items-center text-sm">
-              <div className="w-6 h-6 rounded-full overflow-hidden mr-2">
-                <img 
-                  src={event.hostAvatar} 
-                  alt={event.hostName} 
-                  className="w-full h-full object-cover" 
-                />
-              </div>
-              <span className="text-gray-600">Hosted by <span className="text-gray-800">{event.hostName}</span></span>
-            </div>
+          {/* Event Location */}
+          <div className="flex items-start mb-3">
+            <FiMapPin className={`mr-2 mt-1 flex-shrink-0 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+            <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              {isRemote ? 'Virtual Event' : event.location}
+              {event.address && <span className="block text-xs mt-0.5 opacity-75">{event.address}</span>}
+            </p>
           </div>
           
-          <div className="flex items-center justify-between border-t border-gray-100 pt-4 mt-2">
-            <div className="flex items-center text-sm text-gray-600">
-              <FiUsers className="mr-2" />
-              <span>{event.participants} participating</span>
-            </div>
-            
-            <motion.button
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg flex items-center ${
-                isPast 
-                  ? 'bg-gray-100 text-gray-700'
-                  : isHappening
-                    ? 'bg-[#c36376] text-white'
-                    : 'bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white'
-              }`}
-              whileHover={{ scale: isPast ? 1 : 1.05 }}
-              whileTap={{ scale: isPast ? 1 : 0.95 }}
-              disabled={isPast}
-            >
-              {isPast ? (
-                'View Summary'
-              ) : isHappening ? (
-                <>Join Now</>
-              ) : (
-                <>View Details</>
+          {/* Participants */}
+          <div className="flex items-center mb-4">
+            <FiUsers className={`mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+            <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              {event.participants} {event.participants === 1 ? 'participant' : 'participants'}
+            </p>
+          </div>
+          
+          {/* Host Info */}
+          {event.hostName && (
+            <div className={`flex items-center pt-4 ${isDarkMode ? 'border-t border-gray-700' : 'border-t border-gray-100'}`}>
+              {event.hostAvatar && (
+                <div className="w-8 h-8 rounded-full overflow-hidden mr-3">
+                  <img 
+                    src={event.hostAvatar} 
+                    alt={event.hostName} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               )}
-              <FiChevronRight className="ml-1" />
-            </motion.button>
-          </div>
+              <div>
+                <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Hosted by</p>
+                <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{event.hostName}</p>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {/* Action Button */}
+        <div className={`p-4 pt-2 ${isDarkMode ? 'border-t border-gray-700' : 'border-t border-gray-100'}`}>
+          <button className={`w-full py-2 rounded-lg font-medium ${
+            isDarkMode 
+              ? event.date.toLowerCase().includes('now') 
+                ? 'bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white' 
+                : 'border border-[#be70a9] text-[#be70a9] hover:bg-[#a477ab]/10'
+              : event.date.toLowerCase().includes('now') 
+                ? 'bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white' 
+                : 'border border-[#a477ab] text-[#a477ab] hover:bg-[#a477ab]/5'
+          }`}>
+            {event.date.toLowerCase().includes('now') 
+              ? 'Join Now' 
+              : event.date.toLowerCase().includes('ago') || event.date.toLowerCase().includes('past')
+                ? 'View Details'
+                : 'RSVP'
+            }
+          </button>
         </div>
       </div>
     </motion.div>
@@ -678,22 +649,20 @@ const EventCard = ({ event, isHappening, isPast }) => {
 };
 
 // Empty State Component
-const EmptyState = ({ message, subMessage }) => {
+const EmptyState = ({ text, isDarkMode }) => {
   return (
-    <div className="bg-white rounded-xl shadow-md p-10 flex flex-col items-center justify-center text-center">
-      <div className="h-16 w-16 bg-[#a477ab]/10 rounded-full flex items-center justify-center text-[#a477ab] mb-4">
+    <div className={`col-span-full flex flex-col items-center justify-center py-10 rounded-xl shadow-md ${
+      isDarkMode ? 'bg-gray-800' : 'bg-white'
+    }`}>
+      <div className={`h-16 w-16 rounded-full flex items-center justify-center mb-4 ${
+        isDarkMode ? 'bg-[#a477ab]/20 text-[#be70a9]' : 'bg-[#a477ab]/10 text-[#a477ab]'
+      }`}>
         <FiCalendar size={28} />
       </div>
-      <h3 className="text-xl font-semibold mb-2">{message}</h3>
-      <p className="text-gray-500 max-w-md mb-6">{subMessage}</p>
-      <motion.button
-        className="px-4 py-2 bg-gradient-to-r from-[#a477ab] to-[#c36376] text-white rounded-lg flex items-center font-medium"
-        whileHover={{ y: -2 }}
-        whileTap={{ y: 0 }}
-      >
-        <FiPlus className="mr-2" />
-        Create an Event
-      </motion.button>
+      <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>No events found</h3>
+      <p className={`text-center max-w-md ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+        {text}
+      </p>
     </div>
   );
 };
