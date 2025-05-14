@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     // This ensures client-side routing works in development mode
     historyApiFallback: true,
-    port: 3000, // Use port 3000 instead of the default 5173
+    port: 3001, // Use port 3000 instead of the default 5173
     strictPort: true, // Fail if port is already in use
   },
   build: {
